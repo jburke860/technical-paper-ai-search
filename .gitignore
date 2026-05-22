@@ -1,0 +1,19 @@
+.DS_Store
+
+# Python
+backend/.venv/
+__pycache__/
+*.pyc
+
+# Node / Next.js
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+
+# Generated indexes (rebuild with ingest.py)
+data/chroma/
+data/processed/
+
+# Environment
+.env
+.env.local
