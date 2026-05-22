@@ -4,6 +4,20 @@ A local semantic search demo for public technical PDFs. Ask natural-language que
 
 **Created by Jeremy Burke**
 
+## Screenshots
+
+### Initial UI
+
+Empty state before running a search — question input, search button, and placeholder for results.
+
+![Initial search UI](images/blank_frontend.png)
+
+### Search results
+
+Semantic retrieval returns ranked snippets with document name, page number, and similarity distance.
+
+![Search results with source snippets](images/results.png)
+
 ## Project overview
 
 This project indexes a small collection of public research PDFs about autonomous systems, computer vision, and spacecraft autonomy. It extracts text, splits it into overlapping chunks, embeds them with a local sentence-transformer model, and stores vectors in ChromaDB. A FastAPI backend serves search queries; a Next.js frontend provides a simple UI for exploring results.
@@ -71,6 +85,7 @@ The goal is not production-scale RAG, but a clear, end-to-end reference for how 
 
 ```
 technical-paper-ai-search/
+├── images/             # README screenshots
 ├── backend/
 │   ├── api.py          # FastAPI app + /search endpoint
 │   ├── ingest.py       # PDF → chunks → Chroma
