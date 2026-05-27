@@ -1,6 +1,6 @@
 # Technical Paper AI Search
 
-A local technical-paper search assistant for public PDFs. Ask natural-language questions, retrieve source-grounded snippets, generate local LLM answers, and upload new PDFs for re-indexing — no paid cloud APIs required.
+A local technical-paper search assistant for public PDFs. Ask natural-language questions, retrieve source-grounded snippets, generate local LLM answers, and upload new PDFs for re-indexing. No paid cloud APIs required.
 
 **Created by Jeremy Burke**
 
