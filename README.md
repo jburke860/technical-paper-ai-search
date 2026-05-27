@@ -45,15 +45,15 @@ The goal is not production-scale RAG, but a clear, end-to-end reference for how 
 
 ```
 ┌─────────────────┐     POST /search      ┌──────────────────┐
-│  Next.js UI     │ ────────────────────► │  FastAPI (api.py) │
-│  localhost:3000 │                       │  localhost:8000   │
+│  Next.js UI     │ ────────────────────► │  FastAPI (api.py)│
+│  localhost:3000 │                       │  localhost:8000  │
 └─────────────────┘                       └────────┬─────────┘
                                                    │
                     encode query + vector query    │
                                                    ▼
                                           ┌──────────────────┐
-                                          │  ChromaDB          │
-                                          │  data/chroma/      │
+                                          │  ChromaDB        │
+                                          │  data/chroma/    │
                                           └──────────────────┘
                                                    ▲
                                                    │ ingest
