@@ -10,13 +10,13 @@ A local semantic search demo for public technical PDFs. Ask natural-language que
 
 Empty state before running a search — question input, search button, and placeholder for results.
 
-![Initial search UI](images/blank_frontend.png)
+![Initial search UI](images/frontend_v2.png)
 
 ### Search results
 
 Semantic retrieval returns ranked snippets with document name, page number, and similarity distance.
 
-![Search results with source snippets](images/results.png)
+![Search results with source snippets](images/results_v2.png)
 
 ## Project overview
 
@@ -31,15 +31,16 @@ The goal is not production-scale RAG, but a clear, end-to-end reference for how 
 - **Show provenance** — Every hit includes the PDF name, page number, and raw snippet so you can verify answers against the source.
 - **Portfolio-friendly** — Easy to demo: ingest once, run two terminals, search from the browser.
 
-## Features
+## Current Features
 
-- PDF text extraction with PyMuPDF
-- Word-based chunking with overlap (900 words, 150 overlap)
-- Local embeddings via `all-MiniLM-L6-v2`
-- Persistent vector store with ChromaDB
-- REST search API (`POST /search`)
-- Interactive CLI search (`backend/search.py`)
-- Next.js UI with semantic search, ranked results, and a “How it works” walkthrough
+- Public PDF ingestion with PyMuPDF
+- Chunking and local embedding generation
+- Chroma vector search
+- BM25 + vector hybrid retrieval
+- Local answer synthesis — Uses Ollama locally to generate concise answers from retrieved snippets; answers are source-grounded but should still be verified against the cited excerpts.
+- Source-grounded answers with retrieved excerpts
+- PDF upload and local index rebuild
+- Next.js frontend and FastAPI backend
 
 ## Architecture
 
@@ -173,7 +174,6 @@ These work well with the included papers on autonomous vehicles, aerospace compu
 
 ## Limitations
 
-- **Retrieval only** — No LLM answer synthesis; you get ranked chunks, not a generated summary.
 - **Small corpus** — Quality depends entirely on the PDFs in `data/pdfs/`; out-of-domain questions return weak matches.
 - **PDF text quality** — Scanned or heavily formatted PDFs may extract poorly; chunk boundaries can split sentences awkwardly.
 - **Fixed chunking** — 900-word windows with 150-word overlap; not tuned per document type.
@@ -184,12 +184,9 @@ These work well with the included papers on autonomous vehicles, aerospace compu
 
 ## Future improvements
 
-- [ ] Add an LLM step to synthesize answers with citations from retrieved chunks
 - [ ] Environment variables for API base URL and CORS origins
-- [ ] Hybrid search (BM25 + vectors) for better keyword matches on technical terms
 - [ ] Per-PDF ingest status and collection stats endpoint
 - [ ] Smarter chunking (by section headings, semantic splits)
-- [ ] Support uploading PDFs from the UI
 - [ ] Docker Compose for one-command startup
 - [ ] Evaluation notebook (recall@k on a small labeled question set)
 - [ ] Cache query embeddings and warm the model on API startup
