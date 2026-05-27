@@ -24,7 +24,7 @@ This project indexes a small collection of public research PDFs about autonomous
 
 A FastAPI backend provides semantic search, hybrid-ranked retrieval, local Ollama-based answer generation, and PDF upload/re-indexing. A Next.js frontend provides a simple interface for asking questions, uploading PDFs, generating answers, and reviewing source snippets.
 
-The goal is not production-scale RAG. It is a clear, end-to-end local reference for how document retrieval works:
+It is a clear, end-to-end local reference for how document retrieval works:
 
 ```text
 PDFs → text extraction → chunking → embeddings → vector store → hybrid retrieval → local LLM answer → source display
