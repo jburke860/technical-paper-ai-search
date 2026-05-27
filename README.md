@@ -32,11 +32,11 @@ PDFs → text extraction → chunking → embeddings → vector store → hybrid
 
 ## Why I Built It
 
-- **Learn RAG fundamentals** — See the full retrieval pipeline in a small codebase without managed vector databases or paid hosted LLM APIs.
-- **Stay local** — Embeddings, vector search, and answer generation run locally. Documents stay in `data/pdfs/`.
-- **Show provenance** — Each result includes document name, page number, raw source snippet, and retrieval scores.
-- **Demonstrate practical AI tooling** — The project connects document processing, embeddings, vector search, keyword search, backend APIs, local LLMs, and a web interface.
-- **Portfolio-friendly** — The project uses public PDFs and non-sensitive workflows to demonstrate implementation ability.
+- **Learn RAG fundamentals** : See the full retrieval pipeline in a small codebase without managed vector databases or paid hosted LLM APIs.
+- **Stay local** : Embeddings, vector search, and answer generation run locally. Documents stay in `data/pdfs/`.
+- **Show provenance** : Each result includes document name, page number, raw source snippet, and retrieval scores.
+- **Demonstrate practical AI tooling** : The project connects document processing, embeddings, vector search, keyword search, backend APIs, local LLMs, and a web interface.
+- **Portfolio-friendly** : The project uses public PDFs and non-sensitive workflows to demonstrate implementation ability.
 
 ## Current Features
 
@@ -223,7 +223,7 @@ ollama pull llama3.2:3b
 
 This project uses a **three-terminal setup**.
 
-### Terminal 1 — Start Ollama
+### Terminal 1 : Start Ollama
 
 ```bash
 ollama serve
@@ -235,7 +235,7 @@ Keep this terminal running. Ollama serves the local LLM at:
 http://localhost:11434
 ```
 
-### Terminal 2 — Start the FastAPI Backend
+### Terminal 2 : Start the FastAPI Backend
 
 ```bash
 cd backend
@@ -274,7 +274,7 @@ API docs:
 http://localhost:8000/docs
 ```
 
-### Terminal 3 — Start the Next.js Frontend
+### Terminal 3 : Start the Next.js Frontend
 
 ```bash
 cd frontend
@@ -302,14 +302,14 @@ http://localhost:3000
 
 There are two ways to add PDFs.
 
-### Option 1 — Use the frontend upload
+### Option 1 : Use the frontend upload
 
 1. Choose a public PDF in the upload panel.
 2. Click **Upload PDF**.
 3. The backend saves the file and rebuilds the local index.
 4. Search or generate answers from the updated collection.
 
-### Option 2 — Add PDFs manually
+### Option 2 : Add PDFs manually
 
 1. Copy PDFs into `data/pdfs/`.
 2. Re-run ingestion:
@@ -350,15 +350,15 @@ If you delete a PDF manually from `data/pdfs/`, run `python ingest.py` again to 
 
 ## Limitations
 
-- **Local demo only** — This is not a deployed multi-user application.
-- **Requires three local services** — Ollama, FastAPI, and Next.js must all be running.
-- **Small corpus** — Result quality depends on the PDFs available in `data/pdfs/`.
-- **PDF extraction quality varies** — Scanned or heavily formatted PDFs may extract poorly.
-- **Fixed chunking** — Uses 900-word chunks with 150-word overlap.
-- **Single embedding model** — `all-MiniLM-L6-v2` is fast and local but not optimized for all technical domains.
-- **Local LLM limitations** — Ollama answers are grounded in retrieved snippets but should still be checked against the source excerpts.
-- **Hardcoded local API URL** — The frontend currently points to `http://localhost:8000`.
-- **No authentication or document permissions** — Only use public, non-sensitive PDFs.
+- **Local demo only** : This is not a deployed multi-user application.
+- **Requires three local services** : Ollama, FastAPI, and Next.js must all be running.
+- **Small corpus** : Result quality depends on the PDFs available in `data/pdfs/`.
+- **PDF extraction quality varies** : Scanned or heavily formatted PDFs may extract poorly.
+- **Fixed chunking** : Uses 900-word chunks with 150-word overlap.
+- **Single embedding model** : `all-MiniLM-L6-v2` is fast and local but not optimized for all technical domains.
+- **Local LLM limitations** : Ollama answers are grounded in retrieved snippets but should still be checked against the source excerpts.
+- **Hardcoded local API URL** : The frontend currently points to `http://localhost:8000`.
+- **No authentication or document permissions** : Only use public, non-sensitive PDFs.
 
 ## Future Improvements
 
