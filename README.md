@@ -371,7 +371,3 @@ If you delete a PDF manually from `data/pdfs/`, run `python ingest.py` again to 
 - [ ] Evaluation notebook with recall@k and answer-quality checks
 - [ ] Query embedding cache and model warmup
 - [ ] Optional deployment architecture for frontend/backend split
-
-## License
-
-Use and modify for learning and demos. Ensure any PDFs you add comply with their original licenses and terms of use.
