@@ -66,8 +66,8 @@ PDFs → text extraction → chunking → embeddings → vector store → hybrid
 ## Architecture
 
 The original local runtime remains available for private development. A hosted
-Worker runtime has also been implemented; public activation is intentionally
-blocked until the Phase 3 global quota circuit breaker is complete.
+Worker runtime and its fail-closed D1 quota circuit breaker have also been
+implemented; public activation remains a controlled launch step.
 
 ### Hosted runtime
 
@@ -444,14 +444,14 @@ If you delete a PDF manually from `data/pdfs/`, run `python ingest.py` again to 
 - **Separate local services** : The legacy local workflow still requires the
   frontend, FastAPI, and Ollama processes; the API origin is configured with
   `NEXT_PUBLIC_API_BASE_URL`.
-- **Hosted API not public yet** : Production activation is deliberately gated
-  on the global quota circuit breaker in Phase 3.
+- **Hosted API not public yet** : The API and quota circuit breaker are ready;
+  production provisioning and portfolio linking remain launch work.
 - **No authentication or document permissions** : Only use public, non-sensitive PDFs.
 
 ## Future Improvements
 
 - [ ] Environment variables for API base URL, CORS origins, and Ollama model
-- [ ] Global hosted-demo quota circuit breaker
+- [x] Global hosted-demo quota circuit breaker
 - [ ] Per-PDF ingest status and upload progress
 - [ ] Review and correct low-confidence section headings from complex layouts
 - [ ] Source highlighting inside retrieved snippets

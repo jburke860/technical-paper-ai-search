@@ -1,10 +1,17 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { fetchHandler } from "../src/index";
 import type { Env } from "../src/types";
+import { createMockD1 } from "./mock-d1";
 
 const MATCH_ID = "deep-space-autonomy-modeling-p001-1-introduction-c04";
 
-function createEnv(): Env {
+type EnvOptions = {
+  db?: D1Database;
+  enabled?: string;
+  limit?: string;
+};
+
+function createEnv(options: EnvOptions = {}): Env {
   const run = vi.fn(async (model: string) => {
     if (model.includes("bge-small")) {
       return { shape: [1, 384], data: [Array(384).fill(0.25)], pooling: "cls" };
@@ -19,23 +26,41 @@ function createEnv(): Env {
     matches: [{ id: MATCH_ID, score: 0.95 }],
   }));
 
+  const quota = createMockD1();
   return {
     AI: { run } as unknown as Ai,
     VECTOR_INDEX: { query } as unknown as VectorizeIndex,
-    DB: {} as D1Database,
+    DB: options.db ?? quota.db,
     ALLOWED_ORIGIN: "https://portfolio.example",
+    DEMO_ENABLED: options.enabled ?? "true",
+    DAILY_DEMO_LIMIT: options.limit ?? "200",
   };
 }
 
-function post(path: string, body: unknown, origin?: string): Request {
+function post(path: string, body: unknown, origin?: string, cookie?: string): Request {
   const headers = new Headers({ "Content-Type": "application/json" });
   if (origin) headers.set("Origin", origin);
+  if (cookie) headers.set("Cookie", cookie);
   return new Request(`https://demo.example${path}`, {
     method: "POST",
     headers,
     body: JSON.stringify(body),
   });
 }
+
+function sessionCookie(response: Response): string {
+  const value = response.headers.get("Set-Cookie");
+  expect(value).toContain("demo_session=");
+  return value!.split(";", 1)[0];
+}
+
+function today(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+
+afterEach(() => {
+  vi.useRealTimers();
+});
 
 describe("hosted Worker API", () => {
   it("reports real corpus and model status without inference", async () => {
@@ -50,19 +75,37 @@ describe("hosted Worker API", () => {
     expect(payload.corpus.paperCount).toBe(3);
     expect(payload.corpus.chunkCount).toBe(262);
     expect(payload.models.embedding).toBe("@cf/baai/bge-small-en-v1.5");
+    expect(payload.status).toBe("available");
+    expect(payload.quota.remaining).toBe(200);
+    expect(response.headers.get("X-Demo-Remaining")).toBe("200");
     expect(env.AI.run).not.toHaveBeenCalled();
   });
 
   it("returns only included paper metadata", async () => {
     const response = await fetchHandler(
       new Request("https://demo.example/api/papers"),
-      createEnv(),
+      createEnv({ enabled: "false" }),
     );
     const payload = (await response.json()) as Record<string, any>;
 
     expect(response.status).toBe(200);
     expect(payload.count).toBe(3);
     expect(payload.papers.every((paper: Record<string, unknown>) => paper.include)).toBe(true);
+  });
+
+  it("fails the status check closed when D1 is unavailable", async () => {
+    const quota = createMockD1({ fail: true });
+    const env = createEnv({ db: quota.db });
+    const response = await fetchHandler(
+      new Request("https://demo.example/api/status"),
+      env,
+    );
+    const payload = (await response.json()) as Record<string, any>;
+
+    expect(response.status).toBe(503);
+    expect(payload.code).toBe("QUOTA_CHECK_UNAVAILABLE");
+    expect(env.AI.run).not.toHaveBeenCalled();
+    expect(env.VECTOR_INDEX.query).not.toHaveBeenCalled();
   });
 
   it("runs embedding, Vectorize, BM25, and RRF for search", async () => {
@@ -80,6 +123,8 @@ describe("hosted Worker API", () => {
     expect(payload.results.length).toBeGreaterThan(0);
     expect(payload.results[0].paper_id).toBe("deep-space-autonomy-modeling");
     expect(payload.results[0].rrf_score).toBeGreaterThan(0);
+    expect(response.headers.get("X-Demo-Remaining")).toBe("199");
+    expect(response.headers.get("Set-Cookie")).toContain("HttpOnly");
     expect(env.AI.run).toHaveBeenCalledTimes(1);
     expect(env.VECTOR_INDEX.query).toHaveBeenCalledTimes(1);
   });
@@ -134,5 +179,177 @@ describe("hosted Worker API", () => {
 
     expect(response.status).toBe(503);
     expect(payload.error.code).toBe("HOSTED_INFERENCE_UNAVAILABLE");
+    expect(response.headers.get("X-Demo-Remaining")).toBe("199");
+  });
+
+  it("fails closed before AI when either kill switch is off", async () => {
+    const environmentOff = createEnv({ enabled: "false" });
+    const envResponse = await fetchHandler(
+      post("/api/search", { question: "Explain autonomy." }),
+      environmentOff,
+    );
+
+    const control = createMockD1({ controlEnabled: false });
+    const databaseOff = createEnv({ db: control.db });
+    const dbResponse = await fetchHandler(
+      post("/api/search", { question: "Explain autonomy." }),
+      databaseOff,
+    );
+
+    expect(envResponse.status).toBe(503);
+    expect((await envResponse.json() as Record<string, any>).code).toBe("DEMO_DISABLED");
+    expect(dbResponse.status).toBe(503);
+    expect((await dbResponse.json() as Record<string, any>).code).toBe("DEMO_DISABLED");
+    expect(environmentOff.AI.run).not.toHaveBeenCalled();
+    expect(databaseOff.AI.run).not.toHaveBeenCalled();
+    expect(databaseOff.VECTOR_INDEX.query).not.toHaveBeenCalled();
+  });
+
+  it("stops all inference at the persisted global daily limit", async () => {
+    const quota = createMockD1();
+    const env = createEnv({ db: quota.db, limit: "2" });
+
+    const first = await fetchHandler(post("/api/search", { question: "First question" }), env);
+    const cookie = sessionCookie(first);
+    const second = await fetchHandler(
+      post("/api/search", { question: "Second question" }, undefined, cookie),
+      env,
+    );
+    const blocked = await fetchHandler(
+      post("/api/search", { question: "Third question" }, undefined, cookie),
+      env,
+    );
+    const payload = (await blocked.json()) as Record<string, any>;
+
+    expect(first.status).toBe(200);
+    expect(second.status).toBe(200);
+    expect(blocked.status).toBe(503);
+    expect(payload.code).toBe("DAILY_DEMO_LIMIT_REACHED");
+    expect(payload.resetsAt).toMatch(/T00:00:00\.000Z$/);
+    expect(env.AI.run).toHaveBeenCalledTimes(2);
+    expect(env.VECTOR_INDEX.query).toHaveBeenCalledTimes(2);
+    expect(quota.state.global.get(today())?.consumed).toBe(2);
+  });
+
+  it("keeps the global counter across Worker restarts", async () => {
+    const quota = createMockD1();
+    const firstWorker = createEnv({ db: quota.db, limit: "1" });
+    const first = await fetchHandler(
+      post("/api/search", { question: "Use the final slot" }),
+      firstWorker,
+    );
+    const restartedWorker = createEnv({ db: quota.db, limit: "1" });
+    const blocked = await fetchHandler(
+      post("/api/search", { question: "Try after restart" }),
+      restartedWorker,
+    );
+
+    expect(first.status).toBe(200);
+    expect(blocked.status).toBe(503);
+    expect(restartedWorker.AI.run).not.toHaveBeenCalled();
+    expect(restartedWorker.VECTOR_INDEX.query).not.toHaveBeenCalled();
+  });
+
+  it("fails closed when D1 is unavailable or the configured cap is unsafe", async () => {
+    const quota = createMockD1({ fail: true });
+    const unavailable = createEnv({ db: quota.db });
+    const invalid = createEnv({ limit: "201" });
+
+    const unavailableResponse = await fetchHandler(
+      post("/api/answer", { question: "Explain autonomy." }),
+      unavailable,
+    );
+    const invalidResponse = await fetchHandler(
+      post("/api/answer", { question: "Explain autonomy." }),
+      invalid,
+    );
+
+    expect((await unavailableResponse.json() as Record<string, any>).code).toBe(
+      "QUOTA_CHECK_UNAVAILABLE",
+    );
+    expect((await invalidResponse.json() as Record<string, any>).code).toBe(
+      "QUOTA_CONFIGURATION_INVALID",
+    );
+    expect(unavailable.AI.run).not.toHaveBeenCalled();
+    expect(invalid.AI.run).not.toHaveBeenCalled();
+  });
+
+  it("enforces the per-browser burst limit before inference", async () => {
+    const quota = createMockD1();
+    const env = createEnv({ db: quota.db, limit: "20" });
+    const first = await fetchHandler(post("/api/search", { question: "Question one" }), env);
+    const cookie = sessionCookie(first);
+
+    for (const question of ["Question two", "Question three"]) {
+      const response = await fetchHandler(
+        post("/api/search", { question }, undefined, cookie),
+        env,
+      );
+      expect(response.status).toBe(200);
+    }
+    const blocked = await fetchHandler(
+      post("/api/search", { question: "Question four" }, undefined, cookie),
+      env,
+    );
+
+    expect(blocked.status).toBe(429);
+    expect((await blocked.json() as Record<string, any>).code).toBe(
+      "BROWSER_BURST_LIMIT_REACHED",
+    );
+    expect(env.AI.run).toHaveBeenCalledTimes(3);
+    expect(env.VECTOR_INDEX.query).toHaveBeenCalledTimes(3);
+  });
+
+  it("enforces the per-browser daily limit across minute windows", async () => {
+    vi.useFakeTimers();
+    const start = new Date("2026-07-18T12:00:00.000Z");
+    vi.setSystemTime(start);
+    const quota = createMockD1();
+    const env = createEnv({ db: quota.db });
+    const first = await fetchHandler(post("/api/search", { question: "Question 1" }), env);
+    const cookie = sessionCookie(first);
+
+    for (let number = 2; number <= 20; number += 1) {
+      vi.setSystemTime(new Date(start.getTime() + number * 60_000));
+      const response = await fetchHandler(
+        post("/api/search", { question: `Question ${number}` }, undefined, cookie),
+        env,
+      );
+      expect(response.status).toBe(200);
+    }
+    vi.setSystemTime(new Date(start.getTime() + 21 * 60_000));
+    const blocked = await fetchHandler(
+      post("/api/search", { question: "Question 21" }, undefined, cookie),
+      env,
+    );
+
+    expect(blocked.status).toBe(429);
+    expect((await blocked.json() as Record<string, any>).code).toBe(
+      "BROWSER_DAILY_LIMIT_REACHED",
+    );
+    expect(env.AI.run).toHaveBeenCalledTimes(20);
+  });
+
+  it("resets quota on the next UTC day", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-07-18T23:59:00.000Z"));
+    const quota = createMockD1();
+    const env = createEnv({ db: quota.db, limit: "1" });
+    const first = await fetchHandler(post("/api/search", { question: "Before midnight" }), env);
+    const cookie = sessionCookie(first);
+    const blocked = await fetchHandler(
+      post("/api/search", { question: "Still before midnight" }, undefined, cookie),
+      env,
+    );
+    vi.setSystemTime(new Date("2026-07-19T00:00:00.000Z"));
+    const reset = await fetchHandler(
+      post("/api/search", { question: "After midnight" }, undefined, cookie),
+      env,
+    );
+
+    expect(blocked.status).toBe(503);
+    expect(reset.status).toBe(200);
+    expect(env.AI.run).toHaveBeenCalledTimes(2);
+    expect(quota.state.global.size).toBe(2);
   });
 });

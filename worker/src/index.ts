@@ -1,4 +1,11 @@
 import { manifest, papers } from "./data";
+import {
+  nextUtcMidnight,
+  quotaHeaders,
+  readQuotaStatus,
+  reserveQuota,
+  type QuotaDenial,
+} from "./quota";
 import { bm25Search, fuseResults } from "./retrieval";
 import type {
   EmbeddingOutput,
@@ -10,7 +17,7 @@ import type {
 const EMBEDDING_MODEL = "@cf/baai/bge-small-en-v1.5";
 const GENERATION_MODEL = "@cf/meta/llama-3.2-3b-instruct";
 const MAX_QUESTION_LENGTH = 500;
-const MAX_RESULTS = 10;
+const MAX_RESULTS = 5;
 const DEFAULT_RESULTS = 5;
 const CANDIDATE_COUNT = 20;
 
@@ -29,18 +36,34 @@ function jsonResponse(
   status = 200,
   headers: HeadersInit = {},
 ): Response {
+  const responseHeaders = new Headers(headers);
+  responseHeaders.set("Cache-Control", "no-store");
+  responseHeaders.set("Content-Type", "application/json; charset=utf-8");
   return Response.json(value, {
     status,
-    headers: {
-      "Cache-Control": "no-store",
-      "Content-Type": "application/json; charset=utf-8",
-      ...headers,
-    },
+    headers: responseHeaders,
   });
 }
 
-function errorResponse(error: ApiError, status: number): Response {
-  return jsonResponse({ error }, status);
+function errorResponse(
+  error: ApiError,
+  status: number,
+  headers: HeadersInit = {},
+): Response {
+  return jsonResponse({ error }, status, headers);
+}
+
+function quotaErrorResponse(decision: QuotaDenial): Response {
+  return jsonResponse(
+    {
+      code: decision.code,
+      message: decision.message,
+      resetsAt: decision.resetsAt,
+      error: { code: decision.code, message: decision.message },
+    },
+    decision.status,
+    quotaHeaders(decision),
+  );
 }
 
 function allowedOrigin(request: Request, env: Env): string | null {
@@ -191,13 +214,37 @@ async function routeRequest(request: Request, env: Env): Promise<Response> {
   const url = new URL(request.url);
 
   if (request.method === "GET" && url.pathname === "/api/status") {
-    return jsonResponse({
-      status: "ok",
-      runtime: "cloudflare-worker",
-      corpus: manifest,
-      models: { embedding: EMBEDDING_MODEL, generation: GENERATION_MODEL },
-      quota: null,
-    });
+    try {
+      const quota = await readQuotaStatus(env);
+      return jsonResponse(
+        {
+          status: quota.available ? "available" : "unavailable",
+          runtime: "cloudflare-worker",
+          corpus: manifest,
+          models: { embedding: EMBEDDING_MODEL, generation: GENERATION_MODEL },
+          quota,
+        },
+        200,
+        quotaHeaders(quota),
+      );
+    } catch (error) {
+      console.error("Quota status check failed", error);
+      const resetsAt = nextUtcMidnight(new Date());
+      return jsonResponse(
+        {
+          status: "unavailable",
+          code: "QUOTA_CHECK_UNAVAILABLE",
+          message: "Hosted demo capacity could not be verified.",
+          resetsAt,
+          error: {
+            code: "QUOTA_CHECK_UNAVAILABLE",
+            message: "Hosted demo capacity could not be verified.",
+          },
+        },
+        503,
+        { "X-Demo-Reset": resetsAt },
+      );
+    }
   }
   if (request.method === "GET" && url.pathname === "/api/papers") {
     return jsonResponse({ papers, count: papers.length });
@@ -206,18 +253,23 @@ async function routeRequest(request: Request, env: Env): Promise<Response> {
     const parsed = await parseSearchRequest(request);
     if (parsed instanceof Response) return parsed;
 
+    const quota = await reserveQuota(request, env);
+    if (!quota.allowed) return quotaErrorResponse(quota);
+    const headers = quotaHeaders(quota);
+
     try {
       if (url.pathname === "/api/search") {
         const results = await searchCorpus(parsed.question, parsed.n_results, env);
-        return jsonResponse({ question: parsed.question, results });
+        return jsonResponse({ question: parsed.question, results }, 200, headers);
       }
       const generated = await answerQuestion(parsed.question, parsed.n_results, env);
-      return jsonResponse({ question: parsed.question, ...generated });
+      return jsonResponse({ question: parsed.question, ...generated }, 200, headers);
     } catch (error) {
       console.error("Hosted inference failed", error);
       return errorResponse(
         { code: "HOSTED_INFERENCE_UNAVAILABLE", message: "Hosted search is temporarily unavailable." },
         503,
+        headers,
       );
     }
   }

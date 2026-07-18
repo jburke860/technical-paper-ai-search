@@ -69,6 +69,8 @@ export interface Env {
   VECTOR_INDEX: VectorizeIndex;
   DB: D1Database;
   ALLOWED_ORIGIN: string;
+  DEMO_ENABLED: string;
+  DAILY_DEMO_LIMIT: string;
 }
 
 export type EmbeddingOutput = {

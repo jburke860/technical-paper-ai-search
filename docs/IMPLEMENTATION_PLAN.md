@@ -106,6 +106,8 @@ Exit criteria:
 
 ## Phase 3 — Global quota circuit breaker
 
+Status: complete
+
 Deliverables:
 
 - Add an atomic UTC daily counter in D1.
@@ -122,6 +124,12 @@ Exit criteria:
 - Quota-store failure blocks all dynamic operations.
 - The next UTC date resets application capacity.
 - The global switch disables every dynamic endpoint.
+
+Verification completed with a real local D1 migration, strict TypeScript
+checking, a Wrangler production-bundle dry run, and integration drills covering
+global exhaustion, Worker restart persistence, quota-store failure, both kill
+switches, browser daily and burst limits, and the next-UTC-day reset. Blocked
+requests assert that neither Workers AI nor Vectorize is called.
 
 ## Phase 4 — Visual foundation and application shell
 

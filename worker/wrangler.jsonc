@@ -22,7 +22,9 @@
     }
   ],
   "vars": {
-    "ALLOWED_ORIGIN": ""
+    "ALLOWED_ORIGIN": "",
+    "DEMO_ENABLED": "false",
+    "DAILY_DEMO_LIMIT": "200"
   },
   "observability": {
     "enabled": true,
