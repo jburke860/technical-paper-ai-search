@@ -4,6 +4,13 @@ A local technical-paper search assistant for public PDFs. Ask natural-language q
 
 **Created by Jeremy Burke**
 
+## Modernization Roadmap
+
+The local prototype is being evolved into a polished hosted demo with a hard
+zero-cost operating ceiling. See the executable
+[implementation plan](docs/IMPLEMENTATION_PLAN.md) and the mandatory
+[zero-cost operating guardrails](COST_GUARDRAILS.md).
+
 ## Screenshots
 
 ### Enhanced UI
@@ -42,10 +49,11 @@ PDFs → text extraction → chunking → embeddings → vector store → hybrid
 
 - Public PDF ingestion with PyMuPDF
 - PDF text extraction and overlapping chunk generation
+- Section-aware chunks with stable citation metadata
 - Local embedding generation with `sentence-transformers`
 - Persistent local vector storage with ChromaDB
 - BM25 keyword retrieval with `rank-bm25`
-- Hybrid vector + BM25 search ranking
+- Hybrid vector + BM25 ranking with reciprocal-rank fusion
 - Local LLM answer synthesis with Ollama
 - Source-grounded answers with retrieved excerpts
 - PDF upload from the frontend
@@ -322,6 +330,46 @@ python ingest.py
 
 3. Restart the API if it was already running.
 
+## Corpus and Retrieval Evaluation
+
+The configured collection currently contains **3 unique papers and 262
+section-aware chunks**. One additional PDF is excluded because its extracted
+text is identical to the deep-space autonomy paper despite having a different,
+incorrect filename. The exclusion is recorded in
+[`data/corpus-manifest.json`](data/corpus-manifest.json) rather than silently
+inflating the document count.
+
+Rebuild the deterministic corpus:
+
+```bash
+backend/.venv/bin/python scripts/build_corpus.py
+```
+
+Rebuild the Chroma index from that corpus:
+
+```bash
+backend/.venv/bin/python backend/ingest.py
+```
+
+Run the retrieval evaluation offline using the locally cached embedding model:
+
+```bash
+HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \
+  backend/.venv/bin/python evaluation/evaluate.py
+```
+
+The initial 24-question, page-targeted baseline is:
+
+| Metric | Baseline |
+|---|---:|
+| Recall@5 | 1.0000 |
+| Mean reciprocal rank@5 | 0.8264 |
+
+The questions and expected paper/page matches are stored in
+[`evaluation/questions.json`](evaluation/questions.json), and the complete
+measured output is stored in
+[`evaluation/baseline.json`](evaluation/baseline.json).
+
 ## Example Questions
 
 These work well with public papers on autonomous systems, computer vision, AI, and spacecraft autonomy:
@@ -352,9 +400,11 @@ If you delete a PDF manually from `data/pdfs/`, run `python ingest.py` again to 
 
 - **Local demo only** : This is not a deployed multi-user application.
 - **Requires three local services** : Ollama, FastAPI, and Next.js must all be running.
-- **Small corpus** : Result quality depends on the PDFs available in `data/pdfs/`.
+- **Small corpus** : The evaluation covers three unique papers and does not
+  establish performance on a large or diverse collection.
 - **PDF extraction quality varies** : Scanned or heavily formatted PDFs may extract poorly.
-- **Fixed chunking** : Uses 900-word chunks with 150-word overlap.
+- **Heuristic section detection** : PDF typography and multi-column layouts can
+  still produce imperfect section labels.
 - **Single embedding model** : `all-MiniLM-L6-v2` is fast and local but not optimized for all technical domains.
 - **Local LLM limitations** : Ollama answers are grounded in retrieved snippets but should still be checked against the source excerpts.
 - **Hardcoded local API URL** : The frontend currently points to `http://localhost:8000`.
@@ -365,9 +415,9 @@ If you delete a PDF manually from `data/pdfs/`, run `python ingest.py` again to 
 - [ ] Environment variables for API base URL, CORS origins, and Ollama model
 - [ ] PDF collection stats endpoint
 - [ ] Per-PDF ingest status and upload progress
-- [ ] Smarter chunking by sections/headings
+- [ ] Review and correct low-confidence section headings from complex layouts
 - [ ] Source highlighting inside retrieved snippets
 - [ ] Docker Compose for one-command local startup
-- [ ] Evaluation notebook with recall@k and answer-quality checks
+- [ ] Add answer-grounding and citation-quality evaluation
 - [ ] Query embedding cache and model warmup
 - [ ] Optional deployment architecture for frontend/backend split

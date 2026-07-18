@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "chunking": {
+    "target_tokens": 360,
+    "max_tokens": 450,
+    "overlap_tokens": 60,
+    "token_counting": "max(regex word count, ceil(character count / 4))"
+  },
+  "included_papers": [
+    {
+      "id": "deep-space-autonomy-modeling",
+      "filename": "Modeling Considerations for Developing Deep Space Autonomous Spacecraft and Simulators.pdf",
+      "pages": 20,
+      "chunks": 111,
+      "sha256": "2d3a9f054d74654f754f0c27668579e65770bd08f80ade2cd15ca947aaf4eca3"
+    },
+    {
+      "id": "aerospace-computer-vision",
+      "filename": "Computer vision tasks for intelligent aerospace perception- An overview.pdf",
+      "pages": 23,
+      "chunks": 110,
+      "sha256": "f0f4840929a4e5c35248049ccc49c666fda199db316defe1e04bc486427086b2"
+    },
+    {
+      "id": "autonomous-systems-and-ai",
+      "filename": "Autonomous-System-and-AI-content.pdf",
+      "pages": 14,
+      "chunks": 41,
+      "sha256": "34420083ab7f53b682b4772597e49a67f1a278affeaf71aae29f7b2c17a1bfa8"
+    }
+  ],
+  "excluded_files": [
+    {
+      "id": "misnamed-deep-space-autonomy-duplicate",
+      "filename": "Applications of Computer Vision in Autonomous Vehicles- Methods, Challenges and Future Directions.pdf",
+      "reason": "The extracted text is byte-for-byte identical to the deep-space autonomy paper despite the filename.",
+      "duplicate_of": "deep-space-autonomy-modeling",
+      "sha256": "631a8b93dab1480ad5eef55de1d37fdd33d6b6b7a006b0087e37cbf29c0b89f5"
+    }
+  ],
+  "paper_count": 3,
+  "chunk_count": 262,
+  "corpus_sha256": "06660eff89873c888c18776e602915ad0e095432d40b093df90b551ec2da87cb"
+}

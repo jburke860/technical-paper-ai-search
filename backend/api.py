@@ -1,17 +1,18 @@
 from pathlib import Path
 from typing import Any
-import re
 import shutil
 
 import chromadb
 import requests
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from rank_bm25 import BM25Okapi
 from sentence_transformers import SentenceTransformer
 
 from ingest import main as rebuild_index
+from corpus import register_local_pdf
+from retrieval import deduplicate_overlapping_results, reciprocal_rank_fusion, tokenize
 
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
@@ -49,18 +50,28 @@ bm25_items: list[dict[str, Any]] = []
 
 
 class SearchRequest(BaseModel):
-    question: str
-    n_results: int = 5
+    question: str = Field(min_length=2, max_length=500)
+    n_results: int = Field(default=5, ge=1, le=10)
 
 
 class SearchResult(BaseModel):
     id: str
+    paper_id: str
     document: str
+    title: str
+    authors: list[str]
+    year: int
     page: int
+    section: str
+    pdf_url: str
+    source_url: str | None = None
     snippet: str
     distance: float | None = None
     bm25_score: float | None = None
     hybrid_score: float | None = None
+    vector_rank: int | None = None
+    keyword_rank: int | None = None
+    rrf_score: float
 
 
 class SearchResponse(BaseModel):
@@ -69,8 +80,8 @@ class SearchResponse(BaseModel):
 
 
 class AnswerRequest(BaseModel):
-    question: str
-    n_results: int = 5
+    question: str = Field(min_length=2, max_length=500)
+    n_results: int = Field(default=5, ge=1, le=10)
 
 
 class AnswerResponse(BaseModel):
@@ -82,10 +93,6 @@ class AnswerResponse(BaseModel):
 class UploadResponse(BaseModel):
     filename: str
     message: str
-
-
-def tokenize(text: str) -> list[str]:
-    return re.findall(r"[a-zA-Z0-9_+-]+", text.lower())
 
 
 def load_collection() -> None:
@@ -111,9 +118,21 @@ def build_bm25_index() -> None:
     for item_id, document_text, metadata in zip(ids, documents, metadatas):
         item = {
             "id": item_id,
+            "paper_id": metadata.get("paper_id", metadata["document"]),
             "document": metadata["document"],
+            "title": metadata.get("title", metadata["document"]),
+            "authors": [
+                author
+                for author in metadata.get("authors", "").split("; ")
+                if author
+            ],
+            "year": int(metadata.get("year", 0)),
             "page": metadata["page"],
+            "section": metadata.get("section", "Document overview"),
+            "pdf_url": metadata.get("pdf_url", ""),
+            "source_url": metadata.get("source_url") or None,
             "snippet": document_text,
+            "text": document_text,
         }
         bm25_items.append(item)
         tokenized_corpus.append(tokenize(document_text))
@@ -132,31 +151,42 @@ def hybrid_search(question: str, n_results: int = 5) -> list[dict[str, Any]]:
 
     query_embedding = embedding_model.encode([question]).tolist()[0]
 
-    vector_n = max(n_results * 4, 10)
+    vector_n = min(max(n_results * 4, 10), collection.count())
     vector_results = collection.query(
         query_embeddings=[query_embedding],
         n_results=vector_n,
     )
-
-    candidate_map: dict[str, dict[str, Any]] = {}
 
     vector_ids = vector_results["ids"][0]
     vector_docs = vector_results["documents"][0]
     vector_metas = vector_results["metadatas"][0]
     vector_distances = vector_results["distances"][0]
 
+    vector_ranked = []
     for item_id, text, metadata, distance in zip(
         vector_ids, vector_docs, vector_metas, vector_distances
     ):
-        candidate_map[item_id] = {
-            "id": item_id,
-            "document": metadata["document"],
-            "page": metadata["page"],
-            "snippet": text,
-            "distance": float(distance),
-            "vector_score": 1.0 / (1.0 + float(distance)),
-            "bm25_score": 0.0,
-        }
+        vector_ranked.append(
+            {
+                "id": item_id,
+                "paper_id": metadata.get("paper_id", metadata["document"]),
+                "document": metadata["document"],
+                "title": metadata.get("title", metadata["document"]),
+                "authors": [
+                    author
+                    for author in metadata.get("authors", "").split("; ")
+                    if author
+                ],
+                "year": int(metadata.get("year", 0)),
+                "page": metadata["page"],
+                "section": metadata.get("section", "Document overview"),
+                "pdf_url": metadata.get("pdf_url", ""),
+                "source_url": metadata.get("source_url") or None,
+                "snippet": text,
+                "text": text,
+                "distance": float(distance),
+            }
+        )
 
     query_tokens = tokenize(question)
     bm25_scores = bm25_index.get_scores(query_tokens)
@@ -166,50 +196,33 @@ def hybrid_search(question: str, n_results: int = 5) -> list[dict[str, Any]]:
         key=lambda index: bm25_scores[index],
         reverse=True,
     )[:vector_n]
+    keyword_ranked = [
+        {**bm25_items[index], "bm25_score": float(bm25_scores[index])}
+        for index in top_bm25_indexes
+        if float(bm25_scores[index]) > 0
+    ]
 
-    max_bm25 = max([float(bm25_scores[index]) for index in top_bm25_indexes] + [1.0])
+    ranked = reciprocal_rank_fusion([vector_ranked, keyword_ranked])
+    ranked = deduplicate_overlapping_results(ranked)
 
-    for index in top_bm25_indexes:
-        item = bm25_items[index]
-        item_id = item["id"]
-        normalized_bm25 = float(bm25_scores[index]) / max_bm25
-
-        if item_id not in candidate_map:
-            candidate_map[item_id] = {
-                "id": item_id,
-                "document": item["document"],
-                "page": item["page"],
-                "snippet": item["snippet"],
-                "distance": None,
-                "vector_score": 0.0,
-                "bm25_score": normalized_bm25,
-            }
-        else:
-            candidate_map[item_id]["bm25_score"] = normalized_bm25
-
-    ranked = []
-
-    for candidate in candidate_map.values():
-        hybrid_score = (
-            0.70 * candidate["vector_score"]
-            + 0.30 * candidate["bm25_score"]
-        )
-
-        ranked.append(
+    output = []
+    for candidate in ranked[:n_results]:
+        retriever_ranks = candidate.pop("retriever_ranks")
+        rrf_score = float(candidate["rrf_score"])
+        candidate.pop("text", None)
+        output.append(
             {
-                "id": candidate["id"],
-                "document": candidate["document"],
-                "page": candidate["page"],
-                "snippet": candidate["snippet"],
-                "distance": candidate["distance"],
-                "bm25_score": candidate["bm25_score"],
-                "hybrid_score": hybrid_score,
+                **candidate,
+                "distance": candidate.get("distance"),
+                "bm25_score": candidate.get("bm25_score"),
+                "hybrid_score": rrf_score,
+                "vector_rank": retriever_ranks[0],
+                "keyword_rank": retriever_ranks[1],
+                "rrf_score": rrf_score,
             }
         )
 
-    ranked.sort(key=lambda item: item["hybrid_score"], reverse=True)
-
-    return ranked[:n_results]
+    return output
 
 
 def call_ollama(question: str, sources: list[dict[str, Any]]) -> str:
@@ -314,16 +327,18 @@ async def upload_pdf(file: UploadFile = File(...)) -> dict[str, str]:
     if not file.filename.lower().endswith(".pdf"):
         raise HTTPException(status_code=400, detail="Only PDF files are supported.")
 
+    safe_filename = Path(file.filename).name
     PDF_DIR.mkdir(parents=True, exist_ok=True)
-    destination = PDF_DIR / file.filename
+    destination = PDF_DIR / safe_filename
 
     with destination.open("wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
+    register_local_pdf(safe_filename)
     rebuild_index()
     reload_indexes()
 
     return {
-        "filename": file.filename,
+        "filename": safe_filename,
         "message": "PDF uploaded and index rebuilt successfully.",
     }

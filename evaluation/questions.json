@@ -1,0 +1,122 @@
+[
+  {
+    "id": "deep-autonomy-levels",
+    "question": "How does functional-level autonomy differ from system-level autonomy?",
+    "expected": [{"paper_id": "deep-space-autonomy-modeling", "pages": [1, 2, 14]}]
+  },
+  {
+    "id": "deep-cruise-navigation",
+    "question": "Which autonomous navigation activities are performed during cruise and approach?",
+    "expected": [{"paper_id": "deep-space-autonomy-modeling", "pages": [3, 4]}]
+  },
+  {
+    "id": "deep-power-models",
+    "question": "How are batteries, solar arrays, and state of charge modeled in the power subsystem?",
+    "expected": [{"paper_id": "deep-space-autonomy-modeling", "pages": [6, 7]}]
+  },
+  {
+    "id": "deep-attitude-gnc",
+    "question": "What models are used for attitude guidance, navigation, control, and reaction wheels?",
+    "expected": [{"paper_id": "deep-space-autonomy-modeling", "pages": [8, 9]}]
+  },
+  {
+    "id": "deep-communications",
+    "question": "How does the communication subsystem represent data rate and bit error rate?",
+    "expected": [{"paper_id": "deep-space-autonomy-modeling", "pages": [12]}]
+  },
+  {
+    "id": "deep-model-fidelity",
+    "question": "What tradeoffs should engineers consider when choosing onboard model fidelity?",
+    "expected": [{"paper_id": "deep-space-autonomy-modeling", "pages": [1, 2, 13]}]
+  },
+  {
+    "id": "deep-interconnected-models",
+    "question": "Why are interconnected subsystem models useful for situational awareness?",
+    "expected": [{"paper_id": "deep-space-autonomy-modeling", "pages": [1, 2, 14]}]
+  },
+  {
+    "id": "deep-dare-case-study",
+    "question": "What autonomous activities are included in the DARE small-body exploration case study?",
+    "expected": [{"paper_id": "deep-space-autonomy-modeling", "pages": [3, 4]}]
+  },
+  {
+    "id": "aero-pose-estimation",
+    "question": "How is deep learning applied to spacecraft pose estimation?",
+    "expected": [{"paper_id": "aerospace-computer-vision", "pages": [9, 10, 11]}]
+  },
+  {
+    "id": "aero-traditional-reconstruction",
+    "question": "Which traditional methods are used for three-dimensional aerospace reconstruction?",
+    "expected": [{"paper_id": "aerospace-computer-vision", "pages": [4, 8]}]
+  },
+  {
+    "id": "aero-recognition",
+    "question": "How are object detection, recognition, and segmentation used for spacecraft?",
+    "expected": [{"paper_id": "aerospace-computer-vision", "pages": [13, 14]}]
+  },
+  {
+    "id": "aero-domain-gap",
+    "question": "Why do limited real datasets and synthetic images create a domain gap?",
+    "expected": [{"paper_id": "aerospace-computer-vision", "pages": [9, 13, 14, 15]}]
+  },
+  {
+    "id": "aero-information-fusion",
+    "question": "What benefits can multi-source information fusion provide to aerospace perception?",
+    "expected": [{"paper_id": "aerospace-computer-vision", "pages": [17]}]
+  },
+  {
+    "id": "aero-edge-deployment",
+    "question": "What role do FPGA hardware and AI chips play in deploying perception models in space?",
+    "expected": [{"paper_id": "aerospace-computer-vision", "pages": [14, 17, 18]}]
+  },
+  {
+    "id": "aero-on-orbit-service",
+    "question": "Which perception tasks support on-orbit servicing missions?",
+    "expected": [{"paper_id": "aerospace-computer-vision", "pages": [1, 2, 3]}]
+  },
+  {
+    "id": "aero-sensors",
+    "question": "Which visual sensors and cameras are used for aerospace perception?",
+    "expected": [{"paper_id": "aerospace-computer-vision", "pages": [4, 5, 6]}]
+  },
+  {
+    "id": "autonomous-safety",
+    "question": "What safety and reliability challenges affect autonomous systems?",
+    "expected": [{"paper_id": "autonomous-systems-and-ai", "pages": [1, 2, 10, 11, 12]}]
+  },
+  {
+    "id": "autonomous-ethics",
+    "question": "What ethical, privacy, and accountability concerns arise from autonomous AI?",
+    "expected": [{"paper_id": "autonomous-systems-and-ai", "pages": [10, 11, 12]}]
+  },
+  {
+    "id": "autonomous-vehicles",
+    "question": "How do autonomous vehicles use sensors and AI to navigate and make decisions?",
+    "expected": [{"paper_id": "autonomous-systems-and-ai", "pages": [2, 3, 7]}]
+  },
+  {
+    "id": "autonomous-reinforcement-learning",
+    "question": "How is reinforcement learning used in autonomous systems?",
+    "expected": [{"paper_id": "autonomous-systems-and-ai", "pages": [5, 6]}]
+  },
+  {
+    "id": "autonomous-healthcare",
+    "question": "What are the applications of autonomous AI and robotics in healthcare?",
+    "expected": [{"paper_id": "autonomous-systems-and-ai", "pages": [2, 9, 10]}]
+  },
+  {
+    "id": "autonomous-human-trust",
+    "question": "How do trust, transparency, and human-AI interaction affect adoption?",
+    "expected": [{"paper_id": "autonomous-systems-and-ai", "pages": [10, 11, 12]}]
+  },
+  {
+    "id": "autonomous-anomalies",
+    "question": "How can self-monitoring and anomaly detection improve autonomous-system reliability?",
+    "expected": [{"paper_id": "autonomous-systems-and-ai", "pages": [1, 7, 9]}]
+  },
+  {
+    "id": "autonomous-regulation",
+    "question": "What legal and regulatory challenges apply to autonomous systems?",
+    "expected": [{"paper_id": "autonomous-systems-and-ai", "pages": [10, 11, 12]}]
+  }
+]

@@ -1,0 +1,1047 @@
+{
+  "generated_at": "2026-07-18T17:47:49.579629+00:00",
+  "model": "all-MiniLM-L6-v2",
+  "retrieval": "Reciprocal Rank Fusion of dense cosine and BM25 rankings",
+  "question_count": 24,
+  "corpus_chunk_count": 262,
+  "corpus_sha256": "06660eff89873c888c18776e602915ad0e095432d40b093df90b551ec2da87cb",
+  "top_k": 5,
+  "metrics": {
+    "recall_at_5": 1.0,
+    "mean_reciprocal_rank_at_5": 0.8263888888888888
+  },
+  "questions": [
+    {
+      "id": "deep-autonomy-levels",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "deep-space-autonomy-modeling-p002-2-related-work-c04",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 2,
+          "section": "2. RELATED WORK",
+          "rrf_score": 0.03225806
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p013-9-discussion-c06",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 13,
+          "section": "9. DISCUSSION",
+          "rrf_score": 0.03177806
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p002-1-introduction-c03",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 2,
+          "section": "1. INTRODUCTION",
+          "rrf_score": 0.03077652
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p002-1-introduction-c01",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 2,
+          "section": "1. INTRODUCTION",
+          "rrf_score": 0.03007689
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p013-9-discussion-c08",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 13,
+          "section": "9. DISCUSSION",
+          "rrf_score": 0.02920635
+        }
+      ]
+    },
+    {
+      "id": "deep-cruise-navigation",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "deep-space-autonomy-modeling-p003-dare-conops-c02",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 3,
+          "section": "DARE CONOPS",
+          "rrf_score": 0.03109932
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p002-2-related-work-c04",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 2,
+          "section": "2. RELATED WORK",
+          "rrf_score": 0.03067916
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p005-4-preliminaries-c03",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 5,
+          "section": "4. PRELIMINARIES",
+          "rrf_score": 0.02919864
+        },
+        {
+          "id": "autonomous-systems-and-ai-p008-applications-of-autonomous-systems-and-ai-c01",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 8,
+          "section": "APPLICATIONS OF AUTONOMOUS SYSTEMS AND AI",
+          "rrf_score": 0.02895833
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p011-7-navigation-subsystem-c03",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 11,
+          "section": "7. NAVIGATION SUBSYSTEM",
+          "rrf_score": 0.02782609
+        }
+      ]
+    },
+    {
+      "id": "deep-power-models",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "deep-space-autonomy-modeling-p007-5-power-subsystem-c02",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 7,
+          "section": "5. POWER SUBSYSTEM",
+          "rrf_score": 0.03252247
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p007-5-power-subsystem-c01",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 7,
+          "section": "5. POWER SUBSYSTEM",
+          "rrf_score": 0.03200205
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p007-5-power-subsystem-c03",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 7,
+          "section": "5. POWER SUBSYSTEM",
+          "rrf_score": 0.03033088
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p006-5-power-subsystem-c05",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 6,
+          "section": "5. POWER SUBSYSTEM",
+          "rrf_score": 0.03011775
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p005-5-power-subsystem-c05",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 5,
+          "section": "5. POWER SUBSYSTEM",
+          "rrf_score": 0.02990696
+        }
+      ]
+    },
+    {
+      "id": "deep-attitude-gnc",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "deep-space-autonomy-modeling-p009-6-attitude-gnc-subsystem-c02",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 9,
+          "section": "6. ATTITUDE GNC SUBSYSTEM",
+          "rrf_score": 0.03226646
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p009-6-attitude-gnc-subsystem-c04",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 9,
+          "section": "6. ATTITUDE GNC SUBSYSTEM",
+          "rrf_score": 0.03109932
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p008-6-attitude-gnc-subsystem-c03",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 8,
+          "section": "6. ATTITUDE GNC SUBSYSTEM",
+          "rrf_score": 0.03079839
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p009-6-attitude-gnc-subsystem-c03",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 9,
+          "section": "6. ATTITUDE GNC SUBSYSTEM",
+          "rrf_score": 0.03077652
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p008-5-power-subsystem-c01",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 8,
+          "section": "5. POWER SUBSYSTEM",
+          "rrf_score": 0.02964255
+        }
+      ]
+    },
+    {
+      "id": "deep-communications",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "deep-space-autonomy-modeling-p012-8-communication-subsystem-c03",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 12,
+          "section": "8. COMMUNICATION SUBSYSTEM",
+          "rrf_score": 0.03278689
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p012-8-communication-subsystem-c04",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 12,
+          "section": "8. COMMUNICATION SUBSYSTEM",
+          "rrf_score": 0.03200205
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p012-8-communication-subsystem-c05",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 12,
+          "section": "8. COMMUNICATION SUBSYSTEM",
+          "rrf_score": 0.03175403
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p012-8-communication-subsystem-c01",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 12,
+          "section": "8. COMMUNICATION SUBSYSTEM",
+          "rrf_score": 0.02938653
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p013-8-communication-subsystem-c01",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 13,
+          "section": "8. COMMUNICATION SUBSYSTEM",
+          "rrf_score": 0.02921109
+        }
+      ]
+    },
+    {
+      "id": "deep-model-fidelity",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "deep-space-autonomy-modeling-p013-8-communication-subsystem-c01",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 13,
+          "section": "8. COMMUNICATION SUBSYSTEM",
+          "rrf_score": 0.03201844
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p013-9-discussion-c07",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 13,
+          "section": "9. DISCUSSION",
+          "rrf_score": 0.03151365
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p006-5-power-subsystem-c05",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 6,
+          "section": "5. POWER SUBSYSTEM",
+          "rrf_score": 0.02990696
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p008-5-power-subsystem-c01",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 8,
+          "section": "5. POWER SUBSYSTEM",
+          "rrf_score": 0.02853124
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p002-2-related-work-c05",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 2,
+          "section": "2. RELATED WORK",
+          "rrf_score": 0.02843889
+        }
+      ]
+    },
+    {
+      "id": "deep-interconnected-models",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "deep-space-autonomy-modeling-p014-10-conclusion-c05",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 14,
+          "section": "10. CONCLUSION",
+          "rrf_score": 0.03252247
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p002-1-introduction-c03",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 2,
+          "section": "1. INTRODUCTION",
+          "rrf_score": 0.03200205
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p001-1-introduction-c06",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 1,
+          "section": "1. INTRODUCTION",
+          "rrf_score": 0.02995752
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p002-1-introduction-c02",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 2,
+          "section": "1. INTRODUCTION",
+          "rrf_score": 0.02972678
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p002-2-related-work-c05",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 2,
+          "section": "2. RELATED WORK",
+          "rrf_score": 0.02963126
+        }
+      ]
+    },
+    {
+      "id": "deep-dare-case-study",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 0.5,
+      "first_relevant_rank": 2,
+      "top_results": [
+        {
+          "id": "deep-space-autonomy-modeling-p014-9-discussion-c04",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 14,
+          "section": "9. DISCUSSION",
+          "rrf_score": 0.03055037
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p003-exploration-of-small-bodies-c04",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 3,
+          "section": "EXPLORATION OF SMALL BODIES",
+          "rrf_score": 0.0298574
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p004-exploration-of-small-bodies-c02",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 4,
+          "section": "EXPLORATION OF SMALL BODIES",
+          "rrf_score": 0.02972678
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p003-dare-conops-c03",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 3,
+          "section": "DARE CONOPS",
+          "rrf_score": 0.02964427
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p015-10-conclusion-c01",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 15,
+          "section": "10. CONCLUSION",
+          "rrf_score": 0.02951389
+        }
+      ]
+    },
+    {
+      "id": "aero-pose-estimation",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "aerospace-computer-vision-p011-3-3-fundamental-works-c01",
+          "paper_id": "aerospace-computer-vision",
+          "page": 11,
+          "section": "3.3 Fundamental works",
+          "rrf_score": 0.03278689
+        },
+        {
+          "id": "aerospace-computer-vision-p020-conclusions-c05",
+          "paper_id": "aerospace-computer-vision",
+          "page": 20,
+          "section": "Conclusions",
+          "rrf_score": 0.03100962
+        },
+        {
+          "id": "aerospace-computer-vision-p009-2-3-3-limitations-of-traditional-perception-c01",
+          "paper_id": "aerospace-computer-vision",
+          "page": 9,
+          "section": "2.3.3 Limitations of traditional perception methods",
+          "rrf_score": 0.02987737
+        },
+        {
+          "id": "aerospace-computer-vision-p011-dl-based-3d-reconstruction-c03",
+          "paper_id": "aerospace-computer-vision",
+          "page": 11,
+          "section": "DL-based 3D reconstruction",
+          "rrf_score": 0.02963126
+        },
+        {
+          "id": "aerospace-computer-vision-p009-dl-based-pose-estimation-c02",
+          "paper_id": "aerospace-computer-vision",
+          "page": 9,
+          "section": "DL-based pose estimation",
+          "rrf_score": 0.02943723
+        }
+      ]
+    },
+    {
+      "id": "aero-traditional-reconstruction",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 0.3333333333333333,
+      "first_relevant_rank": 3,
+      "top_results": [
+        {
+          "id": "aerospace-computer-vision-p001-huilin-chen1-qiyu-sun1-fangfei-li2-yang-tang-c02",
+          "paper_id": "aerospace-computer-vision",
+          "page": 1,
+          "section": "Huilin Chen1, Qiyu Sun1, Fangfei Li2* & Yang Tang1*",
+          "rrf_score": 0.03105441
+        },
+        {
+          "id": "aerospace-computer-vision-p007-2-3-2-traditional-3d-reconstruction-c04",
+          "paper_id": "aerospace-computer-vision",
+          "page": 7,
+          "section": "2.3.2 Traditional 3D reconstruction",
+          "rrf_score": 0.03100962
+        },
+        {
+          "id": "aerospace-computer-vision-p008-2-3-3-limitations-of-traditional-perception-c04",
+          "paper_id": "aerospace-computer-vision",
+          "page": 8,
+          "section": "2.3.3 Limitations of traditional perception methods",
+          "rrf_score": 0.02995752
+        },
+        {
+          "id": "aerospace-computer-vision-p001-huilin-chen1-qiyu-sun1-fangfei-li2-yang-tang-c01",
+          "paper_id": "aerospace-computer-vision",
+          "page": 1,
+          "section": "Huilin Chen1, Qiyu Sun1, Fangfei Li2* & Yang Tang1*",
+          "rrf_score": 0.02955134
+        },
+        {
+          "id": "aerospace-computer-vision-p007-2-3-2-traditional-3d-reconstruction-c05",
+          "paper_id": "aerospace-computer-vision",
+          "page": 7,
+          "section": "2.3.2 Traditional 3D reconstruction",
+          "rrf_score": 0.02946237
+        }
+      ]
+    },
+    {
+      "id": "aero-recognition",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "aerospace-computer-vision-p013-5-3-limitations-and-solutions-c03",
+          "paper_id": "aerospace-computer-vision",
+          "page": 13,
+          "section": "5.3 Limitations and solutions",
+          "rrf_score": 0.03278689
+        },
+        {
+          "id": "aerospace-computer-vision-p012-dl-based-recognition-c04",
+          "paper_id": "aerospace-computer-vision",
+          "page": 12,
+          "section": "DL-based Recognition",
+          "rrf_score": 0.03105441
+        },
+        {
+          "id": "aerospace-computer-vision-p013-5-3-limitations-and-solutions-c04",
+          "paper_id": "aerospace-computer-vision",
+          "page": 13,
+          "section": "5.3 Limitations and solutions",
+          "rrf_score": 0.03036577
+        },
+        {
+          "id": "aerospace-computer-vision-p021-conclusions-c01",
+          "paper_id": "aerospace-computer-vision",
+          "page": 21,
+          "section": "Conclusions",
+          "rrf_score": 0.02951389
+        },
+        {
+          "id": "aerospace-computer-vision-p021-conclusions-c02",
+          "paper_id": "aerospace-computer-vision",
+          "page": 21,
+          "section": "Conclusions",
+          "rrf_score": 0.02889813
+        }
+      ]
+    },
+    {
+      "id": "aero-domain-gap",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "aerospace-computer-vision-p009-dl-based-pose-estimation-c05",
+          "paper_id": "aerospace-computer-vision",
+          "page": 9,
+          "section": "DL-based pose estimation",
+          "rrf_score": 0.03102453
+        },
+        {
+          "id": "aerospace-computer-vision-p015-6-3-1-less-independent-of-data-c03",
+          "paper_id": "aerospace-computer-vision",
+          "page": 15,
+          "section": "6.3.1 Less independent of Data",
+          "rrf_score": 0.03033088
+        },
+        {
+          "id": "aerospace-computer-vision-p014-6-2-subsequent-tasks-based-on-intelligent-pe-c02",
+          "paper_id": "aerospace-computer-vision",
+          "page": 14,
+          "section": "6.2 Subsequent tasks based on intelligent perception",
+          "rrf_score": 0.03030999
+        },
+        {
+          "id": "aerospace-computer-vision-p009-dl-based-pose-estimation-c04",
+          "paper_id": "aerospace-computer-vision",
+          "page": 9,
+          "section": "DL-based pose estimation",
+          "rrf_score": 0.03007689
+        },
+        {
+          "id": "aerospace-computer-vision-p013-5-3-limitations-and-solutions-c03",
+          "paper_id": "aerospace-computer-vision",
+          "page": 13,
+          "section": "5.3 Limitations and solutions",
+          "rrf_score": 0.02920635
+        }
+      ]
+    },
+    {
+      "id": "aero-information-fusion",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 0.25,
+      "first_relevant_rank": 4,
+      "top_results": [
+        {
+          "id": "aerospace-computer-vision-p001-huilin-chen1-qiyu-sun1-fangfei-li2-yang-tang-c02",
+          "paper_id": "aerospace-computer-vision",
+          "page": 1,
+          "section": "Huilin Chen1, Qiyu Sun1, Fangfei Li2* & Yang Tang1*",
+          "rrf_score": 0.03225806
+        },
+        {
+          "id": "aerospace-computer-vision-p003-introduction-c01",
+          "paper_id": "aerospace-computer-vision",
+          "page": 3,
+          "section": "Introduction",
+          "rrf_score": 0.03154496
+        },
+        {
+          "id": "aerospace-computer-vision-p014-6-1-deployment-of-dl-algorithms-c05",
+          "paper_id": "aerospace-computer-vision",
+          "page": 14,
+          "section": "6.1 Deployment of DL algorithms",
+          "rrf_score": 0.03100962
+        },
+        {
+          "id": "aerospace-computer-vision-p017-6-3-3-multi-source-information-fusion-c02",
+          "paper_id": "aerospace-computer-vision",
+          "page": 17,
+          "section": "6.3.3 Multi-source information fusion",
+          "rrf_score": 0.03077652
+        },
+        {
+          "id": "aerospace-computer-vision-p006-2-2-an-taxonomy-of-sensors-c02",
+          "paper_id": "aerospace-computer-vision",
+          "page": 6,
+          "section": "2.2 An taxonomy of sensors",
+          "rrf_score": 0.03036577
+        }
+      ]
+    },
+    {
+      "id": "aero-edge-deployment",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "aerospace-computer-vision-p017-6-3-4-ai-chips-c05",
+          "paper_id": "aerospace-computer-vision",
+          "page": 17,
+          "section": "6.3.4 AI chips",
+          "rrf_score": 0.03226646
+        },
+        {
+          "id": "aerospace-computer-vision-p014-6-1-deployment-of-dl-algorithms-c05",
+          "paper_id": "aerospace-computer-vision",
+          "page": 14,
+          "section": "6.1 Deployment of DL algorithms",
+          "rrf_score": 0.03177806
+        },
+        {
+          "id": "aerospace-computer-vision-p018-conclusions-c02",
+          "paper_id": "aerospace-computer-vision",
+          "page": 18,
+          "section": "Conclusions",
+          "rrf_score": 0.03175403
+        },
+        {
+          "id": "aerospace-computer-vision-p017-6-3-4-ai-chips-c04",
+          "paper_id": "aerospace-computer-vision",
+          "page": 17,
+          "section": "6.3.4 AI chips",
+          "rrf_score": 0.03100962
+        },
+        {
+          "id": "aerospace-computer-vision-p014-6-1-deployment-of-dl-algorithms-c03",
+          "paper_id": "aerospace-computer-vision",
+          "page": 14,
+          "section": "6.1 Deployment of DL algorithms",
+          "rrf_score": 0.03021354
+        }
+      ]
+    },
+    {
+      "id": "aero-on-orbit-service",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 0.5,
+      "first_relevant_rank": 2,
+      "top_results": [
+        {
+          "id": "aerospace-computer-vision-p004-2-1-classical-space-programs-c03",
+          "paper_id": "aerospace-computer-vision",
+          "page": 4,
+          "section": "2.1 Classical space programs",
+          "rrf_score": 0.03200205
+        },
+        {
+          "id": "aerospace-computer-vision-p002-introduction-c04",
+          "paper_id": "aerospace-computer-vision",
+          "page": 2,
+          "section": "Introduction",
+          "rrf_score": 0.03177806
+        },
+        {
+          "id": "aerospace-computer-vision-p002-introduction-c05",
+          "paper_id": "aerospace-computer-vision",
+          "page": 2,
+          "section": "Introduction",
+          "rrf_score": 0.03007689
+        },
+        {
+          "id": "aerospace-computer-vision-p001-introduction-c03",
+          "paper_id": "aerospace-computer-vision",
+          "page": 1,
+          "section": "Introduction",
+          "rrf_score": 0.02991071
+        },
+        {
+          "id": "aerospace-computer-vision-p003-2-1-classical-space-programs-c03",
+          "paper_id": "aerospace-computer-vision",
+          "page": 3,
+          "section": "2.1 Classical space programs",
+          "rrf_score": 0.02932363
+        }
+      ]
+    },
+    {
+      "id": "aero-sensors",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 0.25,
+      "first_relevant_rank": 4,
+      "top_results": [
+        {
+          "id": "aerospace-computer-vision-p001-huilin-chen1-qiyu-sun1-fangfei-li2-yang-tang-c02",
+          "paper_id": "aerospace-computer-vision",
+          "page": 1,
+          "section": "Huilin Chen1, Qiyu Sun1, Fangfei Li2* & Yang Tang1*",
+          "rrf_score": 0.03201844
+        },
+        {
+          "id": "aerospace-computer-vision-p003-2-1-classical-space-programs-c03",
+          "paper_id": "aerospace-computer-vision",
+          "page": 3,
+          "section": "2.1 Classical space programs",
+          "rrf_score": 0.03201844
+        },
+        {
+          "id": "aerospace-computer-vision-p001-huilin-chen1-qiyu-sun1-fangfei-li2-yang-tang-c01",
+          "paper_id": "aerospace-computer-vision",
+          "page": 1,
+          "section": "Huilin Chen1, Qiyu Sun1, Fangfei Li2* & Yang Tang1*",
+          "rrf_score": 0.03053613
+        },
+        {
+          "id": "aerospace-computer-vision-p005-2-2-an-taxonomy-of-sensors-c03",
+          "paper_id": "aerospace-computer-vision",
+          "page": 5,
+          "section": "2.2 An taxonomy of sensors",
+          "rrf_score": 0.03041475
+        },
+        {
+          "id": "aerospace-computer-vision-p006-2-2-an-taxonomy-of-sensors-c01",
+          "paper_id": "aerospace-computer-vision",
+          "page": 6,
+          "section": "2.2 An taxonomy of sensors",
+          "rrf_score": 0.02982766
+        }
+      ]
+    },
+    {
+      "id": "autonomous-safety",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 0.5,
+      "first_relevant_rank": 2,
+      "top_results": [
+        {
+          "id": "autonomous-systems-and-ai-p006-role-of-ai-in-autonomous-systems-c01",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 6,
+          "section": "ROLE OF AI IN AUTONOMOUS SYSTEMS",
+          "rrf_score": 0.03200205
+        },
+        {
+          "id": "autonomous-systems-and-ai-p012-ethical-and-social-implications-c01",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 12,
+          "section": "ETHICAL AND SOCIAL IMPLICATIONS",
+          "rrf_score": 0.03030999
+        },
+        {
+          "id": "autonomous-systems-and-ai-p001-autonomous-system-and-ai-c01",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 1,
+          "section": "Autonomous System and AI",
+          "rrf_score": 0.02861201
+        },
+        {
+          "id": "autonomous-systems-and-ai-p008-applications-of-autonomous-systems-and-ai-c02",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 8,
+          "section": "APPLICATIONS OF AUTONOMOUS SYSTEMS AND AI",
+          "rrf_score": 0.028125
+        },
+        {
+          "id": "autonomous-systems-and-ai-p011-ethical-and-social-implications-c03",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 11,
+          "section": "ETHICAL AND SOCIAL IMPLICATIONS",
+          "rrf_score": 0.02786378
+        }
+      ]
+    },
+    {
+      "id": "autonomous-ethics",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "autonomous-systems-and-ai-p011-ethical-and-social-implications-c01",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 11,
+          "section": "ETHICAL AND SOCIAL IMPLICATIONS",
+          "rrf_score": 0.03252247
+        },
+        {
+          "id": "autonomous-systems-and-ai-p012-ethical-and-social-implications-c02",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 12,
+          "section": "ETHICAL AND SOCIAL IMPLICATIONS",
+          "rrf_score": 0.03226646
+        },
+        {
+          "id": "autonomous-systems-and-ai-p003-autonomous-system-and-ai-c01",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 3,
+          "section": "Autonomous System and AI",
+          "rrf_score": 0.03100962
+        },
+        {
+          "id": "autonomous-systems-and-ai-p012-ethical-and-social-implications-c01",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 12,
+          "section": "ETHICAL AND SOCIAL IMPLICATIONS",
+          "rrf_score": 0.03100962
+        },
+        {
+          "id": "autonomous-systems-and-ai-p011-ethical-and-social-implications-c02",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 11,
+          "section": "ETHICAL AND SOCIAL IMPLICATIONS",
+          "rrf_score": 0.03083491
+        }
+      ]
+    },
+    {
+      "id": "autonomous-vehicles",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "autonomous-systems-and-ai-p003-understanding-autonomous-systems-c02",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 3,
+          "section": "UNDERSTANDING AUTONOMOUS SYSTEMS",
+          "rrf_score": 0.03252247
+        },
+        {
+          "id": "autonomous-systems-and-ai-p002-autonomous-system-and-ai-c01",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 2,
+          "section": "Autonomous System and AI",
+          "rrf_score": 0.03175403
+        },
+        {
+          "id": "autonomous-systems-and-ai-p008-applications-of-autonomous-systems-and-ai-c01",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 8,
+          "section": "APPLICATIONS OF AUTONOMOUS SYSTEMS AND AI",
+          "rrf_score": 0.03174603
+        },
+        {
+          "id": "autonomous-systems-and-ai-p001-autonomous-system-and-ai-c01",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 1,
+          "section": "Autonomous System and AI",
+          "rrf_score": 0.03053613
+        },
+        {
+          "id": "autonomous-systems-and-ai-p005-role-of-ai-in-autonomous-systems-c02",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 5,
+          "section": "ROLE OF AI IN AUTONOMOUS SYSTEMS",
+          "rrf_score": 0.03047795
+        }
+      ]
+    },
+    {
+      "id": "autonomous-reinforcement-learning",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "autonomous-systems-and-ai-p005-role-of-ai-in-autonomous-systems-c02",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 5,
+          "section": "ROLE OF AI IN AUTONOMOUS SYSTEMS",
+          "rrf_score": 0.03226646
+        },
+        {
+          "id": "autonomous-systems-and-ai-p006-role-of-ai-in-autonomous-systems-c02",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 6,
+          "section": "ROLE OF AI IN AUTONOMOUS SYSTEMS",
+          "rrf_score": 0.03151365
+        },
+        {
+          "id": "autonomous-systems-and-ai-p002-autonomous-system-and-ai-c02",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 2,
+          "section": "Autonomous System and AI",
+          "rrf_score": 0.03125
+        },
+        {
+          "id": "autonomous-systems-and-ai-p013-ethical-and-social-implications-c02",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 13,
+          "section": "ETHICAL AND SOCIAL IMPLICATIONS",
+          "rrf_score": 0.03007689
+        },
+        {
+          "id": "autonomous-systems-and-ai-p005-role-of-ai-in-autonomous-systems-c03",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 5,
+          "section": "ROLE OF AI IN AUTONOMOUS SYSTEMS",
+          "rrf_score": 0.02972678
+        }
+      ]
+    },
+    {
+      "id": "autonomous-healthcare",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 0.5,
+      "first_relevant_rank": 2,
+      "top_results": [
+        {
+          "id": "autonomous-systems-and-ai-p004-understanding-autonomous-systems-c02",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 4,
+          "section": "UNDERSTANDING AUTONOMOUS SYSTEMS",
+          "rrf_score": 0.03149802
+        },
+        {
+          "id": "autonomous-systems-and-ai-p009-applications-of-autonomous-systems-and-ai-c01",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 9,
+          "section": "APPLICATIONS OF AUTONOMOUS SYSTEMS AND AI",
+          "rrf_score": 0.03053613
+        },
+        {
+          "id": "autonomous-systems-and-ai-p003-understanding-autonomous-systems-c03",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 3,
+          "section": "UNDERSTANDING AUTONOMOUS SYSTEMS",
+          "rrf_score": 0.03030999
+        },
+        {
+          "id": "autonomous-systems-and-ai-p003-autonomous-system-and-ai-c01",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 3,
+          "section": "Autonomous System and AI",
+          "rrf_score": 0.03028233
+        },
+        {
+          "id": "autonomous-systems-and-ai-p007-applications-of-autonomous-systems-and-ai-c03",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 7,
+          "section": "APPLICATIONS OF AUTONOMOUS SYSTEMS AND AI",
+          "rrf_score": 0.03028233
+        }
+      ]
+    },
+    {
+      "id": "autonomous-human-trust",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "autonomous-systems-and-ai-p010-applications-of-autonomous-systems-and-ai-c03",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 10,
+          "section": "APPLICATIONS OF AUTONOMOUS SYSTEMS AND AI",
+          "rrf_score": 0.03128055
+        },
+        {
+          "id": "autonomous-systems-and-ai-p012-ethical-and-social-implications-c02",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 12,
+          "section": "ETHICAL AND SOCIAL IMPLICATIONS",
+          "rrf_score": 0.03009207
+        },
+        {
+          "id": "autonomous-systems-and-ai-p002-autonomous-system-and-ai-c02",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 2,
+          "section": "Autonomous System and AI",
+          "rrf_score": 0.02987737
+        },
+        {
+          "id": "autonomous-systems-and-ai-p011-ethical-and-social-implications-c01",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 11,
+          "section": "ETHICAL AND SOCIAL IMPLICATIONS",
+          "rrf_score": 0.02970951
+        },
+        {
+          "id": "autonomous-systems-and-ai-p011-ethical-and-social-implications-c02",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 11,
+          "section": "ETHICAL AND SOCIAL IMPLICATIONS",
+          "rrf_score": 0.02853124
+        }
+      ]
+    },
+    {
+      "id": "autonomous-anomalies",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "autonomous-systems-and-ai-p001-autonomous-system-and-ai-c02",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 1,
+          "section": "Autonomous System and AI",
+          "rrf_score": 0.03252247
+        },
+        {
+          "id": "autonomous-systems-and-ai-p001-autonomous-system-and-ai-c01",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 1,
+          "section": "Autonomous System and AI",
+          "rrf_score": 0.02990696
+        },
+        {
+          "id": "autonomous-systems-and-ai-p010-applications-of-autonomous-systems-and-ai-c03",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 10,
+          "section": "APPLICATIONS OF AUTONOMOUS SYSTEMS AND AI",
+          "rrf_score": 0.02854251
+        },
+        {
+          "id": "autonomous-systems-and-ai-p006-role-of-ai-in-autonomous-systems-c01",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 6,
+          "section": "ROLE OF AI IN AUTONOMOUS SYSTEMS",
+          "rrf_score": 0.02844551
+        },
+        {
+          "id": "autonomous-systems-and-ai-p008-applications-of-autonomous-systems-and-ai-c01",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 8,
+          "section": "APPLICATIONS OF AUTONOMOUS SYSTEMS AND AI",
+          "rrf_score": 0.02744361
+        }
+      ]
+    },
+    {
+      "id": "autonomous-regulation",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "autonomous-systems-and-ai-p012-ethical-and-social-implications-c02",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 12,
+          "section": "ETHICAL AND SOCIAL IMPLICATIONS",
+          "rrf_score": 0.03252247
+        },
+        {
+          "id": "autonomous-systems-and-ai-p002-autonomous-system-and-ai-c02",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 2,
+          "section": "Autonomous System and AI",
+          "rrf_score": 0.03226646
+        },
+        {
+          "id": "autonomous-systems-and-ai-p002-autonomous-system-and-ai-c03",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 2,
+          "section": "Autonomous System and AI",
+          "rrf_score": 0.03083491
+        },
+        {
+          "id": "autonomous-systems-and-ai-p003-autonomous-system-and-ai-c01",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 3,
+          "section": "Autonomous System and AI",
+          "rrf_score": 0.03079839
+        },
+        {
+          "id": "autonomous-systems-and-ai-p012-ethical-and-social-implications-c01",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 12,
+          "section": "ETHICAL AND SOCIAL IMPLICATIONS",
+          "rrf_score": 0.03077652
+        }
+      ]
+    }
+  ]
+}

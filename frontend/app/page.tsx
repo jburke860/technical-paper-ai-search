@@ -4,12 +4,22 @@ import { ChangeEvent, useState } from "react";
 
 type SearchResult = {
   id: string;
+  paper_id: string;
   document: string;
+  title: string;
+  authors: string[];
+  year: number;
   page: number;
+  section: string;
+  pdf_url: string;
+  source_url: string | null;
   snippet: string;
   distance: number | null;
   bm25_score: number | null;
   hybrid_score: number | null;
+  vector_rank: number | null;
+  keyword_rank: number | null;
+  rrf_score: number;
 };
 
 type SearchResponse = {
