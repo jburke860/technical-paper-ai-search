@@ -133,6 +133,8 @@ requests assert that neither Workers AI nor Vectorize is called.
 
 ## Phase 4 — Visual foundation and application shell
 
+Status: complete
+
 Deliverables:
 
 - Implement design tokens for color, type, spacing, borders, focus, and motion.
@@ -159,6 +161,13 @@ Exit criteria:
 - Keyboard focus is visible and navigation is usable without a mouse.
 - Initial production build requires no Google Fonts network request.
 - All displayed counts come from application data.
+
+Verification completed with ESLint and an optimized Next.js production build.
+The shell uses locally bundled Geist files from the pinned Next.js package,
+contains no Google Fonts request, exposes visible focus states and Escape-close
+drawers, and switches between three-column desktop, two-column tablet, and
+drawer-based mobile layouts. Corpus and quota figures are loaded from the
+Worker status and papers endpoints rather than hard-coded UI metrics.
 
 ## Phase 5 — Main research workflow
 

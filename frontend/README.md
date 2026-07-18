@@ -12,3 +12,8 @@ NEXT_PUBLIC_API_BASE_URL=http://localhost:8000 npm run dev
 ```
 
 See the root README for the complete local setup.
+
+The production shell uses locally bundled fonts and generates its favicon and
+social preview through the Next.js app metadata routes. Set
+`NEXT_PUBLIC_SITE_URL` to the final public origin when deploying so social-card
+URLs resolve to that origin.
