@@ -75,6 +75,13 @@ Exit criteria:
 
 ## Phase 2 — Hosted Worker API
 
+Status: implementation complete; production activation is gated on Phase 3
+
+Safety decision: the deployable Worker bundle is complete, but creating and
+publishing the remote Worker is intentionally deferred until the global quota
+circuit breaker exists. Publishing an unrestricted AI endpoint would conflict
+with the zero-cost operating contract.
+
 Deliverables:
 
 - Add a Cloudflare Worker TypeScript project.
@@ -89,10 +96,13 @@ Deliverables:
 
 Exit criteria:
 
-- The deployed API answers a real corpus question.
+- The production Worker bundle passes a Wrangler deployment dry run and mocked
+  binding tests answer a real corpus question.
 - Returned citations refer to real document pages.
 - Hosted runtime does not require a persistent server or local model process.
 - Local development remains documented.
+- Remote provisioning and public activation occur only after Phase 3 passes its
+  failure drills.
 
 ## Phase 3 — Global quota circuit breaker
 

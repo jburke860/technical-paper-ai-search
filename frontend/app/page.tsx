@@ -33,7 +33,7 @@ type AnswerResponse = {
   sources: SearchResult[];
 };
 
-const API_BASE_URL = "http://localhost:8000";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "/api";
 
 function formatScore(value: number | null | undefined) {
   if (value === null || value === undefined) {

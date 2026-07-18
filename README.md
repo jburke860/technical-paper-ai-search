@@ -60,8 +60,38 @@ PDFs → text extraction → chunking → embeddings → vector store → hybrid
 - Automatic local index rebuild after upload
 - FastAPI backend with `/search`, `/answer`, and `/upload` endpoints
 - Next.js frontend with search, answer generation, upload, and source display
+- Deployable Cloudflare Worker API using Workers AI, Vectorize, BM25/RRF, and
+  structured citations
 
 ## Architecture
+
+The original local runtime remains available for private development. A hosted
+Worker runtime has also been implemented; public activation is intentionally
+blocked until the Phase 3 global quota circuit breaker is complete.
+
+### Hosted runtime
+
+```text
+Next.js UI (same-origin /api)
+            │
+            ▼
+Cloudflare Worker
+  ├── Workers AI BGE-small query embedding
+  ├── Vectorize semantic candidates
+  ├── Bundled BM25 sparse candidates
+  ├── Reciprocal-rank fusion
+  └── Workers AI Llama 3.2 grounded answer
+            │
+            ▼
+Structured citations into the bundled 3-paper corpus
+```
+
+The production bundle contains the corpus and sparse index, so the hosted
+runtime does not install Python, Torch, Chroma, Ollama, or the source PDFs. See
+the [Worker API documentation](worker/README.md) for verification and
+Free-plan provisioning instructions.
+
+### Local runtime
 
 ```text
 ┌─────────────────────────┐
@@ -180,6 +210,10 @@ Example `/answer` response:
 | Vector database | ChromaDB local persistent store |
 | Keyword search | `rank-bm25` |
 | Local LLM | Ollama with `llama3.2:3b` |
+| Hosted API | Cloudflare Worker |
+| Hosted embeddings/LLM | Workers AI |
+| Hosted vector search | Cloudflare Vectorize |
+| Hosted quota ledger | Cloudflare D1 (activated in Phase 3) |
 | Runtime | Python 3.13+, Node.js 20+ |
 
 ## Project Structure
@@ -287,7 +321,7 @@ http://localhost:8000/docs
 ```bash
 cd frontend
 npm install
-npm run dev
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8000 npm run dev
 ```
 
 Open the UI:
@@ -407,17 +441,21 @@ If you delete a PDF manually from `data/pdfs/`, run `python ingest.py` again to 
   still produce imperfect section labels.
 - **Single embedding model** : `all-MiniLM-L6-v2` is fast and local but not optimized for all technical domains.
 - **Local LLM limitations** : Ollama answers are grounded in retrieved snippets but should still be checked against the source excerpts.
-- **Hardcoded local API URL** : The frontend currently points to `http://localhost:8000`.
+- **Separate local services** : The legacy local workflow still requires the
+  frontend, FastAPI, and Ollama processes; the API origin is configured with
+  `NEXT_PUBLIC_API_BASE_URL`.
+- **Hosted API not public yet** : Production activation is deliberately gated
+  on the global quota circuit breaker in Phase 3.
 - **No authentication or document permissions** : Only use public, non-sensitive PDFs.
 
 ## Future Improvements
 
 - [ ] Environment variables for API base URL, CORS origins, and Ollama model
-- [ ] PDF collection stats endpoint
+- [ ] Global hosted-demo quota circuit breaker
 - [ ] Per-PDF ingest status and upload progress
 - [ ] Review and correct low-confidence section headings from complex layouts
 - [ ] Source highlighting inside retrieved snippets
 - [ ] Docker Compose for one-command local startup
 - [ ] Add answer-grounding and citation-quality evaluation
 - [ ] Query embedding cache and model warmup
-- [ ] Optional deployment architecture for frontend/backend split
+- [ ] Browser-local PDF ingestion for the public demo
