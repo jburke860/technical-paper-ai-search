@@ -1,15 +1,24 @@
 # Technical Paper AI Search
 
-A local technical-paper search assistant for public PDFs. Ask natural-language questions, retrieve source-grounded snippets, generate local LLM answers, and upload new PDFs for re-indexing. No paid cloud APIs required.
+A source-grounded research assistant for technical papers. Ask
+natural-language questions against a curated corpus with hybrid retrieval
+(semantic + BM25 fused with reciprocal-rank fusion), stream grounded answers
+with clickable citations that open the exact cited PDF page, and privately
+search your own PDF entirely in your browser.
+
+**Live demo:** https://technical-paper-ai-search.jeremy-burke024.workers.dev
 
 **Created by Jeremy Burke**
 
-## Modernization Roadmap
-
-The local prototype is being evolved into a polished hosted demo with a hard
-zero-cost operating ceiling. See the executable
-[implementation plan](docs/IMPLEMENTATION_PLAN.md) and the mandatory
-[zero-cost operating guardrails](COST_GUARDRAILS.md).
+The hosted demo runs exclusively on Cloudflare Free-plan services under a hard
+zero-cost operating ceiling: at most 200 hosted questions per UTC day
+globally, 20 per browser, enforced by a fail-closed D1 quota circuit breaker.
+When capacity is exhausted, hosted answering pauses until midnight UTC while
+the site, citations, and the browser-local document mode remain available.
+See the [implementation plan](docs/IMPLEMENTATION_PLAN.md), the
+[zero-cost operating guardrails](COST_GUARDRAILS.md), the
+[failure drills](docs/FAILURE_DRILLS.md), and the
+[deployment runbook](docs/DEPLOYMENT.md).
 
 ## Screenshots
 
@@ -84,9 +93,11 @@ PDFs → text extraction → chunking → embeddings → vector store → hybrid
 
 ## Architecture
 
-The original local runtime remains available for private development. A hosted
-Worker runtime and its fail-closed D1 quota circuit breaker have also been
-implemented; public activation remains a controlled launch step.
+The original local runtime remains available for private development. The
+hosted Worker runtime is live at
+https://technical-paper-ai-search.jeremy-burke024.workers.dev — one Worker
+serves both the static Next.js export and the quota-protected API on the
+Workers Free plan, with no payment method on the deployment account.
 
 ### Hosted runtime
 
@@ -449,10 +460,31 @@ These folders are generated and can be rebuilt from the PDFs.
 
 If you delete a PDF manually from `data/pdfs/`, run `python ingest.py` again to remove it from the Chroma and BM25 indexes. Manual file deletion does not automatically update the search index.
 
+## Privacy Model
+
+- The curated hosted index contains only the three public papers listed in the
+  library; the hosted demo has no upload endpoint and no server-side document
+  persistence.
+- Research history lives only in the visitor's browser (localStorage) and is
+  never transmitted.
+- A visitor's own PDF is parsed, chunked, embedded, indexed, and searched
+  entirely inside a Web Worker in their browser. The file never reaches the
+  Worker, Cloudflare storage, or any owner-controlled service. Opt-in
+  persistence uses the browser's own IndexedDB.
+- Hosted answer generation for a local document is opt-in and transmits only
+  the retrieved excerpts (at most 5 x 800 characters), through the same
+  global quota gate as every other inference route.
+- The local embedding model (~25 MB, quantized MiniLM) is fetched once from a
+  public model CDN by the visitor's browser; the visitor's document is not
+  part of that request. If the download fails, local search degrades to
+  keyword-only ranking and says so.
+
 ## Limitations
 
-- **Local demo only** : This is not a deployed multi-user application.
-- **Requires three local services** : Ollama, FastAPI, and Next.js must all be running.
+- **Capacity over availability** : the hosted demo hard-stops at its daily
+  quota (globally and per browser) and fails closed whenever quota state is
+  uncertain; exhaustion lasts until midnight UTC by design.
+- **Requires three local services for the legacy pipeline** : Ollama, FastAPI, and Next.js must all be running.
 - **Small corpus** : The evaluation covers three unique papers and does not
   establish performance on a large or diverse collection.
 - **PDF extraction quality varies** : Scanned or heavily formatted PDFs may extract poorly.
@@ -463,18 +495,33 @@ If you delete a PDF manually from `data/pdfs/`, run `python ingest.py` again to 
 - **Separate local services** : The legacy local workflow still requires the
   frontend, FastAPI, and Ollama processes; the API origin is configured with
   `NEXT_PUBLIC_API_BASE_URL`.
-- **Hosted API not public yet** : The API and quota circuit breaker are ready;
-  production provisioning and portfolio linking remain launch work.
+- **Scanned PDFs unsupported in local mode** : browser-local ingestion needs
+  selectable text; OCR is not implemented.
 - **No authentication or document permissions** : Only use public, non-sensitive PDFs.
+
+## Reproduction Commands
+
+```bash
+# Corpus determinism and quality gate (stdlib only)
+python3 scripts/build_worker_assets.py
+python3 evaluation/check_corpus_quality.py
+
+# Retrieval evaluation (recall@5, MRR, duplicate/citation/metadata metrics)
+backend/.venv/bin/python evaluation/evaluate.py
+
+# Worker: 39 tests, typecheck, deployment dry run
+cd worker && npm ci && npm test && npm run typecheck && npx wrangler deploy --dry-run
+
+# Frontend: lint, unit tests, production static export, 42 Playwright flows
+cd frontend && npm ci && npm run lint && npm run test:unit && npm run build && npm run test:e2e
+```
 
 ## Future Improvements
 
-- [ ] Environment variables for API base URL, CORS origins, and Ollama model
 - [x] Global hosted-demo quota circuit breaker
-- [ ] Per-PDF ingest status and upload progress
+- [x] Browser-local PDF ingestion for the public demo
+- [x] Add answer-grounding and citation-quality evaluation metrics
+- [ ] Per-PDF ingest status for the legacy local pipeline
 - [ ] Review and correct low-confidence section headings from complex layouts
-- [ ] Source highlighting inside retrieved snippets
-- [ ] Docker Compose for one-command local startup
-- [ ] Add answer-grounding and citation-quality evaluation
-- [ ] Query embedding cache and model warmup
-- [ ] Browser-local PDF ingestion for the public demo
+- [ ] Coordinate-based source highlighting for more retrieved snippets
+- [ ] OCR support for scanned documents in browser-local mode

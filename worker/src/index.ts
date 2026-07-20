@@ -1,4 +1,4 @@
-import { manifest, papers } from "./data";
+import { chunksByContentHash, manifest, papers } from "./data";
 import {
   nextUtcMidnight,
   quotaHeaders,
@@ -257,10 +257,12 @@ async function searchCorpus(
     returnMetadata: "none",
     returnValues: false,
   });
-  const vectorCandidates = vectorResponse.matches.map((match) => ({
-    id: match.id,
-    score: match.score,
-  }));
+  // Vector ids are chunk content hashes (Vectorize id length limit);
+  // translate them back to chunk ids for fusion.
+  const vectorCandidates = vectorResponse.matches.flatMap((match) => {
+    const chunk = chunksByContentHash.get(match.id);
+    return chunk ? [{ id: chunk.id, score: match.score }] : [];
+  });
   return fuseResults(
     question,
     vectorCandidates,

@@ -353,6 +353,24 @@ rehearsal in [`FAILURE_DRILLS.md`](FAILURE_DRILLS.md).
 
 ## Phase 10 — Production and portfolio launch
 
+Status: deployed and activated 2026-07-20; portfolio assets pending
+
+Launch record: provisioned Vectorize (262 vectors under content-hash ids) and
+D1 with the quota migration on the dedicated no-payment-method Free account,
+deployed the combined Worker (static export + API) to
+https://technical-paper-ai-search.jeremy-burke024.workers.dev in the disabled
+state, verified fail-closed behavior live, then executed the controlled
+activation: D1 switch on, `DEMO_ENABLED` on, one real question confirmed the
+counter increment, the emergency-shutdown drill passed, and the lowered-limit
+exhaustion drill blocked the next request before AI execution with the stored
+day cap correctly refusing to ratchet back up. The live exhausted state was
+verified in a real browser (banner, disabled ask action, curated library and
+local mode still available). Full procedure in [`DEPLOYMENT.md`](DEPLOYMENT.md).
+
+Remaining: clean-browser verification of the full answer flow after the UTC
+midnight quota reset, current screenshots and interaction recording, and the
+portfolio card update.
+
 Deliverables:
 
 - Deploy from the dedicated no-payment-method Free account.

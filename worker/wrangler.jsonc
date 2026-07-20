@@ -4,6 +4,12 @@
   "main": "src/index.ts",
   "compatibility_date": "2026-07-18",
   "workers_dev": true,
+  // Static frontend export; /api/* has no matching file so those requests
+  // fall through to the Worker.
+  "assets": {
+    "directory": "../frontend/out",
+    "not_found_handling": "404-page"
+  },
   "ai": {
     "binding": "AI"
   },
@@ -17,13 +23,13 @@
     {
       "binding": "DB",
       "database_name": "technical-paper-search-quota",
-      "database_id": "00000000-0000-0000-0000-000000000000",
+      "database_id": "e048dcc3-ca2c-40ee-9f11-657130b2b34a",
       "migrations_dir": "migrations"
     }
   ],
   "vars": {
     "ALLOWED_ORIGIN": "",
-    "DEMO_ENABLED": "false",
+    "DEMO_ENABLED": "true",
     "DAILY_DEMO_LIMIT": "200"
   },
   "observability": {

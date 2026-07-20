@@ -10,3 +10,10 @@ export const papers = papersJson as unknown as Paper[];
 export const manifest = manifestJson as unknown as Manifest;
 
 export const chunksById = new Map(corpus.map((chunk) => [chunk.id, chunk]));
+
+// Vectorize limits vector ids to 64 bytes, shorter than some chunk ids, so
+// vectors are stored under the chunk's sha256 content hash (exactly 64 hex
+// chars, uniqueness enforced by evaluation/check_corpus_quality.py).
+export const chunksByContentHash = new Map(
+  corpus.map((chunk) => [chunk.content_hash, chunk]),
+);

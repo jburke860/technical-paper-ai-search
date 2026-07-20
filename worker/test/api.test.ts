@@ -1,9 +1,13 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { chunksById } from "../src/data";
 import { fetchHandler } from "../src/index";
 import type { Env } from "../src/types";
 import { createMockD1 } from "./mock-d1";
 
-const MATCH_ID = "deep-space-autonomy-modeling-p001-1-introduction-c04";
+// Vectorize stores vectors under content hashes, so the mock returns one.
+const MATCH_ID = chunksById.get(
+  "deep-space-autonomy-modeling-p001-1-introduction-c04",
+)!.content_hash;
 
 type EnvOptions = {
   db?: D1Database;

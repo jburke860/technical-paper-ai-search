@@ -1,0 +1,10 @@
+// Config for the one-time local embedding helper. Used only with
+// `wrangler dev`; this worker is never deployed.
+{
+  "name": "corpus-embed-tool",
+  "main": "embed-worker.ts",
+  "compatibility_date": "2026-07-18",
+  "ai": {
+    "binding": "AI"
+  }
+}

@@ -50,8 +50,10 @@ def embed_batch(
 
 
 def vector_record(chunk: dict[str, Any], values: list[float]) -> dict[str, Any]:
+    # Vectorize ids are limited to 64 bytes; the sha256 content hash fits
+    # exactly and is unique (enforced by evaluation/check_corpus_quality.py).
     return {
-        "id": chunk["id"],
+        "id": chunk["content_hash"],
         "values": values,
         "metadata": {
             "paper_id": chunk["paper_id"],
