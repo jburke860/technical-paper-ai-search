@@ -82,6 +82,7 @@ function withCors(response: Response, origin: string | null): Response {
   headers.set("Access-Control-Allow-Origin", origin);
   headers.set("Access-Control-Allow-Headers", "Content-Type");
   headers.set("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+  headers.set("Access-Control-Expose-Headers", "X-Demo-Limit,X-Demo-Remaining,X-Demo-Reset");
   headers.set("Vary", "Origin");
   return new Response(response.body, { status: response.status, headers });
 }
@@ -210,6 +211,99 @@ async function answerQuestion(
   return { answer, sources, usage: output.usage ?? null };
 }
 
+function streamEvent(value: unknown): Uint8Array {
+  return new TextEncoder().encode(`${JSON.stringify(value)}\n`);
+}
+
+function streamedText(payload: string): string {
+  if (!payload || payload === "[DONE]") return "";
+  try {
+    const parsed = JSON.parse(payload) as {
+      response?: string;
+      choices?: Array<{ delta?: { content?: string } }>;
+    };
+    return parsed.response ?? parsed.choices?.[0]?.delta?.content ?? "";
+  } catch {
+    return "";
+  }
+}
+
+async function streamAnswer(
+  question: string,
+  resultCount: number,
+  env: Env,
+  headers: Headers,
+): Promise<Response> {
+  const sources = await searchCorpus(question, resultCount, env);
+  const upstream = await env.AI.run(GENERATION_MODEL, {
+    messages: [
+      { role: "system", content: "You are a source-grounded technical research assistant." },
+      { role: "user", content: buildAnswerPrompt(question, sources) },
+    ],
+    max_tokens: 400,
+    temperature: 0.2,
+    stream: true,
+  }) as unknown;
+  if (!(upstream instanceof ReadableStream)) {
+    throw new Error("Generation model did not return a stream.");
+  }
+
+  const responseHeaders = new Headers(headers);
+  responseHeaders.set("Cache-Control", "no-store, no-transform");
+  responseHeaders.set("Content-Type", "application/x-ndjson; charset=utf-8");
+  responseHeaders.set("X-Content-Type-Options", "nosniff");
+
+  const body = new ReadableStream<Uint8Array>({
+    async start(controller) {
+      controller.enqueue(streamEvent({ type: "sources", question, sources }));
+      controller.enqueue(streamEvent({ type: "stage", stage: "synthesizing" }));
+      const reader = (upstream as ReadableStream<Uint8Array>).getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+      let answer = "";
+
+      function emitBlock(block: string) {
+        for (const line of block.split(/\r?\n/)) {
+          const payload = line.startsWith("data:") ? line.slice(5).trim() : line.trim();
+          const delta = streamedText(payload);
+          if (delta) {
+            answer += delta;
+            controller.enqueue(streamEvent({ type: "delta", delta }));
+          }
+        }
+      }
+
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          buffer += decoder.decode(value, { stream: !done });
+          const blocks = buffer.split(/\r?\n\r?\n/);
+          buffer = blocks.pop() ?? "";
+          blocks.forEach(emitBlock);
+          if (done) break;
+        }
+        if (buffer.trim()) emitBlock(buffer);
+        if (!answer.trim()) throw new Error("Generation model returned an empty stream.");
+        controller.enqueue(streamEvent({ type: "done" }));
+      } catch (error) {
+        console.error("Hosted answer stream failed", error);
+        controller.enqueue(streamEvent({
+          type: "error",
+          message: "The answer stream was interrupted. Please retry.",
+        }));
+      } finally {
+        reader.releaseLock();
+        controller.close();
+      }
+    },
+    cancel() {
+      void (upstream as ReadableStream<Uint8Array>).cancel();
+    },
+  });
+
+  return new Response(body, { status: 200, headers: responseHeaders });
+}
+
 async function routeRequest(request: Request, env: Env): Promise<Response> {
   const url = new URL(request.url);
 
@@ -249,7 +343,10 @@ async function routeRequest(request: Request, env: Env): Promise<Response> {
   if (request.method === "GET" && url.pathname === "/api/papers") {
     return jsonResponse({ papers, count: papers.length });
   }
-  if (request.method === "POST" && (url.pathname === "/api/search" || url.pathname === "/api/answer")) {
+  if (
+    request.method === "POST" &&
+    ["/api/search", "/api/answer", "/api/answer/stream"].includes(url.pathname)
+  ) {
     const parsed = await parseSearchRequest(request);
     if (parsed instanceof Response) return parsed;
 
@@ -261,6 +358,9 @@ async function routeRequest(request: Request, env: Env): Promise<Response> {
       if (url.pathname === "/api/search") {
         const results = await searchCorpus(parsed.question, parsed.n_results, env);
         return jsonResponse({ question: parsed.question, results }, 200, headers);
+      }
+      if (url.pathname === "/api/answer/stream") {
+        return streamAnswer(parsed.question, parsed.n_results, env, headers);
       }
       const generated = await answerQuestion(parsed.question, parsed.n_results, env);
       return jsonResponse({ question: parsed.question, ...generated }, 200, headers);

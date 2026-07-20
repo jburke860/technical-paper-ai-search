@@ -171,6 +171,8 @@ Worker status and papers endpoints rather than hard-coded UI metrics.
 
 ## Phase 5 — Main research workflow
 
+Status: complete
+
 Deliverables:
 
 - Replace separate search and generation buttons with one `Ask the library`
@@ -188,6 +190,13 @@ Exit criteria:
 - Inline citations select the correct source.
 - Empty, loading, success, failure, and quota-exhausted states are implemented.
 - Search state is preserved through expected navigation.
+
+Verification completed with Worker streaming and quota tests, strict Worker
+typechecking, frontend ESLint, and an optimized Next.js build. The unified
+workflow streams NDJSON source and answer events, links inline citations to the
+source drawer, supports copy/retry and optional retrieval details, persists up
+to eight completed sessions locally, and disables submission whenever status
+cannot positively confirm hosted capacity.
 
 ## Phase 6 — PDF citation viewer
 

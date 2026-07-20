@@ -1,14 +1,16 @@
-import { BookIcon, CloseIcon, FileIcon, LayersIcon } from "@/components/icons";
-import type { Paper } from "@/app/types";
+import { BookIcon, CloseIcon, FileIcon, HistoryIcon, LayersIcon } from "@/components/icons";
+import type { HistoryEntry, Paper } from "@/app/types";
 
 type LibrarySidebarProps = {
   papers: Paper[];
   chunkCount: number | null;
   open: boolean;
+  history: HistoryEntry[];
   onClose: () => void;
+  onSelectHistory: (entry: HistoryEntry) => void;
 };
 
-export function LibrarySidebar({ papers, chunkCount, open, onClose }: LibrarySidebarProps) {
+export function LibrarySidebar({ papers, chunkCount, open, history, onClose, onSelectHistory }: LibrarySidebarProps) {
   const topics = [...new Set(papers.flatMap((paper) => paper.topics))].slice(0, 6);
 
   return (
@@ -46,6 +48,16 @@ export function LibrarySidebar({ papers, chunkCount, open, onClose }: LibrarySid
           <div className="topic-list">
             {topics.length > 0 ? topics.map((topic) => <span key={topic}>{topic}</span>) : <span>Loading corpus…</span>}
           </div>
+        </div>
+
+        <div className="sidebar-section history-list">
+          <p className="eyebrow">Recent research</p>
+          {history.length > 0 ? history.map((entry) => (
+            <button key={entry.id} onClick={() => { onSelectHistory(entry); onClose(); }}>
+              <HistoryIcon />
+              <span><strong>{entry.question}</strong><small>{new Date(entry.createdAt).toLocaleDateString()}</small></span>
+            </button>
+          )) : <p className="history-empty">Completed questions are saved only in this browser.</p>}
         </div>
 
         <div className="sidebar-section paper-list">

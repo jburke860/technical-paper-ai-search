@@ -12,9 +12,20 @@ type EnvOptions = {
 };
 
 function createEnv(options: EnvOptions = {}): Env {
-  const run = vi.fn(async (model: string) => {
+  const run = vi.fn(async (model: string, input?: { stream?: boolean }) => {
     if (model.includes("bge-small")) {
       return { shape: [1, 384], data: [Array(384).fill(0.25)], pooling: "cls" };
+    }
+    if (input?.stream) {
+      const encoder = new TextEncoder();
+      return new ReadableStream({
+        start(controller) {
+          controller.enqueue(encoder.encode('data: {"response":"Functional-level autonomy "}\n\n'));
+          controller.enqueue(encoder.encode('data: {"response":"addresses bounded tasks [Source 1]."}\n\n'));
+          controller.enqueue(encoder.encode("data: [DONE]\n\n"));
+          controller.close();
+        },
+      });
     }
     return {
       response: "Functional-level autonomy addresses bounded subsystem tasks [Source 1].",
@@ -143,6 +154,38 @@ describe("hosted Worker API", () => {
     expect(payload.answer).toContain("[Source 1]");
     expect(payload.sources[0].pdf_url).toContain("/pdfs/");
     expect(env.AI.run).toHaveBeenCalledTimes(2);
+  });
+
+  it("streams sources before grounded answer tokens", async () => {
+    const env = createEnv();
+    const response = await fetchHandler(
+      post("/api/answer/stream", {
+        question: "How does functional-level autonomy differ from system-level autonomy?",
+      }),
+      env,
+    );
+    const lines = (await response.text()).trim().split("\n").map((line) => JSON.parse(line));
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get("Content-Type")).toContain("application/x-ndjson");
+    expect(lines[0].type).toBe("sources");
+    expect(lines[0].sources[0].paper_id).toBe("deep-space-autonomy-modeling");
+    expect(lines.filter((event) => event.type === "delta").map((event) => event.delta).join(""))
+      .toContain("[Source 1]");
+    expect(lines.at(-1).type).toBe("done");
+    expect(env.AI.run).toHaveBeenCalledTimes(2);
+  });
+
+  it("blocks the streaming route before any hosted compute", async () => {
+    const env = createEnv({ enabled: "false" });
+    const response = await fetchHandler(
+      post("/api/answer/stream", { question: "Explain autonomy." }),
+      env,
+    );
+
+    expect(response.status).toBe(503);
+    expect(env.AI.run).not.toHaveBeenCalled();
+    expect(env.VECTOR_INDEX.query).not.toHaveBeenCalled();
   });
 
   it("rejects invalid requests before inference", async () => {

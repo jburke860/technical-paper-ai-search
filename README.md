@@ -62,6 +62,8 @@ PDFs → text extraction → chunking → embeddings → vector store → hybrid
 - Next.js frontend with search, answer generation, upload, and source display
 - Deployable Cloudflare Worker API using Workers AI, Vectorize, BM25/RRF, and
   structured citations
+- Unified streamed research workflow with clickable citations, copy actions,
+  retrieval controls, quota states, and browser-local history
 
 ## Architecture
 
@@ -80,7 +82,7 @@ Cloudflare Worker
   ├── Vectorize semantic candidates
   ├── Bundled BM25 sparse candidates
   ├── Reciprocal-rank fusion
-  └── Workers AI Llama 3.2 grounded answer
+  └── Workers AI Llama 3.2 streamed grounded answer
             │
             ▼
 Structured citations into the bundled 3-paper corpus

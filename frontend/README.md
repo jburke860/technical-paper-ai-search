@@ -17,3 +17,8 @@ The production shell uses locally bundled fonts and generates its favicon and
 social preview through the Next.js app metadata routes. Set
 `NEXT_PUBLIC_SITE_URL` to the final public origin when deploying so social-card
 URLs resolve to that origin.
+
+The primary hosted workflow calls `/api/answer/stream` once per question. It
+renders sources before streamed answer tokens, turns `[Source N]` references
+into evidence controls, and stores up to eight completed sessions in browser
+local storage. No history is sent back to the application owner.

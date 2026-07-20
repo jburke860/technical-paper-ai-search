@@ -51,3 +51,20 @@ export type StatusResponse = {
   };
   quota: QuotaStatus;
 };
+
+export type HistoryEntry = {
+  id: string;
+  question: string;
+  answer: string;
+  sources: SearchResult[];
+  createdAt: string;
+};
+
+export type WorkflowStage = "retrieving" | "synthesizing" | null;
+
+export type AnswerStreamEvent =
+  | { type: "sources"; question: string; sources: SearchResult[] }
+  | { type: "stage"; stage: "synthesizing" }
+  | { type: "delta"; delta: string }
+  | { type: "done" }
+  | { type: "error"; message: string };

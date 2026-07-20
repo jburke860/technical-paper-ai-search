@@ -62,3 +62,23 @@ export function PanelIcon(props: IconProps) {
 export function CheckIcon(props: IconProps) {
   return <IconBase {...props}><path d="m5 12 4 4 10-10" /></IconBase>;
 }
+
+export function CopyIcon(props: IconProps) {
+  return <IconBase {...props}><rect x="8" y="8" width="11" height="11" rx="2" /><path d="M16 8V5H5v11h3" /></IconBase>;
+}
+
+export function HistoryIcon(props: IconProps) {
+  return <IconBase {...props}><path d="M4 12a8 8 0 1 0 2.3-5.7L4 8.6" /><path d="M4 4v4.6h4.6M12 8v5l3 2" /></IconBase>;
+}
+
+export function SettingsIcon(props: IconProps) {
+  return <IconBase {...props}><path d="M4 6h10M18 6h2M4 12h3M11 12h9M4 18h7M15 18h5" /><circle cx="16" cy="6" r="2" /><circle cx="9" cy="12" r="2" /><circle cx="13" cy="18" r="2" /></IconBase>;
+}
+
+export function RefreshIcon(props: IconProps) {
+  return <IconBase {...props}><path d="M20 7v5h-5M4 17v-5h5" /><path d="M6.1 8.5A7 7 0 0 1 18.8 7M17.9 15.5A7 7 0 0 1 5.2 17" /></IconBase>;
+}
+
+export function ChevronIcon(props: IconProps) {
+  return <IconBase {...props}><path d="m8 10 4 4 4-4" /></IconBase>;
+}

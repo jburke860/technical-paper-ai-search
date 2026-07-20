@@ -1,4 +1,7 @@
-import { CloseIcon, ExternalIcon, FileIcon } from "@/components/icons";
+"use client";
+
+import { useState } from "react";
+import { CloseIcon, CopyIcon, ExternalIcon, FileIcon } from "@/components/icons";
 import type { SearchResult } from "@/app/types";
 
 type SourcePanelProps = {
@@ -9,6 +12,17 @@ type SourcePanelProps = {
 };
 
 export function SourcePanel({ source, sourceCount, open, onClose }: SourcePanelProps) {
+  const [copiedSourceId, setCopiedSourceId] = useState<string | null>(null);
+  const copied = copiedSourceId === source?.id;
+
+  async function copyCitation() {
+    if (!source) return;
+    const authors = source.authors.join(", ");
+    await navigator.clipboard.writeText(`${authors} (${source.year}). ${source.title}. p. ${source.page}.`);
+    setCopiedSourceId(source.id);
+    window.setTimeout(() => setCopiedSourceId(null), 1600);
+  }
+
   return (
     <>
       <button
@@ -41,9 +55,10 @@ export function SourcePanel({ source, sourceCount, open, onClose }: SourcePanelP
               <p>{source.authors.slice(0, 3).join(", ")}{source.authors.length > 3 ? " et al." : ""} · {source.year}</p>
             </div>
             <p className="source-snippet">{source.snippet}</p>
-            <a className="secondary-button" href={source.pdf_url} target="_blank" rel="noreferrer">
-              Open original PDF <ExternalIcon />
-            </a>
+            <div className="source-actions">
+              <button className="secondary-button" onClick={copyCitation}><CopyIcon /> {copied ? "Copied" : "Copy citation"}</button>
+              <a className="secondary-button" href={source.source_url ?? source.pdf_url} target="_blank" rel="noreferrer">Open source <ExternalIcon /></a>
+            </div>
           </div>
         ) : (
           <div className="source-empty">

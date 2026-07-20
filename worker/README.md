@@ -18,6 +18,7 @@ the source PDFs.
 | `/api/papers` | GET | Included paper metadata |
 | `/api/search` | POST | Vectorize + BM25/RRF retrieval |
 | `/api/answer` | POST | Grounded Workers AI answer and sources |
+| `/api/answer/stream` | POST | NDJSON sources, answer deltas, and completion events |
 
 Search and answer requests accept:
 
@@ -27,6 +28,11 @@ Search and answer requests accept:
   "n_results": 5
 }
 ```
+
+The streaming endpoint emits one JSON object per line. A `sources` event arrives
+before `delta` events, followed by `done`. If generation is interrupted after
+headers are sent, the stream ends with an `error` event. It uses the same quota
+reservation as the non-streaming routes.
 
 ## Local verification
 
