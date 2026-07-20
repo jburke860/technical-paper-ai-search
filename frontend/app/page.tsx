@@ -50,6 +50,7 @@ export default function Home() {
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [libraryOpen, setLibraryOpen] = useState(false);
   const [sourcesOpen, setSourcesOpen] = useState(false);
+  const [viewerOpen, setViewerOpen] = useState(false);
   const activeRequest = useRef<AbortController | null>(null);
 
   useEffect(() => {
@@ -161,6 +162,7 @@ export default function Home() {
     setAnswer("");
     setResults([]);
     setSelectedSource(null);
+    setViewerOpen(false);
     let completeAnswer = "";
     let completeSources: SearchResult[] = [];
     let completed = false;
@@ -230,6 +232,7 @@ export default function Home() {
 
   function selectSource(source: SearchResult) {
     setSelectedSource(source);
+    setViewerOpen(true);
     setSourcesOpen(true);
   }
 
@@ -239,6 +242,7 @@ export default function Home() {
     setAnswer(entry.answer);
     setResults(entry.sources);
     setSelectedSource(entry.sources[0] ?? null);
+    setViewerOpen(false);
     setError("");
     setStage(null);
   }
@@ -298,7 +302,7 @@ export default function Home() {
           </section>
         </main>
 
-        <SourcePanel source={selectedSource} sourceCount={results.length} open={sourcesOpen} onClose={() => setSourcesOpen(false)} />
+        <SourcePanel source={selectedSource} sourceCount={results.length} open={sourcesOpen} viewerOpen={viewerOpen} onOpenViewer={() => setViewerOpen(true)} onClose={() => setSourcesOpen(false)} />
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import dynamic from "next/dynamic";
 import { CloseIcon, CopyIcon, ExternalIcon, FileIcon } from "@/components/icons";
 import type { SearchResult } from "@/app/types";
 
@@ -8,10 +9,17 @@ type SourcePanelProps = {
   source: SearchResult | null;
   sourceCount: number;
   open: boolean;
+  viewerOpen: boolean;
   onClose: () => void;
+  onOpenViewer: () => void;
 };
 
-export function SourcePanel({ source, sourceCount, open, onClose }: SourcePanelProps) {
+const PdfViewer = dynamic(() => import("@/components/documents/PdfViewer"), {
+  ssr: false,
+  loading: () => <div className="viewer-module-loading">Loading document viewer…</div>,
+});
+
+export function SourcePanel({ source, sourceCount, open, viewerOpen, onClose, onOpenViewer }: SourcePanelProps) {
   const [copiedSourceId, setCopiedSourceId] = useState<string | null>(null);
   const copied = copiedSourceId === source?.id;
 
@@ -39,15 +47,20 @@ export function SourcePanel({ source, sourceCount, open, onClose }: SourcePanelP
 
         {source ? (
           <div className="source-detail">
-            <div className="document-preview" aria-hidden="true">
-              <div className="preview-paper">
-                <span className="preview-kicker">{source.section}</span>
-                <strong>{source.title}</strong>
-                <i /> <i /> <i className="short" />
-                <mark>{source.snippet.slice(0, 180)}</mark>
-                <i /> <i className="short" />
-              </div>
-            </div>
+            {viewerOpen ? (
+              <PdfViewer key={`${source.id}-${source.page}`} url={source.pdf_url} initialPage={source.page} title={source.title} snippet={source.snippet} highlightBoxes={source.highlight_boxes} />
+            ) : (
+              <button className="document-preview" onClick={onOpenViewer} aria-label={`View page ${source.page} of ${source.title}`}>
+                <div className="preview-paper" aria-hidden="true">
+                  <span className="preview-kicker">{source.section}</span>
+                  <strong>{source.title}</strong>
+                  <i /> <i /> <i className="short" />
+                  <mark>{source.snippet.slice(0, 180)}</mark>
+                  <i /> <i className="short" />
+                </div>
+                <span className="preview-cta">View cited page {source.page}</span>
+              </button>
+            )}
             <div className="source-meta">
               <span className="source-number">01</span>
               <p className="eyebrow">Page {source.page}</p>

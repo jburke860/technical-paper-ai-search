@@ -28,6 +28,7 @@ export type SearchResult = {
   vector_rank: number | null;
   keyword_rank: number | null;
   rrf_score: number;
+  highlight_boxes?: Array<{ x: number; y: number; width: number; height: number }>;
 };
 
 export type QuotaStatus = {

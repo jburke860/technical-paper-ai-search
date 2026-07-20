@@ -82,3 +82,23 @@ export function RefreshIcon(props: IconProps) {
 export function ChevronIcon(props: IconProps) {
   return <IconBase {...props}><path d="m8 10 4 4 4-4" /></IconBase>;
 }
+
+export function DownloadIcon(props: IconProps) {
+  return <IconBase {...props}><path d="M12 3v12M7 10l5 5 5-5M5 21h14" /></IconBase>;
+}
+
+export function MinusIcon(props: IconProps) {
+  return <IconBase {...props}><path d="M5 12h14" /></IconBase>;
+}
+
+export function PlusIcon(props: IconProps) {
+  return <IconBase {...props}><path d="M5 12h14M12 5v14" /></IconBase>;
+}
+
+export function LeftIcon(props: IconProps) {
+  return <IconBase {...props}><path d="m15 18-6-6 6-6" /></IconBase>;
+}
+
+export function RightIcon(props: IconProps) {
+  return <IconBase {...props}><path d="m9 18 6-6-6-6" /></IconBase>;
+}

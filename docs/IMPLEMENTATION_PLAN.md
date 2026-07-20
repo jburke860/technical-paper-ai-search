@@ -200,6 +200,8 @@ cannot positively confirm hosted capacity.
 
 ## Phase 6 — PDF citation viewer
 
+Status: complete
+
 Deliverables:
 
 - Integrate PDF.js as a lazy-loaded viewer.
@@ -214,6 +216,13 @@ Exit criteria:
 - PDFs are fetched only when requested.
 - Citations remain usable if passage highlighting is unavailable.
 - Desktop and mobile viewer flows pass browser tests.
+
+Verification completed with desktop and mobile Playwright runs against the real
+curated PDF asset, plus checks that all three included corpus PDFs are served as
+valid static documents. The PDF.js module, worker, and document bytes are loaded
+only after citation interaction. Exact-page rendering, navigation, zoom,
+open/download controls, coordinate-based highlight overlays, and a text-excerpt
+fallback are implemented.
 
 ## Phase 7 — Retrieval explainability
 

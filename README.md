@@ -64,6 +64,8 @@ PDFs → text extraction → chunking → embeddings → vector store → hybrid
   structured citations
 - Unified streamed research workflow with clickable citations, copy actions,
   retrieval controls, quota states, and browser-local history
+- Lazy PDF.js citation viewer with exact-page navigation, zoom, downloads, and
+  responsive desktop/mobile presentation
 
 ## Architecture
 
