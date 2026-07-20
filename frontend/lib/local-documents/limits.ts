@@ -3,6 +3,7 @@
 // the visitor's browser. Mirrors of hosted limits are noted where they must
 // stay in sync with worker/src/index.ts and COST_GUARDRAILS.md.
 
+export const MAX_LOCAL_DOCUMENTS = 3;
 export const MAX_FILE_BYTES = 20 * 1024 * 1024;
 export const MAX_PAGE_COUNT = 200;
 export const MAX_EXTRACTED_CHARS = 500_000;

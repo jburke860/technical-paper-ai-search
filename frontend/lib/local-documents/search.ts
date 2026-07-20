@@ -140,8 +140,8 @@ function matchedConcepts(question: string, text: string): string[] {
 
 export function fuseLocalResults(
   question: string,
-  meta: LocalDocumentMeta,
   chunks: LocalChunk[],
+  chunkMetas: LocalDocumentMeta[],
   semanticCandidates: RankedCandidate[] | null,
   keywordCandidates: RankedCandidate[],
   resultCount: number,
@@ -150,6 +150,7 @@ export function fuseLocalResults(
     number,
     {
       chunk: LocalChunk;
+      meta: LocalDocumentMeta;
       vectorRank: number | null;
       keywordRank: number | null;
       vectorScore: number | null;
@@ -161,6 +162,7 @@ export function fuseLocalResults(
   (semanticCandidates ?? []).forEach((candidate, rankIndex) => {
     candidates.set(candidate.index, {
       chunk: chunks[candidate.index],
+      meta: chunkMetas[candidate.index],
       vectorRank: rankIndex + 1,
       keywordRank: null,
       vectorScore: candidate.score,
@@ -178,6 +180,7 @@ export function fuseLocalResults(
     } else {
       candidates.set(candidate.index, {
         chunk: chunks[candidate.index],
+        meta: chunkMetas[candidate.index],
         vectorRank: null,
         keywordRank: rankIndex + 1,
         vectorScore: null,
@@ -195,6 +198,7 @@ export function fuseLocalResults(
   for (const candidate of ranked) {
     const duplicate = deduplicated.some(
       (existing) =>
+        existing.meta.id === candidate.meta.id &&
         existing.chunk.page === candidate.chunk.page &&
         tokenJaccard(existing.chunk.text, candidate.chunk.text) >= 0.72,
     );
@@ -209,6 +213,7 @@ export function fuseLocalResults(
     const keywordContribution = candidate.keywordRank === null
       ? 0
       : 1 / (RRF_CONSTANT + candidate.keywordRank);
+    const meta = candidate.meta;
     return {
       id: candidate.chunk.id,
       paper_id: meta.id,

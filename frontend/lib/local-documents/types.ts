@@ -42,6 +42,7 @@ export type LocalErrorCode =
   | "TOO_MANY_PAGES"
   | "NO_EXTRACTABLE_TEXT"
   | "NO_DOCUMENT"
+  | "LOCAL_DOCUMENT_LIMIT"
   | "PROCESSING_TIMEOUT"
   | "PROCESSING_CANCELLED"
   | "WORKER_FAILURE";
@@ -56,14 +57,19 @@ export type WorkerRequest =
   | { type: "search"; requestId: string; question: string; k: number }
   | { type: "restore"; requestId: string }
   | { type: "setPersist"; requestId: string; persist: boolean }
-  | { type: "remove"; requestId: string }
+  | { type: "remove"; requestId: string; docId: string | null }
   | { type: "cancel" };
+
+export type RestoredDocument = {
+  meta: LocalDocumentMeta;
+  pdfBytes: ArrayBuffer;
+};
 
 export type WorkerResponse =
   | { type: "progress"; requestId: string; progress: LocalProgress }
-  | { type: "processed"; requestId: string; meta: LocalDocumentMeta }
+  | { type: "processed"; requestId: string; meta: LocalDocumentMeta; metas: LocalDocumentMeta[] }
   | { type: "results"; requestId: string; results: SearchResult[]; embedded: boolean }
-  | { type: "restored"; requestId: string; meta: LocalDocumentMeta | null; pdfBytes: ArrayBuffer | null }
-  | { type: "persistence"; requestId: string; meta: LocalDocumentMeta }
-  | { type: "removed"; requestId: string }
+  | { type: "restored"; requestId: string; docs: RestoredDocument[] }
+  | { type: "persistence"; requestId: string; metas: LocalDocumentMeta[] }
+  | { type: "removed"; requestId: string; metas: LocalDocumentMeta[] }
   | { type: "error"; requestId: string; error: LocalDocumentError };

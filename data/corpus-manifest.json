@@ -27,6 +27,55 @@
       "pages": 14,
       "chunks": 41,
       "sha256": "34420083ab7f53b682b4772597e49a67f1a278affeaf71aae29f7b2c17a1bfa8"
+    },
+    {
+      "id": "dl-spacecraft-pose-estimation-survey",
+      "filename": "Deep Learning Monocular Spacecraft Pose Estimation Survey.pdf",
+      "pages": 26,
+      "chunks": 118,
+      "sha256": "81961beed8c5d11da8a899543f71d4e9c0453082a6395c4d2e2192a4d16d22cf"
+    },
+    {
+      "id": "spacecraft-component-detection-spy",
+      "filename": "SpY Context-Based Spacecraft Component Detection.pdf",
+      "pages": 12,
+      "chunks": 51,
+      "sha256": "3f51db7f18c5f2966488d753ebb44995a698878e87cd48ce5bc4a1982394bb41"
+    },
+    {
+      "id": "non-cooperative-target-navigation",
+      "filename": "YOLOv5 Faster R-CNN Non-Cooperative Target Navigation.pdf",
+      "pages": 12,
+      "chunks": 47,
+      "sha256": "ae6885cd38b7e98cd243f0a9a1453406ff0448d6eb15ea7a312127858a985c50"
+    },
+    {
+      "id": "orbit-domain-gap-augmentation",
+      "filename": "Data Augmentations Domain Gap Object Detection in Orbit.pdf",
+      "pages": 12,
+      "chunks": 61,
+      "sha256": "577ec2f06febbda049fb52a3cc56a5b18b3446097b404a5c75a9c3e3eaec9641"
+    },
+    {
+      "id": "nerf-space-object-reconstruction",
+      "filename": "NeRF 3D Reconstruction Resident Space Objects.pdf",
+      "pages": 14,
+      "chunks": 32,
+      "sha256": "00912081067d09bcf6537342e7a76c6a400979dc10a973cf24ae139ebc291587"
+    },
+    {
+      "id": "space-debris-tracking-dataset",
+      "filename": "Space Debris Tracking Large-Scale Dataset.pdf",
+      "pages": 17,
+      "chunks": 56,
+      "sha256": "e2327f17c3c8a62dfd4ef74a6b0099a3b51de366348f9a6d90c2e673c1e6e4fb"
+    },
+    {
+      "id": "lunar-crater-terrain-navigation",
+      "filename": "Lunar Crater Terrain Relative Navigation.pdf",
+      "pages": 7,
+      "chunks": 31,
+      "sha256": "4c8ff81541a44c0bd8783ee8d7c53d1c90a010f397f2c72951635743e7647dff"
     }
   ],
   "excluded_files": [
@@ -38,7 +87,7 @@
       "sha256": "631a8b93dab1480ad5eef55de1d37fdd33d6b6b7a006b0087e37cbf29c0b89f5"
     }
   ],
-  "paper_count": 3,
-  "chunk_count": 262,
-  "corpus_sha256": "06660eff89873c888c18776e602915ad0e095432d40b093df90b551ec2da87cb"
+  "paper_count": 10,
+  "chunk_count": 658,
+  "corpus_sha256": "8a394bcc84809ee7bf23f76468df949ae49a600122f097d7e90566a2b410d9b2"
 }

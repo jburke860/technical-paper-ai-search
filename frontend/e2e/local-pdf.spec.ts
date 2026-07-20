@@ -239,13 +239,44 @@ test.describe("browser-local PDF mode", () => {
     await expect(page.getByText("This document could not be indexed")).toHaveCount(0);
   });
 
+  test("indexes several documents and searches across them", async ({ page }) => {
+    await mockHostedApi(page);
+    await blockModelCdn(page);
+    await openLocalMode(page);
+    await indexSamplePdf(page);
+
+    const second = {
+      name: "power-notes.pdf",
+      mimeType: "application/pdf",
+      buffer: minimalPdf([[
+        "Battery management balances the zephyr-battery-eclipse duration against",
+        "charge cycles on every orbit, keeping depth of discharge within limits",
+        "so the power subsystem survives repeated eclipse seasons in orbit.",
+      ]]),
+    };
+    await page.getByLabel("Add a local PDF").setInputFiles(second);
+    await expect(page.getByText("2 of 3 documents")).toBeVisible({ timeout: 60_000 });
+    await expect(page.getByText(second.name)).toBeVisible();
+
+    await page.getByRole("textbox", { name: "Research question" }).fill("zephyr battery eclipse charge cycles");
+    await page.getByRole("button", { name: "Search your document" }).click();
+    await expect(page.getByText("Local search only")).toBeVisible({ timeout: 30_000 });
+    await expect(page.locator(".result-card").first()).toContainText(second.name);
+
+    await page.getByRole("button", { name: `Remove ${SAMPLE_PDF.name}` }).click();
+    const docList = page.locator(".local-doc-list");
+    await expect(docList.getByText(SAMPLE_PDF.name)).toHaveCount(0);
+    await expect(docList.getByText(second.name)).toBeVisible();
+    await expect(page.getByText("1 of 3 documents")).toBeVisible();
+  });
+
   test("removes the local document and returns to the empty state", async ({ page }) => {
     await mockHostedApi(page);
     await blockModelCdn(page);
     await openLocalMode(page);
     await indexSamplePdf(page);
 
-    await page.getByRole("button", { name: "Remove document" }).click();
+    await page.getByRole("button", { name: `Remove ${SAMPLE_PDF.name}` }).click();
     await expect(page.getByText("Add a local PDF")).toBeVisible();
     await expect(page.getByText(SAMPLE_PDF.name)).toHaveCount(0);
   });

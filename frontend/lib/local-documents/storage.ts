@@ -1,12 +1,12 @@
-// Opt-in IndexedDB persistence for the visitor's local document. Everything
+// Opt-in IndexedDB persistence for the visitor's local documents. Everything
 // stored here stays in the visitor's browser profile; nothing is transmitted.
 
 import type { LocalChunk, LocalDocumentMeta } from "./types";
 
-const DB_NAME = "technical-paper-local-docs-v1";
+const DB_NAME = "technical-paper-local-docs-v2";
 const STORE = "documents";
-const DOCUMENT_KEY = "current";
-const META_KEY = "current-meta";
+const DOCUMENTS_KEY = "docs";
+const METAS_KEY = "metas";
 
 export type PersistedDocument = {
   meta: LocalDocumentMeta;
@@ -46,30 +46,30 @@ async function withStore<T>(
   }
 }
 
-export async function savePersistedDocument(document: PersistedDocument): Promise<void> {
+export async function savePersistedDocuments(documents: PersistedDocument[]): Promise<void> {
   await withStore("readwrite", (store) => {
-    store.put(document, DOCUMENT_KEY);
-    store.put(document.meta, META_KEY);
+    store.put(documents, DOCUMENTS_KEY);
+    store.put(documents.map((document) => document.meta), METAS_KEY);
   });
 }
 
-export async function readPersistedDocument(): Promise<PersistedDocument | null> {
-  const value = await withStore<PersistedDocument>("readonly", (store) => store.get(DOCUMENT_KEY));
-  return value ?? null;
+export async function readPersistedDocuments(): Promise<PersistedDocument[]> {
+  const value = await withStore<PersistedDocument[]>("readonly", (store) => store.get(DOCUMENTS_KEY));
+  return value ?? [];
 }
 
-export async function readPersistedMeta(): Promise<LocalDocumentMeta | null> {
+export async function readPersistedMetas(): Promise<LocalDocumentMeta[]> {
   try {
-    const value = await withStore<LocalDocumentMeta>("readonly", (store) => store.get(META_KEY));
-    return value ?? null;
+    const value = await withStore<LocalDocumentMeta[]>("readonly", (store) => store.get(METAS_KEY));
+    return value ?? [];
   } catch {
-    return null;
+    return [];
   }
 }
 
-export async function clearPersistedDocument(): Promise<void> {
+export async function clearPersistedDocuments(): Promise<void> {
   await withStore("readwrite", (store) => {
-    store.delete(DOCUMENT_KEY);
-    store.delete(META_KEY);
+    store.delete(DOCUMENTS_KEY);
+    store.delete(METAS_KEY);
   });
 }

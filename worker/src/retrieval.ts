@@ -178,6 +178,7 @@ export function fuseResults(
     vector_rank: candidate.vectorRank,
     keyword_rank: candidate.keywordRank,
     rrf_score: candidate.rrfScore,
+    highlight_boxes: candidate.chunk.highlight_boxes ?? [],
     retrieval_explanation: {
       final_rank: index + 1,
       rrf_constant: RRF_CONSTANT,

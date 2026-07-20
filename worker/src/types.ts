@@ -1,3 +1,10 @@
+export type HighlightBox = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};
+
 export type CorpusChunk = {
   id: string;
   paper_id: string;
@@ -13,6 +20,7 @@ export type CorpusChunk = {
   text: string;
   token_estimate: number;
   content_hash: string;
+  highlight_boxes?: HighlightBox[];
 };
 
 export type Paper = {
@@ -62,6 +70,7 @@ export type SearchResult = {
   vector_rank: number | null;
   keyword_rank: number | null;
   rrf_score: number;
+  highlight_boxes?: HighlightBox[];
   retrieval_explanation: {
     final_rank: number;
     rrf_constant: number;

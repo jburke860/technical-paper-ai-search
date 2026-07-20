@@ -12,6 +12,7 @@ import {
   LOCAL_EMBEDDING_MODEL,
   MAX_EXTRACTED_CHARS,
   MAX_FILE_BYTES,
+  MAX_LOCAL_DOCUMENTS,
   MAX_PAGE_COUNT,
   MIN_TOTAL_EXTRACTED_CHARS,
   MODEL_LOAD_TIMEOUT_MS,
@@ -26,9 +27,9 @@ import {
   type LexicalIndex,
 } from "./search";
 import {
-  clearPersistedDocument,
-  readPersistedDocument,
-  savePersistedDocument,
+  clearPersistedDocuments,
+  readPersistedDocuments,
+  savePersistedDocuments,
 } from "./storage";
 import type {
   LocalChunk,
@@ -43,14 +44,71 @@ type DocumentState = {
   meta: LocalDocumentMeta;
   chunks: LocalChunk[];
   embeddings: Float32Array[] | null;
-  lexical: LexicalIndex;
   pdfBytes: ArrayBuffer;
 };
 
-let state: DocumentState | null = null;
+// Combined view over every added document so ranks are global across the set.
+type CombinedIndex = {
+  chunks: LocalChunk[];
+  metas: LocalDocumentMeta[];
+  embeddings: Float32Array[] | null;
+  lexical: LexicalIndex;
+};
+
+const documents = new Map<string, DocumentState>();
+let combined: CombinedIndex | null = null;
+let persistSet = false;
 let extractor: FeatureExtractionPipeline | null = null;
 let modelUnavailable = false;
 let cancelled = false;
+
+function rebuildCombined(): void {
+  const chunks: LocalChunk[] = [];
+  const metas: LocalDocumentMeta[] = [];
+  const embeddings: Float32Array[] = [];
+  let allEmbedded = true;
+  for (const document of documents.values()) {
+    for (const chunk of document.chunks) {
+      chunks.push(chunk);
+      metas.push(document.meta);
+    }
+    if (document.embeddings) embeddings.push(...document.embeddings);
+    else allEmbedded = false;
+  }
+  combined = chunks.length
+    ? {
+        chunks,
+        metas,
+        // Semantic ranks need aligned vectors for every chunk; if any document
+        // fell back to keyword-only, the whole set searches lexically.
+        embeddings: allEmbedded ? embeddings : null,
+        lexical: buildLexicalIndex(chunks),
+      }
+    : null;
+}
+
+function currentMetas(): LocalDocumentMeta[] {
+  return [...documents.values()].map((document) => document.meta);
+}
+
+async function persistIfEnabled(): Promise<void> {
+  if (!persistSet) return;
+  try {
+    await savePersistedDocuments(
+      [...documents.values()].map((document) => ({
+        meta: { ...document.meta, persisted: true },
+        chunks: document.chunks,
+        embeddings: document.embeddings,
+        pdfBytes: document.pdfBytes,
+      })),
+    );
+    for (const document of documents.values()) {
+      document.meta = { ...document.meta, persisted: true };
+    }
+  } catch {
+    // Persistence is optional; the in-memory index still works.
+  }
+}
 
 class LocalPipelineError extends Error {
   code: LocalDocumentError["code"];
@@ -254,10 +312,15 @@ async function handleProcess(
   requestId: string,
   fileName: string,
   bytes: ArrayBuffer,
-  persist: boolean,
 ): Promise<void> {
   cancelled = false;
   progress(requestId, { stage: "validating", completed: 0, total: 1 });
+  if (documents.size >= MAX_LOCAL_DOCUMENTS) {
+    throw new LocalPipelineError(
+      "LOCAL_DOCUMENT_LIMIT",
+      `Up to ${MAX_LOCAL_DOCUMENTS} local documents can be indexed at once. Remove one first.`,
+    );
+  }
   if (bytes.byteLength === 0 || bytes.byteLength > MAX_FILE_BYTES) {
     throw new LocalPipelineError(
       "FILE_TOO_LARGE",
@@ -291,7 +354,6 @@ async function handleProcess(
 
   assertNotCancelled();
   progress(requestId, { stage: "indexing", completed: 0, total: 1 });
-  const lexical = buildLexicalIndex(chunks);
   const meta: LocalDocumentMeta = {
     id: documentId,
     fileName,
@@ -303,93 +365,101 @@ async function handleProcess(
     persisted: false,
     addedAt: new Date().toISOString(),
   };
-  state = { meta, chunks, embeddings, lexical, pdfBytes: bytes };
-
-  if (persist) {
-    try {
-      await savePersistedDocument({ meta: { ...meta, persisted: true }, chunks, embeddings, pdfBytes: bytes });
-      state.meta = { ...meta, persisted: true };
-    } catch {
-      // Persistence is optional; the in-memory index still works.
-    }
-  }
+  documents.set(documentId, { meta, chunks, embeddings, pdfBytes: bytes });
+  rebuildCombined();
+  await persistIfEnabled();
   progress(requestId, { stage: "indexing", completed: 1, total: 1 });
-  post({ type: "processed", requestId, meta: state.meta });
+  post({
+    type: "processed",
+    requestId,
+    meta: documents.get(documentId)!.meta,
+    metas: currentMetas(),
+  });
 }
 
 async function handleSearch(requestId: string, question: string, k: number): Promise<void> {
-  if (!state) {
+  if (!combined) {
     throw new LocalPipelineError("NO_DOCUMENT", "No local document is indexed.");
   }
   cancelled = false;
 
   let semanticCandidates: ReturnType<typeof semanticRank> | null = null;
-  if (state.embeddings) {
-    // A restored document has stored passage vectors but the model may not be
+  if (combined.embeddings) {
+    // Restored documents have stored passage vectors but the model may not be
     // loaded yet; the query itself still needs a local embedding.
     const pipeline = await loadExtractor(requestId);
     if (pipeline) {
       const [queryVector] = await embedTexts(null, pipeline, [question]);
-      semanticCandidates = semanticRank(queryVector, state.embeddings);
+      semanticCandidates = semanticRank(queryVector, combined.embeddings);
     }
   }
 
   const results = fuseLocalResults(
     question,
-    state.meta,
-    state.chunks,
+    combined.chunks,
+    combined.metas,
     semanticCandidates,
-    bm25Rank(state.lexical, question),
+    bm25Rank(combined.lexical, question),
     k,
   );
   post({ type: "results", requestId, results, embedded: semanticCandidates !== null });
 }
 
 async function handleRestore(requestId: string): Promise<void> {
-  const persisted = await readPersistedDocument();
-  if (!persisted) {
-    post({ type: "restored", requestId, meta: null, pdfBytes: null });
-    return;
+  const persisted = await readPersistedDocuments();
+  documents.clear();
+  for (const document of persisted.slice(0, MAX_LOCAL_DOCUMENTS)) {
+    documents.set(document.meta.id, {
+      meta: { ...document.meta, persisted: true },
+      chunks: document.chunks,
+      embeddings: document.embeddings,
+      pdfBytes: document.pdfBytes,
+    });
   }
-  state = {
-    meta: { ...persisted.meta, persisted: true },
-    chunks: persisted.chunks,
-    embeddings: persisted.embeddings,
-    lexical: buildLexicalIndex(persisted.chunks),
-    pdfBytes: persisted.pdfBytes,
-  };
-  // Cloned (not transferred) so the worker keeps its copy for persistence.
-  post({ type: "restored", requestId, meta: state.meta, pdfBytes: persisted.pdfBytes });
+  persistSet = documents.size > 0;
+  rebuildCombined();
+  // Cloned (not transferred) so the worker keeps its copies for persistence.
+  post({
+    type: "restored",
+    requestId,
+    docs: [...documents.values()].map((document) => ({
+      meta: document.meta,
+      pdfBytes: document.pdfBytes,
+    })),
+  });
 }
 
 async function handleSetPersist(requestId: string, persist: boolean): Promise<void> {
-  if (!state) {
+  if (documents.size === 0) {
     throw new LocalPipelineError("NO_DOCUMENT", "No local document is indexed.");
   }
+  persistSet = persist;
   if (persist) {
-    const meta = { ...state.meta, persisted: true };
-    await savePersistedDocument({
-      meta,
-      chunks: state.chunks,
-      embeddings: state.embeddings,
-      pdfBytes: state.pdfBytes,
-    });
-    state.meta = meta;
+    await persistIfEnabled();
   } else {
-    await clearPersistedDocument();
-    state.meta = { ...state.meta, persisted: false };
+    await clearPersistedDocuments();
+    for (const document of documents.values()) {
+      document.meta = { ...document.meta, persisted: false };
+    }
   }
-  post({ type: "persistence", requestId, meta: state.meta });
+  post({ type: "persistence", requestId, metas: currentMetas() });
 }
 
-async function handleRemove(requestId: string): Promise<void> {
-  state = null;
+async function handleRemove(requestId: string, docId: string | null): Promise<void> {
+  if (docId === null) documents.clear();
+  else documents.delete(docId);
+  rebuildCombined();
   try {
-    await clearPersistedDocument();
+    if (documents.size === 0) {
+      persistSet = false;
+      await clearPersistedDocuments();
+    } else {
+      await persistIfEnabled();
+    }
   } catch {
-    // The store may be unavailable; in-memory state is already gone.
+    // The store may be unavailable; in-memory state is already updated.
   }
-  post({ type: "removed", requestId });
+  post({ type: "removed", requestId, metas: currentMetas() });
 }
 
 self.addEventListener("message", (event: MessageEvent<WorkerRequest>) => {
@@ -402,7 +472,7 @@ self.addEventListener("message", (event: MessageEvent<WorkerRequest>) => {
   void (async () => {
     try {
       if (message.type === "process") {
-        await handleProcess(requestId, message.fileName, message.bytes, message.persist);
+        await handleProcess(requestId, message.fileName, message.bytes);
       } else if (message.type === "search") {
         await handleSearch(requestId, message.question, message.k);
       } else if (message.type === "restore") {
@@ -410,7 +480,7 @@ self.addEventListener("message", (event: MessageEvent<WorkerRequest>) => {
       } else if (message.type === "setPersist") {
         await handleSetPersist(requestId, message.persist);
       } else if (message.type === "remove") {
-        await handleRemove(requestId);
+        await handleRemove(requestId, message.docId);
       }
     } catch (error) {
       const known = error instanceof LocalPipelineError;

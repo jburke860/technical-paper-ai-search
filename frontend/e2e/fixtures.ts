@@ -49,6 +49,10 @@ export function makeSource(rank: number, overrides: Record<string, unknown> = {}
     vector_rank: explanationValue.semantic.rank,
     keyword_rank: explanationValue.keyword.rank,
     rrf_score: explanationValue.semantic.contribution + explanationValue.keyword.contribution,
+    highlight_boxes: [
+      { x: 0.12, y: 0.2, width: 0.76, height: 0.08 },
+      { x: 0.12, y: 0.31, width: 0.5, height: 0.04 },
+    ],
     retrieval_explanation: explanationValue,
     ...overrides,
   };

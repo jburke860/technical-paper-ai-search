@@ -18,7 +18,11 @@
       "Issa A. D. Nesnas"
     ],
     "year": 2024,
-    "topics": ["spacecraft autonomy", "modeling", "deep-space missions"],
+    "topics": [
+      "spacecraft autonomy",
+      "modeling",
+      "deep-space missions"
+    ],
     "source_url": "https://arxiv.org/abs/2401.11371",
     "pdf_url": "/pdfs/Modeling%20Considerations%20for%20Developing%20Deep%20Space%20Autonomous%20Spacecraft%20and%20Simulators.pdf",
     "include": true
@@ -27,9 +31,18 @@
     "id": "aerospace-computer-vision",
     "filename": "Computer vision tasks for intelligent aerospace perception- An overview.pdf",
     "title": "Computer Vision Tasks for Intelligent Aerospace Perception: An Overview",
-    "authors": ["Huilin Chen", "Qiyu Sun", "Fangfei Li", "Yang Tang"],
+    "authors": [
+      "Huilin Chen",
+      "Qiyu Sun",
+      "Fangfei Li",
+      "Yang Tang"
+    ],
     "year": 2024,
-    "topics": ["computer vision", "aerospace perception", "deep learning"],
+    "topics": [
+      "computer vision",
+      "aerospace perception",
+      "deep learning"
+    ],
     "source_url": "https://doi.org/10.1007/s11431-024-2714-4",
     "pdf_url": "/pdfs/Computer%20vision%20tasks%20for%20intelligent%20aerospace%20perception-%20An%20overview.pdf",
     "include": true
@@ -47,7 +60,11 @@
       "C. Selvalakshmi"
     ],
     "year": 2024,
-    "topics": ["autonomous systems", "artificial intelligence", "safety"],
+    "topics": [
+      "autonomous systems",
+      "artificial intelligence",
+      "safety"
+    ],
     "source_url": "https://doi.org/10.4018/979-8-3693-1962-8.ch001",
     "pdf_url": "/pdfs/Autonomous-System-and-AI-content.pdf",
     "include": true
@@ -64,5 +81,158 @@
     "include": false,
     "duplicate_of": "deep-space-autonomy-modeling",
     "exclusion_reason": "The extracted text is byte-for-byte identical to the deep-space autonomy paper despite the filename."
+  },
+  {
+    "id": "dl-spacecraft-pose-estimation-survey",
+    "filename": "Deep Learning Monocular Spacecraft Pose Estimation Survey.pdf",
+    "title": "A Survey on Deep Learning-Based Monocular Spacecraft Pose Estimation: Current State, Limitations and Prospects",
+    "authors": [
+      "Leo Pauly",
+      "Wassim Rharbaoui",
+      "Carl Shneider",
+      "Arunkumar Rathinam",
+      "Vincent Gaudilliere",
+      "Djamila Aouada"
+    ],
+    "year": 2023,
+    "topics": [
+      "pose estimation",
+      "deep learning",
+      "spacecraft",
+      "survey"
+    ],
+    "source_url": "https://arxiv.org/abs/2305.07348",
+    "license": "CC BY 4.0",
+    "pdf_url": "/pdfs/Deep%20Learning%20Monocular%20Spacecraft%20Pose%20Estimation%20Survey.pdf",
+    "include": true
+  },
+  {
+    "id": "spacecraft-component-detection-spy",
+    "filename": "SpY Context-Based Spacecraft Component Detection.pdf",
+    "title": "SpY: A Context-Based Approach to Spacecraft Component Detection",
+    "authors": [
+      "Trupti Mahendrakar",
+      "Ryan T. White",
+      "Madhur Tiwari"
+    ],
+    "year": 2024,
+    "topics": [
+      "object detection",
+      "spacecraft components",
+      "computer vision"
+    ],
+    "source_url": "https://arxiv.org/abs/2406.18709",
+    "license": "CC BY 4.0",
+    "pdf_url": "/pdfs/SpY%20Context-Based%20Spacecraft%20Component%20Detection.pdf",
+    "include": true
+  },
+  {
+    "id": "non-cooperative-target-navigation",
+    "filename": "YOLOv5 Faster R-CNN Non-Cooperative Target Navigation.pdf",
+    "title": "Performance Study of YOLOv5 and Faster R-CNN for Autonomous Navigation around Non-Cooperative Targets",
+    "authors": [
+      "Trupti Mahendrakar",
+      "Andrew Ekblad",
+      "Nathan Fischer",
+      "Ryan T. White",
+      "Markus Wilde",
+      "Brian Kish",
+      "Isaac Silver"
+    ],
+    "year": 2023,
+    "topics": [
+      "autonomous navigation",
+      "object detection",
+      "rendezvous"
+    ],
+    "source_url": "https://arxiv.org/abs/2301.09056",
+    "license": "CC BY 4.0",
+    "pdf_url": "/pdfs/YOLOv5%20Faster%20R-CNN%20Non-Cooperative%20Target%20Navigation.pdf",
+    "include": true
+  },
+  {
+    "id": "orbit-domain-gap-augmentation",
+    "filename": "Data Augmentations Domain Gap Object Detection in Orbit.pdf",
+    "title": "How Important are Data Augmentations to Close the Domain Gap for Object Detection in Orbit?",
+    "authors": [
+      "Maximilian Ulmer",
+      "Leonard Klüpfel",
+      "Maximilian Durner",
+      "Rudolph Triebel"
+    ],
+    "year": 2024,
+    "topics": [
+      "domain gap",
+      "data augmentation",
+      "object detection"
+    ],
+    "source_url": "https://arxiv.org/abs/2410.15766",
+    "license": "CC BY 4.0",
+    "pdf_url": "/pdfs/Data%20Augmentations%20Domain%20Gap%20Object%20Detection%20in%20Orbit.pdf",
+    "include": true
+  },
+  {
+    "id": "nerf-space-object-reconstruction",
+    "filename": "NeRF 3D Reconstruction Resident Space Objects.pdf",
+    "title": "3D Reconstruction of Non-cooperative Resident Space Objects using Instant NGP-accelerated NeRF and D-NeRF",
+    "authors": [
+      "Basilio Caruso",
+      "Trupti Mahendrakar",
+      "Van Minh Nguyen",
+      "Ryan T. White",
+      "Todd Steffen"
+    ],
+    "year": 2023,
+    "topics": [
+      "3d reconstruction",
+      "nerf",
+      "space objects"
+    ],
+    "source_url": "https://arxiv.org/abs/2301.09060",
+    "license": "CC BY 4.0",
+    "pdf_url": "/pdfs/NeRF%203D%20Reconstruction%20Resident%20Space%20Objects.pdf",
+    "include": true
+  },
+  {
+    "id": "space-debris-tracking-dataset",
+    "filename": "Space Debris Tracking Large-Scale Dataset.pdf",
+    "title": "High Performance Space Debris Tracking in Complex Skylight Backgrounds with a Large-Scale Dataset",
+    "authors": [
+      "Guohang Zhuang",
+      "Weixi Song",
+      "Jinyang Huang",
+      "Chenwei Yang",
+      "Wanli OuYang",
+      "Yan Lu"
+    ],
+    "year": 2025,
+    "topics": [
+      "space debris",
+      "tracking",
+      "dataset"
+    ],
+    "source_url": "https://arxiv.org/abs/2506.02614",
+    "license": "CC BY 4.0",
+    "pdf_url": "/pdfs/Space%20Debris%20Tracking%20Large-Scale%20Dataset.pdf",
+    "include": true
+  },
+  {
+    "id": "lunar-crater-terrain-navigation",
+    "filename": "Lunar Crater Terrain Relative Navigation.pdf",
+    "title": "Deep Learning-Based Lunar Crater Terrain Relative Navigation",
+    "authors": [
+      "Batu Candan",
+      "Simone Servadio"
+    ],
+    "year": 2026,
+    "topics": [
+      "terrain relative navigation",
+      "crater detection",
+      "lunar landing"
+    ],
+    "source_url": "https://arxiv.org/abs/2606.14776",
+    "license": "CC BY 4.0",
+    "pdf_url": "/pdfs/Lunar%20Crater%20Terrain%20Relative%20Navigation.pdf",
+    "include": true
   }
 ]

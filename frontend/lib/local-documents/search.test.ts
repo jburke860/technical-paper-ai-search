@@ -65,7 +65,7 @@ describe("fuseLocalResults", () => {
       { index: 0, score: 0.9 },
       { index: 1, score: 0.5 },
     ];
-    const results = fuseLocalResults("radiator margin", META, CHUNKS, semantic, keyword, 5);
+    const results = fuseLocalResults("radiator margin", CHUNKS, CHUNKS.map(() => META), semantic, keyword, 5);
 
     expect(results.length).toBeGreaterThan(0);
     results.forEach((result, position) => {
@@ -87,8 +87,8 @@ describe("fuseLocalResults", () => {
     const index = buildLexicalIndex(CHUNKS);
     const results = fuseLocalResults(
       "radiator margin",
-      META,
       CHUNKS,
+      CHUNKS.map(() => META),
       null,
       bm25Rank(index, "radiator margin"),
       5,
@@ -109,8 +109,8 @@ describe("fuseLocalResults", () => {
     const index = buildLexicalIndex(nearDuplicates);
     const results = fuseLocalResults(
       "radiator margin power",
-      META,
       nearDuplicates,
+      nearDuplicates.map(() => META),
       null,
       bm25Rank(index, "radiator margin power"),
       5,
@@ -128,8 +128,8 @@ describe("fuseLocalResults", () => {
     const index = buildLexicalIndex(many);
     const results = fuseLocalResults(
       "radiator margin",
-      META,
       many,
+      many.map(() => META),
       null,
       bm25Rank(index, "radiator margin"),
       3,

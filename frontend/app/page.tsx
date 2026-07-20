@@ -5,7 +5,7 @@ import { AppHeader } from "@/components/app-shell/AppHeader";
 import { LibrarySidebar } from "@/components/app-shell/LibrarySidebar";
 import { SourcePanel } from "@/components/app-shell/SourcePanel";
 import { AnswerCard } from "@/components/answer/AnswerCard";
-import { LocalDocumentPanel, type LocalPhase } from "@/components/local/LocalDocumentPanel";
+import { LocalDocumentPanel } from "@/components/local/LocalDocumentPanel";
 import { QueryComposer } from "@/components/search/QueryComposer";
 import { ResultList } from "@/components/sources/ResultList";
 import { BookIcon, FileIcon, RefreshIcon, SparkIcon } from "@/components/icons";
@@ -15,7 +15,7 @@ import {
   MAX_LOCAL_EXCERPT_CHARS,
 } from "@/lib/local-documents/limits";
 import { LocalDocumentSession } from "@/lib/local-documents/session";
-import { readPersistedMeta } from "@/lib/local-documents/storage";
+import { readPersistedMetas } from "@/lib/local-documents/storage";
 import type { LocalDocumentError, LocalDocumentMeta, LocalProgress } from "@/lib/local-documents/types";
 import type {
   AnswerStreamEvent,
@@ -29,10 +29,18 @@ import type {
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "/api";
 const HISTORY_KEY = "technical-paper-ai-history-v1";
 const INITIAL_QUESTION = "What safety and reliability challenges affect autonomous systems?";
-const EXAMPLE_QUESTIONS = [
+// A rotating subset keeps repeat visits fresh; all of these are grounded in
+// the curated corpus and drawn from the evaluation themes.
+const EXAMPLE_POOL = [
   "How does functional-level autonomy differ from system-level autonomy?",
   "How is deep learning applied to spacecraft pose estimation?",
   "Why do limited real datasets and synthetic images create a domain gap?",
+  "How can spacecraft components be detected during rendezvous with an unknown target?",
+  "What role do data augmentations play in object detection for orbital imagery?",
+  "How can NeRF models reconstruct tumbling resident space objects in 3D?",
+  "What makes tracking space debris against complex skylight backgrounds difficult?",
+  "How are craters used for terrain-relative navigation during lunar descent?",
+  "What are the main limitations of monocular spacecraft pose estimation methods?",
 ];
 
 type Collection = "curated" | "local";
@@ -68,12 +76,13 @@ export default function Home() {
   const [sourceCount, setSourceCount] = useState(5);
   const [showDetails, setShowDetails] = useState(false);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const [examples, setExamples] = useState<string[]>(EXAMPLE_POOL.slice(0, 3));
   const [libraryOpen, setLibraryOpen] = useState(false);
   const [sourcesOpen, setSourcesOpen] = useState(false);
   const [viewerOpen, setViewerOpen] = useState(false);
   const [collection, setCollection] = useState<Collection>("curated");
-  const [localPhase, setLocalPhase] = useState<LocalPhase>("idle");
-  const [localMeta, setLocalMeta] = useState<LocalDocumentMeta | null>(null);
+  const [localDocs, setLocalDocs] = useState<LocalDocumentMeta[]>([]);
+  const [localBusy, setLocalBusy] = useState(false);
   const [localProgress, setLocalProgress] = useState<LocalProgress | null>(null);
   const [localError, setLocalError] = useState("");
   const [persistedAvailable, setPersistedAvailable] = useState(false);
@@ -81,7 +90,7 @@ export default function Home() {
   const [localSearchMode, setLocalSearchMode] = useState<"hybrid" | "keyword" | null>(null);
   const activeRequest = useRef<AbortController | null>(null);
   const localSession = useRef<LocalDocumentSession | null>(null);
-  const localPdfUrlRef = useRef<string | null>(null);
+  const localPdfUrls = useRef(new Map<string, string>());
 
   function getSession(): LocalDocumentSession {
     if (!localSession.current) {
@@ -92,9 +101,19 @@ export default function Home() {
     return localSession.current;
   }
 
-  function replaceLocalPdfUrl(url: string | null) {
-    if (localPdfUrlRef.current) URL.revokeObjectURL(localPdfUrlRef.current);
-    localPdfUrlRef.current = url;
+  function setLocalPdfUrl(docId: string, url: string) {
+    const existing = localPdfUrls.current.get(docId);
+    if (existing) URL.revokeObjectURL(existing);
+    localPdfUrls.current.set(docId, url);
+  }
+
+  function revokeLocalPdfUrls(keep: Set<string>) {
+    for (const [docId, url] of localPdfUrls.current) {
+      if (!keep.has(docId)) {
+        URL.revokeObjectURL(url);
+        localPdfUrls.current.delete(docId);
+      }
+    }
   }
 
   useEffect(() => {
@@ -121,7 +140,9 @@ export default function Home() {
       await Promise.all([loadStatus, loadPapers]);
     }
     void loadWorkspace();
-    void readPersistedMeta().then((meta) => setPersistedAvailable(Boolean(meta)));
+    void readPersistedMetas().then((metas) => setPersistedAvailable(metas.length > 0));
+    // Rotate after hydration so server and first client render agree.
+    setExamples([...EXAMPLE_POOL].sort(() => Math.random() - 0.5).slice(0, 3));
 
     try {
       const stored = JSON.parse(localStorage.getItem(HISTORY_KEY) ?? "[]") as unknown;
@@ -139,7 +160,7 @@ export default function Home() {
       window.cancelAnimationFrame(historyFrame);
       activeRequest.current?.abort();
       localSession.current?.dispose();
-      if (localPdfUrlRef.current) URL.revokeObjectURL(localPdfUrlRef.current);
+      revokeLocalPdfUrls(new Set());
     };
   }, []);
 
@@ -162,7 +183,7 @@ export default function Home() {
   }, [status, statusFailed]);
 
   const hostedAvailable = !statusFailed && (status?.quota.available ?? false);
-  const localReady = localPhase === "ready";
+  const localReady = localDocs.length > 0 && !localBusy;
   const composerAvailable = collection === "curated" ? hostedAvailable : localReady;
 
   function updateRemaining(response: Response) {
@@ -277,7 +298,7 @@ export default function Home() {
     const outcome = await getSession().search(submittedQuestion, sourceCount);
     const localSources = outcome.results.map((result) => ({
       ...result,
-      pdf_url: localPdfUrlRef.current ?? "",
+      pdf_url: localPdfUrls.current.get(result.paper_id) ?? "",
     }));
     setResults(localSources);
     setSelectedSource(localSources[0] ?? null);
@@ -351,68 +372,70 @@ export default function Home() {
 
   async function addLocalFile(file: File) {
     if (file.size > MAX_FILE_BYTES) {
-      setLocalPhase("error");
       setLocalError(`PDFs up to ${Math.round(MAX_FILE_BYTES / (1024 * 1024))} MB are supported.`);
       return;
     }
-    setLocalPhase("processing");
+    setLocalBusy(true);
     setLocalProgress(null);
     setLocalError("");
     try {
-      const meta = await getSession().process(file, false);
-      replaceLocalPdfUrl(URL.createObjectURL(file));
-      setLocalMeta(meta);
-      setLocalPhase("ready");
+      const { meta, metas } = await getSession().process(file);
+      setLocalPdfUrl(meta.id, URL.createObjectURL(file));
+      setLocalDocs(metas);
     } catch (caught) {
       const { code, message } = localErrorMessage(caught);
-      if (code === "PROCESSING_CANCELLED") {
-        setLocalPhase("idle");
-        return;
-      }
-      setLocalPhase("error");
-      setLocalError(message);
+      if (code !== "PROCESSING_CANCELLED") setLocalError(message);
+    } finally {
+      setLocalBusy(false);
     }
   }
 
-  async function restoreLocalDocument() {
-    setLocalPhase("processing");
+  async function restoreLocalDocuments() {
+    setLocalBusy(true);
     setLocalProgress(null);
     setLocalError("");
     try {
       const restored = await getSession().restore();
-      if (!restored) {
+      if (restored.length === 0) {
         setPersistedAvailable(false);
-        setLocalPhase("idle");
         return;
       }
-      replaceLocalPdfUrl(URL.createObjectURL(new Blob([restored.pdfBytes], { type: "application/pdf" })));
-      setLocalMeta(restored.meta);
-      setLocalPhase("ready");
+      for (const doc of restored) {
+        setLocalPdfUrl(doc.meta.id, URL.createObjectURL(new Blob([doc.pdfBytes], { type: "application/pdf" })));
+      }
+      setLocalDocs(restored.map((doc) => doc.meta));
     } catch (caught) {
-      setLocalPhase("error");
       setLocalError(localErrorMessage(caught).message);
+    } finally {
+      setLocalBusy(false);
     }
   }
 
-  async function removeLocalDocument() {
+  async function removeLocalDocument(docId: string) {
     try {
-      await getSession().remove();
+      const metas = await getSession().remove(docId);
+      setLocalDocs(metas);
+      revokeLocalPdfUrls(new Set(metas.map((meta) => meta.id)));
+      if (metas.length === 0) {
+        setPersistedAvailable(false);
+        resetResearchState();
+      } else {
+        setResults((current) => current.filter((result) => result.paper_id !== docId));
+        setSelectedSource((current) => (current?.paper_id === docId ? null : current));
+      }
     } catch {
       localSession.current?.terminate();
+      setLocalDocs([]);
+      revokeLocalPdfUrls(new Set());
+      resetResearchState();
     }
-    replaceLocalPdfUrl(null);
-    setLocalMeta(null);
-    setLocalPhase("idle");
-    setLocalProgress(null);
-    setPersistedAvailable(false);
-    resetResearchState();
   }
 
-  async function persistLocalDocument(persist: boolean) {
+  async function persistLocalDocuments(persist: boolean) {
     try {
-      const meta = await getSession().setPersist(persist);
-      setLocalMeta(meta);
-      setPersistedAvailable(meta.persisted);
+      const metas = await getSession().setPersist(persist);
+      setLocalDocs(metas);
+      setPersistedAvailable(metas.some((meta) => meta.persisted));
     } catch (caught) {
       setError(localErrorMessage(caught).message);
     }
@@ -447,7 +470,7 @@ export default function Home() {
 
   return (
     <div className="research-app">
-      <AppHeader statusLabel={statusView.label} statusTone={statusView.tone} libraryOpen={libraryOpen} sourcesOpen={sourcesOpen} onOpenLibrary={() => setLibraryOpen(true)} onOpenSources={() => setSourcesOpen(true)} />
+      <AppHeader statusLabel={statusView.label} statusTone={statusView.tone} quota={status?.quota ?? null} libraryOpen={libraryOpen} sourcesOpen={sourcesOpen} onOpenLibrary={() => setLibraryOpen(true)} onOpenSources={() => setSourcesOpen(true)} />
 
       <div className="workspace-grid">
         <LibrarySidebar papers={papers} chunkCount={status?.corpus.chunkCount ?? null} history={history} open={libraryOpen} onClose={() => setLibraryOpen(false)} onSelectHistory={restoreHistory} />
@@ -485,27 +508,28 @@ export default function Home() {
 
           {collection === "local" && (
             <LocalDocumentPanel
-              phase={localPhase}
-              meta={localMeta}
+              docs={localDocs}
+              busy={localBusy}
+              searchBusy={Boolean(stage)}
               progress={localProgress}
               error={localError}
-              persistedAvailable={persistedAvailable && localPhase === "idle"}
+              persistedAvailable={persistedAvailable}
+              persistEnabled={localDocs.some((doc) => doc.persisted)}
               hostedSynthesisEnabled={hostedSynthesis}
               hostedAvailable={hostedAvailable}
-              busy={Boolean(stage)}
               onAddFile={addLocalFile}
-              onRestore={restoreLocalDocument}
+              onRestore={restoreLocalDocuments}
               onCancel={() => localSession.current?.cancel()}
-              onRemove={removeLocalDocument}
-              onPersistChange={persistLocalDocument}
+              onRemoveDoc={removeLocalDocument}
+              onPersistChange={persistLocalDocuments}
               onHostedSynthesisChange={setHostedSynthesis}
-              onReset={() => { setLocalPhase("idle"); setLocalError(""); }}
+              onDismissError={() => setLocalError("")}
             />
           )}
 
           <QueryComposer
             question={question}
-            examples={collection === "curated" ? EXAMPLE_QUESTIONS : []}
+            examples={collection === "curated" ? examples : []}
             sourceCount={sourceCount}
             showDetails={showDetails}
             available={composerAvailable}
@@ -568,6 +592,14 @@ export default function Home() {
               <article><span>03</span><h3>Grounded synthesis</h3><p>Answers are constrained to retrieved context and keep citations visible.</p></article>
             </div>
           </section>
+
+          <footer className="workspace-footer">
+            <p>
+              <strong>Made by Jeremy Burke</strong>
+              <a href="https://github.com/jburke860/technical-paper-ai-search" target="_blank" rel="noreferrer">Source on GitHub</a>
+            </p>
+            <p>Runs entirely on Cloudflare&rsquo;s free tier with a hard daily question cap.</p>
+          </footer>
         </main>
 
         <SourcePanel source={selectedSource} sourceCount={results.length} open={sourcesOpen} viewerOpen={viewerOpen} onOpenViewer={() => setViewerOpen(true)} onClose={() => setSourcesOpen(false)} />

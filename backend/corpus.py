@@ -33,8 +33,11 @@ NUMBERED_HEADING = re.compile(
 class Line:
     text: str
     page: int
+    x0: float
     y0: float
+    x1: float
     y1: float
+    page_width: float
     page_height: float
     max_font_size: float
     bold: bool
@@ -133,8 +136,11 @@ def extract_lines(document: fitz.Document) -> list[list[Line]]:
                     Line(
                         text=text,
                         page=page_index + 1,
+                        x0=float(bbox[0]),
                         y0=float(bbox[1]),
+                        x1=float(bbox[2]),
                         y1=float(bbox[3]),
+                        page_width=float(page.rect.width),
                         page_height=height,
                         max_font_size=max(
                             (float(span.get("size", 0)) for span in spans),
@@ -329,6 +335,54 @@ def chunk_section(text: str) -> list[str]:
     return chunks
 
 
+MAX_HIGHLIGHT_BOXES = 30
+BOX_MERGE_GAP = 7.0
+
+
+def merge_line_rects(
+    rects: list[tuple[float, float, float, float]],
+    page_width: float,
+    page_height: float,
+) -> list[dict[str, float]]:
+    """Merge vertically adjacent same-column line rects into fewer boxes and
+    normalize them to page-fraction coordinates for the PDF viewer overlay."""
+    merged: list[list[float]] = []
+    for x0, y0, x1, y1 in rects:
+        if merged:
+            last = merged[-1]
+            overlap = min(last[2], x1) - max(last[0], x0)
+            same_column = overlap > 0.5 * min(last[2] - last[0], x1 - x0)
+            if same_column and -1.0 <= y0 - last[3] <= BOX_MERGE_GAP:
+                merged[-1] = [min(last[0], x0), last[1], max(last[2], x1), max(last[3], y1)]
+                continue
+        merged.append([x0, y0, x1, y1])
+    return [
+        {
+            "x": round(x0 / page_width, 4),
+            "y": round(y0 / page_height, 4),
+            "width": round((x1 - x0) / page_width, 4),
+            "height": round((y1 - y0) / page_height, 4),
+        }
+        for x0, y0, x1, y1 in merged[:MAX_HIGHLIGHT_BOXES]
+    ]
+
+
+def chunk_highlight_boxes(chunk_text: str, lines: list[Line]) -> list[dict[str, float]]:
+    """Locate the page lines whose text the chunk contains and return their
+    merged bounding boxes. Hyphenated line breaks are matched by prefix since
+    join_body_lines() reassembles the split word."""
+    rects: list[tuple[float, float, float, float]] = []
+    for line in lines:
+        probe = normalize_space(line.text).rstrip("-")
+        if len(probe) < 12:
+            continue
+        if probe in chunk_text or probe[:60] in chunk_text:
+            rects.append((line.x0, line.y0, line.x1, line.y1))
+    if not rects:
+        return []
+    return merge_line_rects(rects, lines[0].page_width, lines[0].page_height)
+
+
 def paper_chunks(paper: dict[str, Any], pdf_path: Path) -> list[dict[str, Any]]:
     document = fitz.open(pdf_path)
     pages = strip_repeated_margins(extract_lines(document))
@@ -360,8 +414,11 @@ def paper_chunks(paper: dict[str, Any], pdf_path: Path) -> list[dict[str, Any]]:
                     combined_heading = Line(
                         text=f"{line.text.rstrip('.')} {following.text}",
                         page=line.page,
+                        x0=min(line.x0, following.x0),
                         y0=line.y0,
+                        x1=max(line.x1, following.x1),
                         y1=following.y1,
+                        page_width=line.page_width,
                         page_height=line.page_height,
                         max_font_size=max(line.max_font_size, following.max_font_size),
                         bold=line.bold or following.bold,
@@ -410,6 +467,7 @@ def paper_chunks(paper: dict[str, Any], pdf_path: Path) -> list[dict[str, Any]]:
                         "text": chunk_text,
                         "token_estimate": approximate_tokens(chunk_text),
                         "content_hash": content_hash,
+                        "highlight_boxes": chunk_highlight_boxes(chunk_text, lines),
                     }
                 )
 

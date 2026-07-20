@@ -77,7 +77,10 @@ PDFs → text extraction → chunking → embeddings → vector store → hybrid
   responsive desktop/mobile presentation
 - Reproducible retrieval explanations with semantic/BM25 ranks, RRF
   contributions, retriever agreement, and matched query concepts
-- Private browser-local PDF mode: visitor documents are parsed, chunked,
+- Exact-passage citation highlighting: chunk bounding boxes are computed at
+  ingestion time and rendered as overlays on the cited PDF page
+- Private browser-local PDF mode (up to 3 documents at once): visitor
+  documents are parsed, chunked,
   embedded (Transformers.js MiniLM), and searched with hybrid BM25 + semantic
   RRF entirely in a Web Worker, with opt-in IndexedDB persistence and
   strict size/page/chunk/timeout limits — the file never leaves the browser,
@@ -396,9 +399,14 @@ python ingest.py
 
 ## Corpus and Retrieval Evaluation
 
-The configured collection currently contains **3 unique papers and 262
-section-aware chunks**. One additional PDF is excluded because its extracted
-text is identical to the deep-space autonomy paper despite having a different,
+The configured collection currently contains **10 unique papers and 658
+section-aware chunks** covering spacecraft autonomy, monocular pose
+estimation, spacecraft component detection, orbital domain-gap augmentation,
+NeRF reconstruction of space objects, space debris tracking, and lunar
+terrain-relative navigation. The seven papers added after launch are all
+arXiv publications under CC BY 4.0 licenses with metadata taken from the
+arXiv API. One additional PDF is excluded because its extracted text is
+identical to the deep-space autonomy paper despite having a different,
 incorrect filename. The exclusion is recorded in
 [`data/corpus-manifest.json`](data/corpus-manifest.json) rather than silently
 inflating the document count.
@@ -422,12 +430,15 @@ HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 \
   backend/.venv/bin/python evaluation/evaluate.py
 ```
 
-The initial 24-question, page-targeted baseline is:
+The 59-question, page-targeted baseline over the 10-paper corpus is:
 
 | Metric | Baseline |
 |---|---:|
 | Recall@5 | 1.0000 |
-| Mean reciprocal rank@5 | 0.8264 |
+| Mean reciprocal rank@5 | 0.8404 |
+| Duplicate-result rate | 0.0000 |
+| Citation-page accuracy | 1.0000 |
+| Missing-metadata rate | 0.0000 |
 
 The questions and expected paper/page matches are stored in
 [`evaluation/questions.json`](evaluation/questions.json), and the complete
@@ -485,8 +496,9 @@ If you delete a PDF manually from `data/pdfs/`, run `python ingest.py` again to 
   quota (globally and per browser) and fails closed whenever quota state is
   uncertain; exhaustion lasts until midnight UTC by design.
 - **Requires three local services for the legacy pipeline** : Ollama, FastAPI, and Next.js must all be running.
-- **Small corpus** : The evaluation covers three unique papers and does not
-  establish performance on a large or diverse collection.
+- **Mid-sized corpus** : The evaluation covers ten papers in one thematic
+  area and does not establish performance on a large or heterogeneous
+  collection.
 - **PDF extraction quality varies** : Scanned or heavily formatted PDFs may extract poorly.
 - **Heuristic section detection** : PDF typography and multi-column layouts can
   still produce imperfect section labels.

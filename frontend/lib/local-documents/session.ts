@@ -9,6 +9,7 @@ import type {
   LocalDocumentError,
   LocalDocumentMeta,
   LocalProgress,
+  RestoredDocument,
   WorkerRequest,
   WorkerResponse,
 } from "./types";
@@ -83,7 +84,7 @@ export class LocalDocumentSession {
     });
   }
 
-  async process(file: File, persist: boolean): Promise<LocalDocumentMeta> {
+  async process(file: File): Promise<{ meta: LocalDocumentMeta; metas: LocalDocumentMeta[] }> {
     const bytes = await file.arrayBuffer();
     const response = await this.request(
       {
@@ -91,13 +92,13 @@ export class LocalDocumentSession {
         requestId: crypto.randomUUID(),
         fileName: file.name,
         bytes,
-        persist,
+        persist: false,
       },
       PROCESS_HARD_LIMIT_MS,
       [bytes],
     );
     if (response.type !== "processed") throw new Error("Unexpected worker response.");
-    return response.meta;
+    return { meta: response.meta, metas: response.metas };
   }
 
   async search(question: string, k: number): Promise<LocalSearchOutcome> {
@@ -109,30 +110,31 @@ export class LocalDocumentSession {
     return { results: response.results, embedded: response.embedded };
   }
 
-  async restore(): Promise<{ meta: LocalDocumentMeta; pdfBytes: ArrayBuffer } | null> {
+  async restore(): Promise<RestoredDocument[]> {
     const response = await this.request(
       { type: "restore", requestId: crypto.randomUUID() },
       PROCESS_HARD_LIMIT_MS,
     );
     if (response.type !== "restored") throw new Error("Unexpected worker response.");
-    if (!response.meta || !response.pdfBytes) return null;
-    return { meta: response.meta, pdfBytes: response.pdfBytes };
+    return response.docs;
   }
 
-  async setPersist(persist: boolean): Promise<LocalDocumentMeta> {
+  async setPersist(persist: boolean): Promise<LocalDocumentMeta[]> {
     const response = await this.request(
       { type: "setPersist", requestId: crypto.randomUUID(), persist },
       SEARCH_TIMEOUT_MS,
     );
     if (response.type !== "persistence") throw new Error("Unexpected worker response.");
-    return response.meta;
+    return response.metas;
   }
 
-  async remove(): Promise<void> {
-    await this.request(
-      { type: "remove", requestId: crypto.randomUUID() },
+  async remove(docId: string | null): Promise<LocalDocumentMeta[]> {
+    const response = await this.request(
+      { type: "remove", requestId: crypto.randomUUID(), docId },
       SEARCH_TIMEOUT_MS,
     );
+    if (response.type !== "removed") throw new Error("Unexpected worker response.");
+    return response.metas;
   }
 
   // Cooperative cancel first; if the worker does not acknowledge by rejecting

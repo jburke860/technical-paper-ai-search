@@ -87,8 +87,8 @@ describe("hosted Worker API", () => {
     const payload = (await response.json()) as Record<string, any>;
 
     expect(response.status).toBe(200);
-    expect(payload.corpus.paperCount).toBe(3);
-    expect(payload.corpus.chunkCount).toBe(262);
+    expect(payload.corpus.paperCount).toBe(10);
+    expect(payload.corpus.chunkCount).toBe(658);
     expect(payload.models.embedding).toBe("@cf/baai/bge-small-en-v1.5");
     expect(payload.status).toBe("available");
     expect(payload.quota.remaining).toBe(200);
@@ -104,7 +104,7 @@ describe("hosted Worker API", () => {
     const payload = (await response.json()) as Record<string, any>;
 
     expect(response.status).toBe(200);
-    expect(payload.count).toBe(3);
+    expect(payload.count).toBe(10);
     expect(payload.papers.every((paper: Record<string, unknown>) => paper.include)).toBe(true);
   });
 
@@ -727,6 +727,7 @@ describe("prompt safety and citation integrity", () => {
       expect(source.pdf_url).toContain("/pdfs/");
       expect(source.snippet).toBeTruthy();
       expect(source.retrieval_explanation).toBeTruthy();
+      expect(Array.isArray(source.highlight_boxes)).toBe(true);
     }
     const citedNumbers = [...payload.answer.matchAll(/\[Source (\d+)\]/g)]
       .map((match: RegExpMatchArray) => Number(match[1]));
@@ -815,7 +816,7 @@ describe("no quota bypass on any dynamic route", () => {
     expect(status.status).toBe(200);
     expect(statusPayload.status).toBe("unavailable");
     expect(statusPayload.quota.code).toBe("DEMO_DISABLED");
-    expect(statusPayload.corpus.chunkCount).toBe(262);
+    expect(statusPayload.corpus.chunkCount).toBe(658);
     expect(papers.status).toBe(200);
     expect(env.AI.run).not.toHaveBeenCalled();
   });

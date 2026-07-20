@@ -393,3 +393,29 @@ Exit criteria:
 - Release 1 — Phases 0–6: hosted, credible, citation-verifiable demo.
 - Release 2 — Phases 7–8: explainability and private browser PDF mode.
 - Release 3 — Phases 9–10: measured, hardened, portfolio-ready launch.
+
+## Post-launch enhancements (2026-07-20)
+
+Completed the day after activation, deployed through the same guardrails:
+
+- Corpus expanded from 3 to 10 papers (658 chunks) in the spacecraft-autonomy
+  and aerospace computer-vision theme. All seven additions are CC BY 4.0
+  arXiv papers whose metadata was taken from the arXiv API, never from
+  memory; PDFs are re-hosted under their licenses with `license` recorded in
+  `data/papers.json`. Vectors were re-embedded with the production model and
+  upserted under content-hash ids.
+- Exact-passage citation highlighting: `backend/corpus.py` maps every chunk
+  back to its page lines during ingestion and stores merged, normalized
+  bounding boxes (`highlight_boxes`, avg 8 per chunk); the Worker passes them
+  through search results and the PDF viewer renders them as overlays on the
+  cited page.
+- Evaluation set expanded from 24 to 59 page-targeted questions authored from
+  actual chunk text; one legacy annotation was broadened because the expanded
+  corpus contains new papers that legitimately answer it. Baseline: recall@5
+  1.0, MRR@5 0.840, duplicate rate 0, citation-page accuracy 1.0.
+- Browser-local mode now supports up to 3 simultaneous documents with
+  per-document removal, merged cross-document RRF ranking, and set-level
+  IndexedDB persistence.
+- Interface polish: rotating example questions, a quota explainer popover on
+  the status pill, visible "Made by Jeremy Burke" attribution, decorative
+  navigation removed.

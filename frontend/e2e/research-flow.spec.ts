@@ -201,6 +201,8 @@ test.describe("hosted research workflow", () => {
     await expect(panel.getByText("Page 3", { exact: true })).toBeVisible();
     await expect(panel.locator(".pdf-toolbar")).toBeVisible({ timeout: 30_000 });
     await expect(panel.locator(".pdf-toolbar span").first()).toContainText("3");
+    // Coordinate-based citation highlights render as marks over the page.
+    await expect(panel.locator(".pdf-page mark")).toHaveCount(2, { timeout: 30_000 });
 
     await panel.getByRole("button", { name: "Copy citation" }).click();
     await expect(panel.getByRole("button", { name: "Copied" })).toBeVisible();

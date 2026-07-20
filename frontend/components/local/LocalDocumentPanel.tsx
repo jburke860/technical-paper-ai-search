@@ -2,27 +2,26 @@
 
 import { useRef } from "react";
 import { CloseIcon, FileIcon, RefreshIcon } from "@/components/icons";
-import { MAX_FILE_BYTES, MAX_PAGE_COUNT } from "@/lib/local-documents/limits";
+import { MAX_FILE_BYTES, MAX_LOCAL_DOCUMENTS, MAX_PAGE_COUNT } from "@/lib/local-documents/limits";
 import type { LocalDocumentMeta, LocalProgress } from "@/lib/local-documents/types";
 
-export type LocalPhase = "idle" | "processing" | "ready" | "error";
-
 type LocalDocumentPanelProps = {
-  phase: LocalPhase;
-  meta: LocalDocumentMeta | null;
+  docs: LocalDocumentMeta[];
+  busy: boolean;
+  searchBusy: boolean;
   progress: LocalProgress | null;
   error: string;
   persistedAvailable: boolean;
+  persistEnabled: boolean;
   hostedSynthesisEnabled: boolean;
   hostedAvailable: boolean;
-  busy: boolean;
   onAddFile: (file: File) => void;
   onRestore: () => void;
   onCancel: () => void;
-  onRemove: () => void;
+  onRemoveDoc: (docId: string) => void;
   onPersistChange: (persist: boolean) => void;
   onHostedSynthesisChange: (enabled: boolean) => void;
-  onReset: () => void;
+  onDismissError: () => void;
 };
 
 const STAGE_LABELS: Record<LocalProgress["stage"], string> = {
@@ -44,23 +43,25 @@ function progressLabel(progress: LocalProgress): string {
 }
 
 export function LocalDocumentPanel({
-  phase,
-  meta,
+  docs,
+  busy,
+  searchBusy,
   progress,
   error,
   persistedAvailable,
+  persistEnabled,
   hostedSynthesisEnabled,
   hostedAvailable,
-  busy,
   onAddFile,
   onRestore,
   onCancel,
-  onRemove,
+  onRemoveDoc,
   onPersistChange,
   onHostedSynthesisChange,
-  onReset,
+  onDismissError,
 }: LocalDocumentPanelProps) {
   const fileInput = useRef<HTMLInputElement>(null);
+  const canAdd = !busy && docs.length < MAX_LOCAL_DOCUMENTS;
 
   function handleFiles(files: FileList | null) {
     const file = files?.[0];
@@ -73,46 +74,47 @@ export function LocalDocumentPanel({
       <div className="local-doc-heading">
         <div>
           <p className="eyebrow"><FileIcon /> Private document mode</p>
-          <h2 id="local-doc-heading">Search your own PDF</h2>
+          <h2 id="local-doc-heading">Search your own PDFs</h2>
         </div>
-        {phase === "ready" && meta && (
-          <button className="secondary-button" onClick={onRemove} disabled={busy}>
-            <CloseIcon /> Remove document
-          </button>
+        {docs.length > 0 && (
+          <span className="local-doc-count">{docs.length} of {MAX_LOCAL_DOCUMENTS} documents</span>
         )}
       </div>
 
-      {phase === "idle" && (
-        <div className="local-doc-empty">
-          <p className="local-doc-lede">
-            Your PDF is parsed, chunked, and indexed inside this browser tab.
-            It is never uploaded or stored on any server.
-          </p>
-          <div className="local-doc-actions">
-            <label className="primary-button local-file-button">
-              Add a local PDF
-              <input
-                ref={fileInput}
-                type="file"
-                accept=".pdf,application/pdf"
-                onChange={(event) => handleFiles(event.target.files)}
-              />
-            </label>
-            {persistedAvailable && (
-              <button className="secondary-button" onClick={onRestore}>
-                <RefreshIcon /> Restore saved document
-              </button>
-            )}
-          </div>
-          <ul className="local-doc-limits">
-            <li>Up to {Math.round(MAX_FILE_BYTES / (1024 * 1024))} MB and {MAX_PAGE_COUNT} pages</li>
-            <li>Text-based PDFs only — scanned documents need OCR, which is not supported</li>
-            <li>The embedding model (~25 MB) is downloaded once from a public CDN; your document is not part of that request</li>
-          </ul>
-        </div>
+      {docs.length === 0 && !busy && (
+        <p className="local-doc-lede">
+          Your PDFs are parsed, chunked, and indexed inside this browser tab.
+          It is never uploaded or stored on any server.
+        </p>
       )}
 
-      {phase === "processing" && (
+      {docs.length > 0 && (
+        <ul className="local-doc-list">
+          {docs.map((doc) => (
+            <li key={doc.id} className="local-doc-meta">
+              <FileIcon />
+              <div>
+                <strong>{doc.fileName}</strong>
+                <small>
+                  {doc.pageCount} pages · {doc.chunkCount} passages ·{" "}
+                  {doc.embedded ? "hybrid semantic + keyword search" : "keyword search only"}
+                  {doc.truncated ? " · truncated at the passage limit" : ""}
+                </small>
+              </div>
+              <button
+                className="icon-button"
+                onClick={() => onRemoveDoc(doc.id)}
+                disabled={busy || searchBusy}
+                aria-label={`Remove ${doc.fileName}`}
+              >
+                <CloseIcon />
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {busy && (
         <div className="local-doc-progress" role="status" aria-live="polite">
           <p>{progress ? progressLabel(progress) : "Preparing…"}</p>
           <progress
@@ -124,57 +126,68 @@ export function LocalDocumentPanel({
         </div>
       )}
 
-      {phase === "error" && (
+      {error && !busy && (
         <div className="message error-message local-doc-error" role="alert">
           <div><strong>This document could not be indexed</strong><span>{error}</span></div>
-          <button onClick={onReset}><RefreshIcon /> Try another file</button>
+          <button onClick={onDismissError}><RefreshIcon /> Try another file</button>
         </div>
       )}
 
-      {phase === "ready" && meta && (
-        <div className="local-doc-ready">
-          <div className="local-doc-meta">
-            <FileIcon />
-            <div>
-              <strong>{meta.fileName}</strong>
-              <small>
-                {meta.pageCount} pages · {meta.chunkCount} passages ·{" "}
-                {meta.embedded ? "hybrid semantic + keyword search" : "keyword search only"}
-                {meta.truncated ? " · long document truncated at the passage limit" : ""}
-              </small>
-              {!meta.embedded && (
-                <small className="local-doc-warning">
-                  The embedding model could not be loaded, so search uses keyword ranking only.
-                </small>
-              )}
-            </div>
-          </div>
+      {!busy && (
+        <div className="local-doc-actions">
+          {canAdd && (
+            <label className="primary-button local-file-button">
+              Add a local PDF
+              <input
+                ref={fileInput}
+                type="file"
+                accept=".pdf,application/pdf"
+                onChange={(event) => handleFiles(event.target.files)}
+              />
+            </label>
+          )}
+          {persistedAvailable && docs.length === 0 && (
+            <button className="secondary-button" onClick={onRestore}>
+              <RefreshIcon /> Restore saved documents
+            </button>
+          )}
+        </div>
+      )}
 
+      {docs.length === 0 && !busy && (
+        <ul className="local-doc-limits">
+          <li>Up to {MAX_LOCAL_DOCUMENTS} documents, each {Math.round(MAX_FILE_BYTES / (1024 * 1024))} MB and {MAX_PAGE_COUNT} pages max</li>
+          <li>Text-based PDFs only — scanned documents need OCR, which is not supported</li>
+          <li>The embedding model (~25 MB) is downloaded once from a public CDN; your documents are not part of that request</li>
+        </ul>
+      )}
+
+      {docs.length > 0 && !busy && (
+        <div className="local-doc-ready">
           <div className="local-doc-toggles">
             <label className="toggle-label">
               <input
                 type="checkbox"
-                checked={meta.persisted}
+                checked={persistEnabled}
                 onChange={(event) => onPersistChange(event.target.checked)}
-                disabled={busy}
+                disabled={searchBusy}
               />
-              <span /> Keep this document in this browser
+              <span /> Keep these documents in this browser
             </label>
             <label className="toggle-label">
               <input
                 type="checkbox"
                 checked={hostedSynthesisEnabled}
                 onChange={(event) => onHostedSynthesisChange(event.target.checked)}
-                disabled={busy || !hostedAvailable}
+                disabled={searchBusy || !hostedAvailable}
               />
               <span /> Generate answers with the hosted model
             </label>
           </div>
-
           <p className="local-doc-privacy">
             {hostedSynthesisEnabled
-              ? "Answers send only the few retrieved excerpts (never the file) to the quota-limited hosted model."
-              : "Fully local: searches run in this tab and nothing about this document leaves your browser."}
+              ? "Answers send only the few retrieved excerpts (never the files) to the quota-limited hosted model."
+              : "Fully local: searches run in this tab and nothing about these documents leaves your browser."}
             {!hostedAvailable && " Hosted synthesis is currently unavailable, so local search continues on its own."}
           </p>
         </div>

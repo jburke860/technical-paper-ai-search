@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-07-20T18:02:57.775710+00:00",
+  "generated_at": "2026-07-20T19:47:17.946642+00:00",
   "model": "all-MiniLM-L6-v2",
   "retrieval": "Reciprocal Rank Fusion of dense cosine and BM25 rankings",
-  "question_count": 24,
-  "corpus_chunk_count": 262,
-  "corpus_sha256": "06660eff89873c888c18776e602915ad0e095432d40b093df90b551ec2da87cb",
+  "question_count": 59,
+  "corpus_chunk_count": 658,
+  "corpus_sha256": "8a394bcc84809ee7bf23f76468df949ae49a600122f097d7e90566a2b410d9b2",
   "top_k": 5,
   "metrics": {
     "recall_at_5": 1.0,
-    "mean_reciprocal_rank_at_5": 0.8263888888888888,
+    "mean_reciprocal_rank_at_5": 0.8403954802259888,
     "duplicate_result_rate": 0.0,
     "citation_page_accuracy": 1.0,
     "missing_metadata_rate": 0.0
@@ -17,9 +17,16 @@
     {
       "id": "deep-autonomy-levels",
       "recall_at_5": 1.0,
-      "reciprocal_rank": 1.0,
-      "first_relevant_rank": 1,
+      "reciprocal_rank": 0.5,
+      "first_relevant_rank": 2,
       "top_results": [
+        {
+          "id": "deep-space-autonomy-modeling-p013-9-discussion-c06",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 13,
+          "section": "9. DISCUSSION",
+          "rrf_score": 0.03226646
+        },
         {
           "id": "deep-space-autonomy-modeling-p002-2-related-work-c04",
           "paper_id": "deep-space-autonomy-modeling",
@@ -28,75 +35,68 @@
           "rrf_score": 0.03225806
         },
         {
-          "id": "deep-space-autonomy-modeling-p013-9-discussion-c06",
-          "paper_id": "deep-space-autonomy-modeling",
-          "page": 13,
-          "section": "9. DISCUSSION",
-          "rrf_score": 0.03177806
-        },
-        {
           "id": "deep-space-autonomy-modeling-p002-1-introduction-c03",
           "paper_id": "deep-space-autonomy-modeling",
           "page": 2,
           "section": "1. INTRODUCTION",
-          "rrf_score": 0.03077652
+          "rrf_score": 0.03100962
         },
         {
           "id": "deep-space-autonomy-modeling-p002-1-introduction-c01",
           "paper_id": "deep-space-autonomy-modeling",
           "page": 2,
           "section": "1. INTRODUCTION",
-          "rrf_score": 0.03007689
+          "rrf_score": 0.03077652
         },
         {
-          "id": "deep-space-autonomy-modeling-p013-9-discussion-c08",
+          "id": "deep-space-autonomy-modeling-p013-9-discussion-c05",
           "paper_id": "deep-space-autonomy-modeling",
           "page": 13,
           "section": "9. DISCUSSION",
-          "rrf_score": 0.02920635
+          "rrf_score": 0.02941813
         }
       ]
     },
     {
       "id": "deep-cruise-navigation",
       "recall_at_5": 1.0,
-      "reciprocal_rank": 1.0,
-      "first_relevant_rank": 1,
+      "reciprocal_rank": 0.5,
+      "first_relevant_rank": 2,
       "top_results": [
-        {
-          "id": "deep-space-autonomy-modeling-p003-dare-conops-c02",
-          "paper_id": "deep-space-autonomy-modeling",
-          "page": 3,
-          "section": "DARE CONOPS",
-          "rrf_score": 0.03109932
-        },
         {
           "id": "deep-space-autonomy-modeling-p002-2-related-work-c04",
           "paper_id": "deep-space-autonomy-modeling",
           "page": 2,
           "section": "2. RELATED WORK",
-          "rrf_score": 0.03067916
+          "rrf_score": 0.03109932
         },
         {
-          "id": "deep-space-autonomy-modeling-p005-4-preliminaries-c03",
+          "id": "deep-space-autonomy-modeling-p003-dare-conops-c02",
           "paper_id": "deep-space-autonomy-modeling",
-          "page": 5,
-          "section": "4. PRELIMINARIES",
-          "rrf_score": 0.02919864
+          "page": 3,
+          "section": "DARE CONOPS",
+          "rrf_score": 0.0308862
         },
         {
           "id": "autonomous-systems-and-ai-p008-applications-of-autonomous-systems-and-ai-c01",
           "paper_id": "autonomous-systems-and-ai",
           "page": 8,
           "section": "APPLICATIONS OF AUTONOMOUS SYSTEMS AND AI",
-          "rrf_score": 0.02895833
+          "rrf_score": 0.02991071
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p005-4-preliminaries-c03",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 5,
+          "section": "4. PRELIMINARIES",
+          "rrf_score": 0.02816901
         },
         {
           "id": "deep-space-autonomy-modeling-p011-7-navigation-subsystem-c03",
           "paper_id": "deep-space-autonomy-modeling",
           "page": 11,
           "section": "7. NAVIGATION SUBSYSTEM",
-          "rrf_score": 0.02782609
+          "rrf_score": 0.0268759
         }
       ]
     },
@@ -121,25 +121,25 @@
           "rrf_score": 0.03200205
         },
         {
-          "id": "deep-space-autonomy-modeling-p007-5-power-subsystem-c03",
+          "id": "deep-space-autonomy-modeling-p005-5-power-subsystem-c05",
           "paper_id": "deep-space-autonomy-modeling",
-          "page": 7,
+          "page": 5,
           "section": "5. POWER SUBSYSTEM",
-          "rrf_score": 0.03033088
+          "rrf_score": 0.03067916
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p006-5-power-subsystem-c01",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 6,
+          "section": "5. POWER SUBSYSTEM",
+          "rrf_score": 0.03055037
         },
         {
           "id": "deep-space-autonomy-modeling-p006-5-power-subsystem-c05",
           "paper_id": "deep-space-autonomy-modeling",
           "page": 6,
           "section": "5. POWER SUBSYSTEM",
-          "rrf_score": 0.03011775
-        },
-        {
-          "id": "deep-space-autonomy-modeling-p005-5-power-subsystem-c05",
-          "paper_id": "deep-space-autonomy-modeling",
-          "page": 5,
-          "section": "5. POWER SUBSYSTEM",
-          "rrf_score": 0.02990696
+          "rrf_score": 0.03055037
         }
       ]
     },
@@ -204,7 +204,7 @@
           "paper_id": "deep-space-autonomy-modeling",
           "page": 12,
           "section": "8. COMMUNICATION SUBSYSTEM",
-          "rrf_score": 0.03200205
+          "rrf_score": 0.03175403
         },
         {
           "id": "deep-space-autonomy-modeling-p012-8-communication-subsystem-c05",
@@ -218,14 +218,14 @@
           "paper_id": "deep-space-autonomy-modeling",
           "page": 12,
           "section": "8. COMMUNICATION SUBSYSTEM",
-          "rrf_score": 0.02938653
+          "rrf_score": 0.02995752
         },
         {
           "id": "deep-space-autonomy-modeling-p013-8-communication-subsystem-c01",
           "paper_id": "deep-space-autonomy-modeling",
           "page": 13,
           "section": "8. COMMUNICATION SUBSYSTEM",
-          "rrf_score": 0.02921109
+          "rrf_score": 0.02967033
         }
       ]
     },
@@ -240,7 +240,7 @@
           "paper_id": "deep-space-autonomy-modeling",
           "page": 13,
           "section": "8. COMMUNICATION SUBSYSTEM",
-          "rrf_score": 0.03201844
+          "rrf_score": 0.03226646
         },
         {
           "id": "deep-space-autonomy-modeling-p013-9-discussion-c07",
@@ -257,18 +257,18 @@
           "rrf_score": 0.02990696
         },
         {
-          "id": "deep-space-autonomy-modeling-p008-5-power-subsystem-c01",
-          "paper_id": "deep-space-autonomy-modeling",
-          "page": 8,
-          "section": "5. POWER SUBSYSTEM",
-          "rrf_score": 0.02853124
-        },
-        {
           "id": "deep-space-autonomy-modeling-p002-2-related-work-c05",
           "paper_id": "deep-space-autonomy-modeling",
           "page": 2,
           "section": "2. RELATED WORK",
-          "rrf_score": 0.02843889
+          "rrf_score": 0.02941813
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p008-5-power-subsystem-c01",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 8,
+          "section": "5. POWER SUBSYSTEM",
+          "rrf_score": 0.02862903
         }
       ]
     },
@@ -297,7 +297,7 @@
           "paper_id": "deep-space-autonomy-modeling",
           "page": 1,
           "section": "1. INTRODUCTION",
-          "rrf_score": 0.02995752
+          "rrf_score": 0.03015873
         },
         {
           "id": "deep-space-autonomy-modeling-p002-1-introduction-c02",
@@ -307,97 +307,97 @@
           "rrf_score": 0.02972678
         },
         {
-          "id": "deep-space-autonomy-modeling-p002-2-related-work-c05",
+          "id": "deep-space-autonomy-modeling-p011-7-navigation-subsystem-c03",
           "paper_id": "deep-space-autonomy-modeling",
-          "page": 2,
-          "section": "2. RELATED WORK",
-          "rrf_score": 0.02963126
+          "page": 11,
+          "section": "7. NAVIGATION SUBSYSTEM",
+          "rrf_score": 0.02970951
         }
       ]
     },
     {
       "id": "deep-dare-case-study",
       "recall_at_5": 1.0,
-      "reciprocal_rank": 0.5,
-      "first_relevant_rank": 2,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
       "top_results": [
+        {
+          "id": "deep-space-autonomy-modeling-p003-dare-conops-c03",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 3,
+          "section": "DARE CONOPS",
+          "rrf_score": 0.03011775
+        },
         {
           "id": "deep-space-autonomy-modeling-p014-9-discussion-c04",
           "paper_id": "deep-space-autonomy-modeling",
           "page": 14,
           "section": "9. DISCUSSION",
-          "rrf_score": 0.03055037
+          "rrf_score": 0.03011775
         },
         {
           "id": "deep-space-autonomy-modeling-p003-exploration-of-small-bodies-c04",
           "paper_id": "deep-space-autonomy-modeling",
           "page": 3,
           "section": "EXPLORATION OF SMALL BODIES",
-          "rrf_score": 0.0298574
+          "rrf_score": 0.03007689
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p002-2-related-work-c05",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 2,
+          "section": "2. RELATED WORK",
+          "rrf_score": 0.02995752
         },
         {
           "id": "deep-space-autonomy-modeling-p004-exploration-of-small-bodies-c02",
           "paper_id": "deep-space-autonomy-modeling",
           "page": 4,
           "section": "EXPLORATION OF SMALL BODIES",
-          "rrf_score": 0.02972678
-        },
-        {
-          "id": "deep-space-autonomy-modeling-p003-dare-conops-c03",
-          "paper_id": "deep-space-autonomy-modeling",
-          "page": 3,
-          "section": "DARE CONOPS",
-          "rrf_score": 0.02964427
-        },
-        {
-          "id": "deep-space-autonomy-modeling-p015-10-conclusion-c01",
-          "paper_id": "deep-space-autonomy-modeling",
-          "page": 15,
-          "section": "10. CONCLUSION",
-          "rrf_score": 0.02951389
+          "rrf_score": 0.02946237
         }
       ]
     },
     {
       "id": "aero-pose-estimation",
       "recall_at_5": 1.0,
-      "reciprocal_rank": 1.0,
-      "first_relevant_rank": 1,
+      "reciprocal_rank": 0.3333333333333333,
+      "first_relevant_rank": 3,
       "top_results": [
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p001-djamila-aouadaa-c01",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 1,
+          "section": "Djamila Aouadaa",
+          "rrf_score": 0.03226646
+        },
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p002-1-introduction-c01",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 2,
+          "section": "1. Introduction",
+          "rrf_score": 0.03149802
+        },
         {
           "id": "aerospace-computer-vision-p011-3-3-fundamental-works-c01",
           "paper_id": "aerospace-computer-vision",
           "page": 11,
           "section": "3.3 Fundamental works",
-          "rrf_score": 0.03278689
+          "rrf_score": 0.03083491
         },
         {
-          "id": "aerospace-computer-vision-p020-conclusions-c05",
-          "paper_id": "aerospace-computer-vision",
+          "id": "dl-spacecraft-pose-estimation-survey-p020-4-2-explainability-of-algorithms-c02",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
           "page": 20,
-          "section": "Conclusions",
-          "rrf_score": 0.03100962
+          "section": "4.2. Explainability of Algorithms",
+          "rrf_score": 0.02889344
         },
         {
-          "id": "aerospace-computer-vision-p009-2-3-3-limitations-of-traditional-perception-c01",
-          "paper_id": "aerospace-computer-vision",
-          "page": 9,
-          "section": "2.3.3 Limitations of traditional perception methods",
-          "rrf_score": 0.02987737
-        },
-        {
-          "id": "aerospace-computer-vision-p011-dl-based-3d-reconstruction-c03",
+          "id": "aerospace-computer-vision-p011-dl-based-3d-reconstruction-c04",
           "paper_id": "aerospace-computer-vision",
           "page": 11,
           "section": "DL-based 3D reconstruction",
-          "rrf_score": 0.02963126
-        },
-        {
-          "id": "aerospace-computer-vision-p009-dl-based-pose-estimation-c02",
-          "paper_id": "aerospace-computer-vision",
-          "page": 9,
-          "section": "DL-based pose estimation",
-          "rrf_score": 0.02943723
+          "rrf_score": 0.0276929
         }
       ]
     },
@@ -408,13 +408,6 @@
       "first_relevant_rank": 3,
       "top_results": [
         {
-          "id": "aerospace-computer-vision-p001-huilin-chen1-qiyu-sun1-fangfei-li2-yang-tang-c02",
-          "paper_id": "aerospace-computer-vision",
-          "page": 1,
-          "section": "Huilin Chen1, Qiyu Sun1, Fangfei Li2* & Yang Tang1*",
-          "rrf_score": 0.03105441
-        },
-        {
           "id": "aerospace-computer-vision-p007-2-3-2-traditional-3d-reconstruction-c04",
           "paper_id": "aerospace-computer-vision",
           "page": 7,
@@ -422,25 +415,32 @@
           "rrf_score": 0.03100962
         },
         {
+          "id": "aerospace-computer-vision-p001-huilin-chen1-qiyu-sun1-fangfei-li2-yang-tang-c02",
+          "paper_id": "aerospace-computer-vision",
+          "page": 1,
+          "section": "Huilin Chen1, Qiyu Sun1, Fangfei Li2* & Yang Tang1*",
+          "rrf_score": 0.03083491
+        },
+        {
           "id": "aerospace-computer-vision-p008-2-3-3-limitations-of-traditional-perception-c04",
           "paper_id": "aerospace-computer-vision",
           "page": 8,
           "section": "2.3.3 Limitations of traditional perception methods",
-          "rrf_score": 0.02995752
-        },
-        {
-          "id": "aerospace-computer-vision-p001-huilin-chen1-qiyu-sun1-fangfei-li2-yang-tang-c01",
-          "paper_id": "aerospace-computer-vision",
-          "page": 1,
-          "section": "Huilin Chen1, Qiyu Sun1, Fangfei Li2* & Yang Tang1*",
-          "rrf_score": 0.02955134
+          "rrf_score": 0.02920635
         },
         {
           "id": "aerospace-computer-vision-p007-2-3-2-traditional-3d-reconstruction-c05",
           "paper_id": "aerospace-computer-vision",
           "page": 7,
           "section": "2.3.2 Traditional 3D reconstruction",
-          "rrf_score": 0.02946237
+          "rrf_score": 0.02886003
+        },
+        {
+          "id": "aerospace-computer-vision-p008-2-3-2-traditional-3d-reconstruction-c01",
+          "paper_id": "aerospace-computer-vision",
+          "page": 8,
+          "section": "2.3.2 Traditional 3D reconstruction",
+          "rrf_score": 0.02866503
         }
       ]
     },
@@ -458,32 +458,32 @@
           "rrf_score": 0.03278689
         },
         {
+          "id": "non-cooperative-target-navigation-p011-6-implementation-c01",
+          "paper_id": "non-cooperative-target-navigation",
+          "page": 11,
+          "section": "6. IMPLEMENTATION",
+          "rrf_score": 0.02946912
+        },
+        {
           "id": "aerospace-computer-vision-p012-dl-based-recognition-c04",
           "paper_id": "aerospace-computer-vision",
           "page": 12,
           "section": "DL-based Recognition",
-          "rrf_score": 0.03105441
+          "rrf_score": 0.0289916
         },
         {
-          "id": "aerospace-computer-vision-p013-5-3-limitations-and-solutions-c04",
-          "paper_id": "aerospace-computer-vision",
-          "page": 13,
-          "section": "5.3 Limitations and solutions",
-          "rrf_score": 0.03036577
+          "id": "spacecraft-component-detection-spy-p002-component-detection-c02",
+          "paper_id": "spacecraft-component-detection-spy",
+          "page": 2,
+          "section": "Component Detection",
+          "rrf_score": 0.02878289
         },
         {
-          "id": "aerospace-computer-vision-p021-conclusions-c01",
-          "paper_id": "aerospace-computer-vision",
-          "page": 21,
-          "section": "Conclusions",
-          "rrf_score": 0.02951389
-        },
-        {
-          "id": "aerospace-computer-vision-p021-conclusions-c02",
-          "paper_id": "aerospace-computer-vision",
-          "page": 21,
-          "section": "Conclusions",
-          "rrf_score": 0.02889813
+          "id": "non-cooperative-target-navigation-p001-1-introduction-c03",
+          "paper_id": "non-cooperative-target-navigation",
+          "page": 1,
+          "section": "1. INTRODUCTION",
+          "rrf_score": 0.02854251
         }
       ]
     },
@@ -494,47 +494,47 @@
       "first_relevant_rank": 1,
       "top_results": [
         {
-          "id": "aerospace-computer-vision-p009-dl-based-pose-estimation-c05",
-          "paper_id": "aerospace-computer-vision",
-          "page": 9,
-          "section": "DL-based pose estimation",
-          "rrf_score": 0.03102453
+          "id": "dl-spacecraft-pose-estimation-survey-p018-3-3-1-realism-of-synthetically-generated-dat-c03",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 18,
+          "section": "3.3.1. Realism of Synthetically Generated Datasets",
+          "rrf_score": 0.03252247
         },
         {
-          "id": "aerospace-computer-vision-p015-6-3-1-less-independent-of-data-c03",
-          "paper_id": "aerospace-computer-vision",
-          "page": 15,
-          "section": "6.3.1 Less independent of Data",
-          "rrf_score": 0.03033088
+          "id": "dl-spacecraft-pose-estimation-survey-p016-3-2-bridging-the-domain-gap-c05",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 16,
+          "section": "3.2. Bridging the Domain Gap",
+          "rrf_score": 0.03154496
         },
         {
-          "id": "aerospace-computer-vision-p014-6-2-subsequent-tasks-based-on-intelligent-pe-c02",
-          "paper_id": "aerospace-computer-vision",
+          "id": "dl-spacecraft-pose-estimation-survey-p014-3-datasets-c02",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
           "page": 14,
-          "section": "6.2 Subsequent tasks based on intelligent perception",
-          "rrf_score": 0.03030999
+          "section": "3. Datasets",
+          "rrf_score": 0.03149802
         },
         {
-          "id": "aerospace-computer-vision-p009-dl-based-pose-estimation-c04",
-          "paper_id": "aerospace-computer-vision",
-          "page": 9,
-          "section": "DL-based pose estimation",
-          "rrf_score": 0.03007689
+          "id": "dl-spacecraft-pose-estimation-survey-p018-3-3-2-algorithm-evaluation-c04",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 18,
+          "section": "3.3.2. Algorithm Evaluation",
+          "rrf_score": 0.0305789
         },
         {
-          "id": "aerospace-computer-vision-p013-5-3-limitations-and-solutions-c03",
-          "paper_id": "aerospace-computer-vision",
-          "page": 13,
-          "section": "5.3 Limitations and solutions",
-          "rrf_score": 0.02920635
+          "id": "orbit-domain-gap-augmentation-p003-2-related-work-c01",
+          "paper_id": "orbit-domain-gap-augmentation",
+          "page": 3,
+          "section": "2. RELATED WORK",
+          "rrf_score": 0.03053613
         }
       ]
     },
     {
       "id": "aero-information-fusion",
       "recall_at_5": 1.0,
-      "reciprocal_rank": 0.25,
-      "first_relevant_rank": 4,
+      "reciprocal_rank": 0.3333333333333333,
+      "first_relevant_rank": 3,
       "top_results": [
         {
           "id": "aerospace-computer-vision-p001-huilin-chen1-qiyu-sun1-fangfei-li2-yang-tang-c02",
@@ -551,25 +551,25 @@
           "rrf_score": 0.03154496
         },
         {
-          "id": "aerospace-computer-vision-p014-6-1-deployment-of-dl-algorithms-c05",
-          "paper_id": "aerospace-computer-vision",
-          "page": 14,
-          "section": "6.1 Deployment of DL algorithms",
-          "rrf_score": 0.03100962
-        },
-        {
           "id": "aerospace-computer-vision-p017-6-3-3-multi-source-information-fusion-c02",
           "paper_id": "aerospace-computer-vision",
           "page": 17,
           "section": "6.3.3 Multi-source information fusion",
-          "rrf_score": 0.03077652
+          "rrf_score": 0.03100962
         },
         {
           "id": "aerospace-computer-vision-p006-2-2-an-taxonomy-of-sensors-c02",
           "paper_id": "aerospace-computer-vision",
           "page": 6,
           "section": "2.2 An taxonomy of sensors",
-          "rrf_score": 0.03036577
+          "rrf_score": 0.03079839
+        },
+        {
+          "id": "aerospace-computer-vision-p014-6-1-deployment-of-dl-algorithms-c05",
+          "paper_id": "aerospace-computer-vision",
+          "page": 14,
+          "section": "6.1 Deployment of DL algorithms",
+          "rrf_score": 0.03053613
         }
       ]
     },
@@ -608,11 +608,11 @@
           "rrf_score": 0.03100962
         },
         {
-          "id": "aerospace-computer-vision-p014-6-1-deployment-of-dl-algorithms-c03",
-          "paper_id": "aerospace-computer-vision",
-          "page": 14,
-          "section": "6.1 Deployment of DL algorithms",
-          "rrf_score": 0.03021354
+          "id": "dl-spacecraft-pose-estimation-survey-p019-4-future-research-directions-c04",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 19,
+          "section": "4. Future Research Directions",
+          "rrf_score": 0.0298574
         }
       ]
     },
@@ -627,7 +627,7 @@
           "paper_id": "aerospace-computer-vision",
           "page": 4,
           "section": "2.1 Classical space programs",
-          "rrf_score": 0.03200205
+          "rrf_score": 0.03225806
         },
         {
           "id": "aerospace-computer-vision-p002-introduction-c04",
@@ -641,7 +641,14 @@
           "paper_id": "aerospace-computer-vision",
           "page": 2,
           "section": "Introduction",
-          "rrf_score": 0.03007689
+          "rrf_score": 0.03053613
+        },
+        {
+          "id": "aerospace-computer-vision-p002-introduction-c02",
+          "paper_id": "aerospace-computer-vision",
+          "page": 2,
+          "section": "Introduction",
+          "rrf_score": 0.02995752
         },
         {
           "id": "aerospace-computer-vision-p001-introduction-c03",
@@ -649,13 +656,6 @@
           "page": 1,
           "section": "Introduction",
           "rrf_score": 0.02991071
-        },
-        {
-          "id": "aerospace-computer-vision-p003-2-1-classical-space-programs-c03",
-          "paper_id": "aerospace-computer-vision",
-          "page": 3,
-          "section": "2.1 Classical space programs",
-          "rrf_score": 0.02932363
         }
       ]
     },
@@ -666,39 +666,39 @@
       "first_relevant_rank": 4,
       "top_results": [
         {
-          "id": "aerospace-computer-vision-p001-huilin-chen1-qiyu-sun1-fangfei-li2-yang-tang-c02",
-          "paper_id": "aerospace-computer-vision",
-          "page": 1,
-          "section": "Huilin Chen1, Qiyu Sun1, Fangfei Li2* & Yang Tang1*",
-          "rrf_score": 0.03201844
-        },
-        {
           "id": "aerospace-computer-vision-p003-2-1-classical-space-programs-c03",
           "paper_id": "aerospace-computer-vision",
           "page": 3,
           "section": "2.1 Classical space programs",
-          "rrf_score": 0.03201844
+          "rrf_score": 0.03177806
+        },
+        {
+          "id": "aerospace-computer-vision-p001-huilin-chen1-qiyu-sun1-fangfei-li2-yang-tang-c02",
+          "paper_id": "aerospace-computer-vision",
+          "page": 1,
+          "section": "Huilin Chen1, Qiyu Sun1, Fangfei Li2* & Yang Tang1*",
+          "rrf_score": 0.03151365
         },
         {
           "id": "aerospace-computer-vision-p001-huilin-chen1-qiyu-sun1-fangfei-li2-yang-tang-c01",
           "paper_id": "aerospace-computer-vision",
           "page": 1,
           "section": "Huilin Chen1, Qiyu Sun1, Fangfei Li2* & Yang Tang1*",
-          "rrf_score": 0.03053613
+          "rrf_score": 0.03079839
         },
         {
           "id": "aerospace-computer-vision-p005-2-2-an-taxonomy-of-sensors-c03",
           "paper_id": "aerospace-computer-vision",
           "page": 5,
           "section": "2.2 An taxonomy of sensors",
-          "rrf_score": 0.03041475
+          "rrf_score": 0.03036577
         },
         {
-          "id": "aerospace-computer-vision-p006-2-2-an-taxonomy-of-sensors-c01",
+          "id": "aerospace-computer-vision-p009-2-3-3-limitations-of-traditional-perception-c01",
           "paper_id": "aerospace-computer-vision",
-          "page": 6,
-          "section": "2.2 An taxonomy of sensors",
-          "rrf_score": 0.02982766
+          "page": 9,
+          "section": "2.3.3 Limitations of traditional perception methods",
+          "rrf_score": 0.02963126
         }
       ]
     },
@@ -720,28 +720,28 @@
           "paper_id": "autonomous-systems-and-ai",
           "page": 12,
           "section": "ETHICAL AND SOCIAL IMPLICATIONS",
-          "rrf_score": 0.03030999
+          "rrf_score": 0.03055037
         },
         {
           "id": "autonomous-systems-and-ai-p001-autonomous-system-and-ai-c01",
           "paper_id": "autonomous-systems-and-ai",
           "page": 1,
           "section": "Autonomous System and AI",
-          "rrf_score": 0.02861201
-        },
-        {
-          "id": "autonomous-systems-and-ai-p008-applications-of-autonomous-systems-and-ai-c02",
-          "paper_id": "autonomous-systems-and-ai",
-          "page": 8,
-          "section": "APPLICATIONS OF AUTONOMOUS SYSTEMS AND AI",
-          "rrf_score": 0.028125
+          "rrf_score": 0.02886003
         },
         {
           "id": "autonomous-systems-and-ai-p011-ethical-and-social-implications-c03",
           "paper_id": "autonomous-systems-and-ai",
           "page": 11,
           "section": "ETHICAL AND SOCIAL IMPLICATIONS",
-          "rrf_score": 0.02786378
+          "rrf_score": 0.02808327
+        },
+        {
+          "id": "autonomous-systems-and-ai-p011-ethical-and-social-implications-c02",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 11,
+          "section": "ETHICAL AND SOCIAL IMPLICATIONS",
+          "rrf_score": 0.02788462
         }
       ]
     },
@@ -766,6 +766,13 @@
           "rrf_score": 0.03226646
         },
         {
+          "id": "autonomous-systems-and-ai-p002-autonomous-system-and-ai-c02",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 2,
+          "section": "Autonomous System and AI",
+          "rrf_score": 0.03102453
+        },
+        {
           "id": "autonomous-systems-and-ai-p003-autonomous-system-and-ai-c01",
           "paper_id": "autonomous-systems-and-ai",
           "page": 3,
@@ -778,13 +785,6 @@
           "page": 12,
           "section": "ETHICAL AND SOCIAL IMPLICATIONS",
           "rrf_score": 0.03100962
-        },
-        {
-          "id": "autonomous-systems-and-ai-p011-ethical-and-social-implications-c02",
-          "paper_id": "autonomous-systems-and-ai",
-          "page": 11,
-          "section": "ETHICAL AND SOCIAL IMPLICATIONS",
-          "rrf_score": 0.03083491
         }
       ]
     },
@@ -816,18 +816,18 @@
           "rrf_score": 0.03174603
         },
         {
+          "id": "autonomous-systems-and-ai-p005-role-of-ai-in-autonomous-systems-c02",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 5,
+          "section": "ROLE OF AI IN AUTONOMOUS SYSTEMS",
+          "rrf_score": 0.0308862
+        },
+        {
           "id": "autonomous-systems-and-ai-p001-autonomous-system-and-ai-c01",
           "paper_id": "autonomous-systems-and-ai",
           "page": 1,
           "section": "Autonomous System and AI",
           "rrf_score": 0.03053613
-        },
-        {
-          "id": "autonomous-systems-and-ai-p005-role-of-ai-in-autonomous-systems-c02",
-          "paper_id": "autonomous-systems-and-ai",
-          "page": 5,
-          "section": "ROLE OF AI IN AUTONOMOUS SYSTEMS",
-          "rrf_score": 0.03047795
         }
       ]
     },
@@ -856,21 +856,21 @@
           "paper_id": "autonomous-systems-and-ai",
           "page": 2,
           "section": "Autonomous System and AI",
-          "rrf_score": 0.03125
-        },
-        {
-          "id": "autonomous-systems-and-ai-p013-ethical-and-social-implications-c02",
-          "paper_id": "autonomous-systems-and-ai",
-          "page": 13,
-          "section": "ETHICAL AND SOCIAL IMPLICATIONS",
-          "rrf_score": 0.03007689
+          "rrf_score": 0.03149802
         },
         {
           "id": "autonomous-systems-and-ai-p005-role-of-ai-in-autonomous-systems-c03",
           "paper_id": "autonomous-systems-and-ai",
           "page": 5,
           "section": "ROLE OF AI IN AUTONOMOUS SYSTEMS",
-          "rrf_score": 0.02972678
+          "rrf_score": 0.03067916
+        },
+        {
+          "id": "autonomous-systems-and-ai-p013-ethical-and-social-implications-c02",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 13,
+          "section": "ETHICAL AND SOCIAL IMPLICATIONS",
+          "rrf_score": 0.03030999
         }
       ]
     },
@@ -885,28 +885,28 @@
           "paper_id": "autonomous-systems-and-ai",
           "page": 4,
           "section": "UNDERSTANDING AUTONOMOUS SYSTEMS",
-          "rrf_score": 0.03149802
+          "rrf_score": 0.03174603
         },
         {
-          "id": "autonomous-systems-and-ai-p009-applications-of-autonomous-systems-and-ai-c01",
+          "id": "autonomous-systems-and-ai-p002-autonomous-system-and-ai-c01",
           "paper_id": "autonomous-systems-and-ai",
-          "page": 9,
-          "section": "APPLICATIONS OF AUTONOMOUS SYSTEMS AND AI",
-          "rrf_score": 0.03053613
+          "page": 2,
+          "section": "Autonomous System and AI",
+          "rrf_score": 0.03105441
         },
         {
           "id": "autonomous-systems-and-ai-p003-understanding-autonomous-systems-c03",
           "paper_id": "autonomous-systems-and-ai",
           "page": 3,
           "section": "UNDERSTANDING AUTONOMOUS SYSTEMS",
-          "rrf_score": 0.03030999
+          "rrf_score": 0.03100962
         },
         {
           "id": "autonomous-systems-and-ai-p003-autonomous-system-and-ai-c01",
           "paper_id": "autonomous-systems-and-ai",
           "page": 3,
           "section": "Autonomous System and AI",
-          "rrf_score": 0.03028233
+          "rrf_score": 0.0308862
         },
         {
           "id": "autonomous-systems-and-ai-p007-applications-of-autonomous-systems-and-ai-c03",
@@ -935,28 +935,28 @@
           "paper_id": "autonomous-systems-and-ai",
           "page": 12,
           "section": "ETHICAL AND SOCIAL IMPLICATIONS",
-          "rrf_score": 0.03009207
-        },
-        {
-          "id": "autonomous-systems-and-ai-p002-autonomous-system-and-ai-c02",
-          "paper_id": "autonomous-systems-and-ai",
-          "page": 2,
-          "section": "Autonomous System and AI",
-          "rrf_score": 0.02987737
+          "rrf_score": 0.02972678
         },
         {
           "id": "autonomous-systems-and-ai-p011-ethical-and-social-implications-c01",
           "paper_id": "autonomous-systems-and-ai",
           "page": 11,
           "section": "ETHICAL AND SOCIAL IMPLICATIONS",
-          "rrf_score": 0.02970951
+          "rrf_score": 0.02932363
+        },
+        {
+          "id": "autonomous-systems-and-ai-p002-autonomous-system-and-ai-c02",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 2,
+          "section": "Autonomous System and AI",
+          "rrf_score": 0.0292735
         },
         {
           "id": "autonomous-systems-and-ai-p011-ethical-and-social-implications-c02",
           "paper_id": "autonomous-systems-and-ai",
           "page": 11,
           "section": "ETHICAL AND SOCIAL IMPLICATIONS",
-          "rrf_score": 0.02853124
+          "rrf_score": 0.02837302
         }
       ]
     },
@@ -988,34 +988,27 @@
           "rrf_score": 0.02854251
         },
         {
-          "id": "autonomous-systems-and-ai-p006-role-of-ai-in-autonomous-systems-c01",
-          "paper_id": "autonomous-systems-and-ai",
-          "page": 6,
-          "section": "ROLE OF AI IN AUTONOMOUS SYSTEMS",
-          "rrf_score": 0.02844551
+          "id": "deep-space-autonomy-modeling-p016-references-c05",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 16,
+          "section": "REFERENCES",
+          "rrf_score": 0.01612903
         },
         {
-          "id": "autonomous-systems-and-ai-p008-applications-of-autonomous-systems-and-ai-c01",
+          "id": "autonomous-systems-and-ai-p005-understanding-autonomous-systems-c01",
           "paper_id": "autonomous-systems-and-ai",
-          "page": 8,
-          "section": "APPLICATIONS OF AUTONOMOUS SYSTEMS AND AI",
-          "rrf_score": 0.02744361
+          "page": 5,
+          "section": "UNDERSTANDING AUTONOMOUS SYSTEMS",
+          "rrf_score": 0.01587302
         }
       ]
     },
     {
       "id": "autonomous-regulation",
       "recall_at_5": 1.0,
-      "reciprocal_rank": 1.0,
-      "first_relevant_rank": 1,
+      "reciprocal_rank": 0.5,
+      "first_relevant_rank": 2,
       "top_results": [
-        {
-          "id": "autonomous-systems-and-ai-p012-ethical-and-social-implications-c02",
-          "paper_id": "autonomous-systems-and-ai",
-          "page": 12,
-          "section": "ETHICAL AND SOCIAL IMPLICATIONS",
-          "rrf_score": 0.03252247
-        },
         {
           "id": "autonomous-systems-and-ai-p002-autonomous-system-and-ai-c02",
           "paper_id": "autonomous-systems-and-ai",
@@ -1024,11 +1017,18 @@
           "rrf_score": 0.03226646
         },
         {
+          "id": "autonomous-systems-and-ai-p012-ethical-and-social-implications-c02",
+          "paper_id": "autonomous-systems-and-ai",
+          "page": 12,
+          "section": "ETHICAL AND SOCIAL IMPLICATIONS",
+          "rrf_score": 0.03225806
+        },
+        {
           "id": "autonomous-systems-and-ai-p002-autonomous-system-and-ai-c03",
           "paper_id": "autonomous-systems-and-ai",
           "page": 2,
           "section": "Autonomous System and AI",
-          "rrf_score": 0.03083491
+          "rrf_score": 0.03109932
         },
         {
           "id": "autonomous-systems-and-ai-p003-autonomous-system-and-ai-c01",
@@ -1043,6 +1043,1511 @@
           "page": 12,
           "section": "ETHICAL AND SOCIAL IMPLICATIONS",
           "rrf_score": 0.03077652
+        }
+      ]
+    },
+    {
+      "id": "pose-survey-hybrid-vs-direct-kspec",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p008-2-3-algorithm-comparison-c04",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 8,
+          "section": "2.3. Algorithm Comparison",
+          "rrf_score": 0.03278689
+        },
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p001-djamila-aouadaa-c02",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 1,
+          "section": "Djamila Aouadaa",
+          "rrf_score": 0.03174603
+        },
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p003-1-introduction-c01",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 3,
+          "section": "1. Introduction",
+          "rrf_score": 0.03128055
+        },
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p020-4-5-domain-adaptation-c07",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 20,
+          "section": "4.5. Domain Adaptation",
+          "rrf_score": 0.03125
+        },
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p008-2-3-algorithm-comparison-c03",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 8,
+          "section": "2.3. Algorithm Comparison",
+          "rrf_score": 0.03030999
+        }
+      ]
+    },
+    {
+      "id": "pose-survey-keypoints-without-cad",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p005-2-1-2-keypoint-prediction-c02",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 5,
+          "section": "2.1.2. Keypoint Prediction",
+          "rrf_score": 0.03278689
+        },
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p006-2-1-3-pose-computation-c03",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 6,
+          "section": "2.1.3. Pose Computation",
+          "rrf_score": 0.03105441
+        },
+        {
+          "id": "aerospace-computer-vision-p008-2-3-2-traditional-3d-reconstruction-c02",
+          "paper_id": "aerospace-computer-vision",
+          "page": 8,
+          "section": "2.3.2 Traditional 3D reconstruction",
+          "rrf_score": 0.03033088
+        },
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p005-2-1-2-keypoint-prediction-c03",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 5,
+          "section": "2.1.2. Keypoint Prediction",
+          "rrf_score": 0.02957165
+        },
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p008-2-3-algorithm-comparison-c03",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 8,
+          "section": "2.3. Algorithm Comparison",
+          "rrf_score": 0.02869353
+        }
+      ]
+    },
+    {
+      "id": "pose-survey-pose-space-discretisation",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p006-2-1-3-pose-computation-c04",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 6,
+          "section": "2.1.3. Pose Computation",
+          "rrf_score": 0.03278689
+        },
+        {
+          "id": "aerospace-computer-vision-p009-dl-based-pose-estimation-c02",
+          "paper_id": "aerospace-computer-vision",
+          "page": 9,
+          "section": "DL-based pose estimation",
+          "rrf_score": 0.02857726
+        },
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p006-2-1-3-pose-computation-c05",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 6,
+          "section": "2.1.3. Pose Computation",
+          "rrf_score": 0.02678571
+        },
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p015-3-1-summary-of-datasets-simulators-testbeds-c03",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 15,
+          "section": "3.1. Summary of Datasets, Simulators & Testbeds",
+          "rrf_score": 0.02599156
+        },
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p007-2-2-direct-end-to-end-approaches-c01",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 7,
+          "section": "2.2. Direct End-to-end Approaches",
+          "rrf_score": 0.01612903
+        }
+      ]
+    },
+    {
+      "id": "pose-survey-spnv2-online-refinement",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p007-2-2-direct-end-to-end-approaches-c02",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 7,
+          "section": "2.2. Direct End-to-end Approaches",
+          "rrf_score": 0.03278689
+        },
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p007-2-2-direct-end-to-end-approaches-c01",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 7,
+          "section": "2.2. Direct End-to-end Approaches",
+          "rrf_score": 0.03105441
+        },
+        {
+          "id": "orbit-domain-gap-augmentation-p003-2-related-work-c03",
+          "paper_id": "orbit-domain-gap-augmentation",
+          "page": 3,
+          "section": "2. RELATED WORK",
+          "rrf_score": 0.03036577
+        },
+        {
+          "id": "orbit-domain-gap-augmentation-p002-1-institute-of-robotics-and-mechatronics-ger-c01",
+          "paper_id": "orbit-domain-gap-augmentation",
+          "page": 2,
+          "section": "1 Institute of Robotics and Mechatronics, German Aerospace Center (DLR),",
+          "rrf_score": 0.0282194
+        },
+        {
+          "id": "orbit-domain-gap-augmentation-p004-2-related-work-c01",
+          "paper_id": "orbit-domain-gap-augmentation",
+          "page": 4,
+          "section": "2. RELATED WORK",
+          "rrf_score": 0.01612903
+        }
+      ]
+    },
+    {
+      "id": "pose-survey-testbed-lighting-emulation",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p016-3-2-1-data-augmentation-c03",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 16,
+          "section": "3.2.1. Data Augmentation",
+          "rrf_score": 0.03278689
+        },
+        {
+          "id": "orbit-domain-gap-augmentation-p006-4-experiment-c04",
+          "paper_id": "orbit-domain-gap-augmentation",
+          "page": 6,
+          "section": "4. EXPERIMENT",
+          "rrf_score": 0.03105441
+        },
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p016-3-2-1-data-augmentation-c02",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 16,
+          "section": "3.2.1. Data Augmentation",
+          "rrf_score": 0.03021354
+        },
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p015-3-1-summary-of-datasets-simulators-testbeds-c02",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 15,
+          "section": "3.1. Summary of Datasets, Simulators & Testbeds",
+          "rrf_score": 0.02848485
+        },
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p015-3-1-summary-of-datasets-simulators-testbeds-c01",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 15,
+          "section": "3.1. Summary of Datasets, Simulators & Testbeds",
+          "rrf_score": 0.02843889
+        }
+      ]
+    },
+    {
+      "id": "pose-survey-differentiable-pose-computation",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p006-2-1-3-pose-computation-c03",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 6,
+          "section": "2.1.3. Pose Computation",
+          "rrf_score": 0.03278689
+        },
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p004-2-1-hybrid-modular-approaches-c01",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 4,
+          "section": "2.1. Hybrid Modular Approaches",
+          "rrf_score": 0.03151365
+        },
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p003-1-introduction-c01",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 3,
+          "section": "1. Introduction",
+          "rrf_score": 0.03125
+        },
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p011-7-5-hrnet32-154-c03",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 11,
+          "section": "7.5 HRNet32 [154]",
+          "rrf_score": 0.03105441
+        },
+        {
+          "id": "aerospace-computer-vision-p011-dl-based-3d-reconstruction-c04",
+          "paper_id": "aerospace-computer-vision",
+          "page": 11,
+          "section": "DL-based 3D reconstruction",
+          "rrf_score": 0.02995752
+        }
+      ]
+    },
+    {
+      "id": "spy-shape-detector-overlap-loss",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "spacecraft-component-detection-spy-p006-1-shape-scorer-c04",
+          "paper_id": "spacecraft-component-detection-spy",
+          "page": 6,
+          "section": "1 Shape Scorer",
+          "rrf_score": 0.03278689
+        },
+        {
+          "id": "spacecraft-component-detection-spy-p006-3-color-space-converter-c01",
+          "paper_id": "spacecraft-component-detection-spy",
+          "page": 6,
+          "section": "3. Color Space Converter",
+          "rrf_score": 0.03125
+        },
+        {
+          "id": "spacecraft-component-detection-spy-p009-4-syc-predictions-c02",
+          "paper_id": "spacecraft-component-detection-spy",
+          "page": 9,
+          "section": "4. SYC Predictions",
+          "rrf_score": 0.03083491
+        },
+        {
+          "id": "spacecraft-component-detection-spy-p008-4-syc-predictions-c02",
+          "paper_id": "spacecraft-component-detection-spy",
+          "page": 8,
+          "section": "4. SYC Predictions",
+          "rrf_score": 0.03079839
+        },
+        {
+          "id": "spacecraft-component-detection-spy-p005-3-color-space-converter-c03",
+          "paper_id": "spacecraft-component-detection-spy",
+          "page": 5,
+          "section": "3. Color Space Converter",
+          "rrf_score": 0.02987737
+        }
+      ]
+    },
+    {
+      "id": "spy-color-scorer-hsv-mapping",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "spacecraft-component-detection-spy-p007-2-color-scorer-c01",
+          "paper_id": "spacecraft-component-detection-spy",
+          "page": 7,
+          "section": "2 Color Scorer",
+          "rrf_score": 0.03278689
+        },
+        {
+          "id": "spacecraft-component-detection-spy-p006-2-color-scorer-c05",
+          "paper_id": "spacecraft-component-detection-spy",
+          "page": 6,
+          "section": "2 Color Scorer",
+          "rrf_score": 0.03225806
+        },
+        {
+          "id": "spacecraft-component-detection-spy-p007-2-color-scorer-c02",
+          "paper_id": "spacecraft-component-detection-spy",
+          "page": 7,
+          "section": "2 Color Scorer",
+          "rrf_score": 0.03174603
+        },
+        {
+          "id": "spacecraft-component-detection-spy-p005-3-color-space-converter-c03",
+          "paper_id": "spacecraft-component-detection-spy",
+          "page": 5,
+          "section": "3. Color Space Converter",
+          "rrf_score": 0.03100962
+        },
+        {
+          "id": "spacecraft-component-detection-spy-p004-component-detection-c03",
+          "paper_id": "spacecraft-component-detection-spy",
+          "page": 4,
+          "section": "Component Detection",
+          "rrf_score": 0.03030999
+        }
+      ]
+    },
+    {
+      "id": "spy-texture-score-imbalance-correction",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "spacecraft-component-detection-spy-p007-3-texture-scorer-c04",
+          "paper_id": "spacecraft-component-detection-spy",
+          "page": 7,
+          "section": "3. Texture Scorer",
+          "rrf_score": 0.03252247
+        },
+        {
+          "id": "spacecraft-component-detection-spy-p007-2-color-scorer-c02",
+          "paper_id": "spacecraft-component-detection-spy",
+          "page": 7,
+          "section": "2 Color Scorer",
+          "rrf_score": 0.03201844
+        },
+        {
+          "id": "spacecraft-component-detection-spy-p007-3-texture-scorer-c05",
+          "paper_id": "spacecraft-component-detection-spy",
+          "page": 7,
+          "section": "3. Texture Scorer",
+          "rrf_score": 0.03151365
+        },
+        {
+          "id": "spacecraft-component-detection-spy-p007-2-color-scorer-c03",
+          "paper_id": "spacecraft-component-detection-spy",
+          "page": 7,
+          "section": "2 Color Scorer",
+          "rrf_score": 0.03149802
+        },
+        {
+          "id": "spacecraft-component-detection-spy-p009-4-syc-predictions-c03",
+          "paper_id": "spacecraft-component-detection-spy",
+          "page": 9,
+          "section": "4. SYC Predictions",
+          "rrf_score": 0.03079839
+        }
+      ]
+    },
+    {
+      "id": "spy-ensemble-recall-gain",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "spacecraft-component-detection-spy-p001-component-detection-c03",
+          "paper_id": "spacecraft-component-detection-spy",
+          "page": 1,
+          "section": "Component Detection",
+          "rrf_score": 0.03252247
+        },
+        {
+          "id": "orbit-domain-gap-augmentation-p002-1-institute-of-robotics-and-mechatronics-ger-c01",
+          "paper_id": "orbit-domain-gap-augmentation",
+          "page": 2,
+          "section": "1 Institute of Robotics and Mechatronics, German Aerospace Center (DLR),",
+          "rrf_score": 0.03011775
+        },
+        {
+          "id": "spacecraft-component-detection-spy-p010-4-syc-predictions-c02",
+          "paper_id": "spacecraft-component-detection-spy",
+          "page": 10,
+          "section": "4. SYC Predictions",
+          "rrf_score": 0.02943723
+        },
+        {
+          "id": "spacecraft-component-detection-spy-p001-component-detection-c05",
+          "paper_id": "spacecraft-component-detection-spy",
+          "page": 1,
+          "section": "Component Detection",
+          "rrf_score": 0.02857726
+        },
+        {
+          "id": "orbit-domain-gap-augmentation-p001-domain-gap-for-object-detection-in-orbit-c02",
+          "paper_id": "orbit-domain-gap-augmentation",
+          "page": 1,
+          "section": "Domain Gap for Object Detection in Orbit?",
+          "rrf_score": 0.02788462
+        }
+      ]
+    },
+    {
+      "id": "spy-hil-testbed-setup",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 0.5,
+      "first_relevant_rank": 2,
+      "top_results": [
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p016-3-2-1-data-augmentation-c03",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 16,
+          "section": "3.2.1. Data Augmentation",
+          "rrf_score": 0.03252247
+        },
+        {
+          "id": "spacecraft-component-detection-spy-p003-component-detection-c03",
+          "paper_id": "spacecraft-component-detection-spy",
+          "page": 3,
+          "section": "Component Detection",
+          "rrf_score": 0.03252247
+        },
+        {
+          "id": "nerf-space-object-reconstruction-p004-1-can-nerf-related-algorithms-learn-high-fid-c02",
+          "paper_id": "nerf-space-object-reconstruction",
+          "page": 4,
+          "section": "1. Can NeRF-related algorithms learn high-fidelity 3D models based on 2D scenes of a",
+          "rrf_score": 0.03125763
+        },
+        {
+          "id": "non-cooperative-target-navigation-p005-4-based-on-these-criteria-a-total-of-1231-rg-c03",
+          "paper_id": "non-cooperative-target-navigation",
+          "page": 5,
+          "section": "4 Based on these criteria, a total of 1231 RGB images were",
+          "rrf_score": 0.03007689
+        },
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p014-3-datasets-c04",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 14,
+          "section": "3. Datasets",
+          "rrf_score": 0.02921109
+        }
+      ]
+    },
+    {
+      "id": "noncoop-accuracy-speed-tradeoff",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "non-cooperative-target-navigation-p009-7-conclusion-c02",
+          "paper_id": "non-cooperative-target-navigation",
+          "page": 9,
+          "section": "7. CONCLUSION",
+          "rrf_score": 0.03128055
+        },
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p004-2-1-hybrid-modular-approaches-c02",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 4,
+          "section": "2.1. Hybrid Modular Approaches",
+          "rrf_score": 0.03109932
+        },
+        {
+          "id": "orbit-domain-gap-augmentation-p009-4-experiment-c05",
+          "paper_id": "orbit-domain-gap-augmentation",
+          "page": 9,
+          "section": "4. EXPERIMENT",
+          "rrf_score": 0.03030999
+        },
+        {
+          "id": "non-cooperative-target-navigation-p003-2-yolo-and-faster-r-cnn-c03",
+          "paper_id": "non-cooperative-target-navigation",
+          "page": 3,
+          "section": "2. YOLO AND FASTER R-CNN",
+          "rrf_score": 0.02972678
+        },
+        {
+          "id": "non-cooperative-target-navigation-p009-6-implementation-c04",
+          "paper_id": "non-cooperative-target-navigation",
+          "page": 9,
+          "section": "6. IMPLEMENTATION",
+          "rrf_score": 0.01612903
+        }
+      ]
+    },
+    {
+      "id": "noncoop-orion-lab-lighting",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 0.5,
+      "first_relevant_rank": 2,
+      "top_results": [
+        {
+          "id": "nerf-space-object-reconstruction-p004-1-can-nerf-related-algorithms-learn-high-fid-c02",
+          "paper_id": "nerf-space-object-reconstruction",
+          "page": 4,
+          "section": "1. Can NeRF-related algorithms learn high-fidelity 3D models based on 2D scenes of a",
+          "rrf_score": 0.03252247
+        },
+        {
+          "id": "non-cooperative-target-navigation-p005-4-based-on-these-criteria-a-total-of-1231-rg-c03",
+          "paper_id": "non-cooperative-target-navigation",
+          "page": 5,
+          "section": "4 Based on these criteria, a total of 1231 RGB images were",
+          "rrf_score": 0.03252247
+        },
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p017-3-2-2-domain-randomization-c02",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 17,
+          "section": "3.2.2. Domain Randomization",
+          "rrf_score": 0.03077652
+        },
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p015-3-1-summary-of-datasets-simulators-testbeds-c01",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 15,
+          "section": "3.1. Summary of Datasets, Simulators & Testbeds",
+          "rrf_score": 0.02941813
+        },
+        {
+          "id": "aerospace-computer-vision-p003-2-1-classical-space-programs-c03",
+          "paper_id": "aerospace-computer-vision",
+          "page": 3,
+          "section": "2.1 Classical space programs",
+          "rrf_score": 0.0292735
+        }
+      ]
+    },
+    {
+      "id": "noncoop-dim-lighting-case",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "non-cooperative-target-navigation-p008-5-testing-c03",
+          "paper_id": "non-cooperative-target-navigation",
+          "page": 8,
+          "section": "5. TESTING",
+          "rrf_score": 0.03278689
+        },
+        {
+          "id": "orbit-domain-gap-augmentation-p006-4-experiment-c04",
+          "paper_id": "orbit-domain-gap-augmentation",
+          "page": 6,
+          "section": "4. EXPERIMENT",
+          "rrf_score": 0.03079839
+        },
+        {
+          "id": "non-cooperative-target-navigation-p008-5-testing-c02",
+          "paper_id": "non-cooperative-target-navigation",
+          "page": 8,
+          "section": "5. TESTING",
+          "rrf_score": 0.0298574
+        },
+        {
+          "id": "non-cooperative-target-navigation-p005-4-based-on-these-criteria-a-total-of-1231-rg-c03",
+          "paper_id": "non-cooperative-target-navigation",
+          "page": 5,
+          "section": "4 Based on these criteria, a total of 1231 RGB images were",
+          "rrf_score": 0.02951389
+        },
+        {
+          "id": "orbit-domain-gap-augmentation-p009-4-experiment-c04",
+          "paper_id": "orbit-domain-gap-augmentation",
+          "page": 9,
+          "section": "4. EXPERIMENT",
+          "rrf_score": 0.02911605
+        }
+      ]
+    },
+    {
+      "id": "noncoop-detection-target-vector",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "non-cooperative-target-navigation-p003-2-yolo-and-faster-r-cnn-c02",
+          "paper_id": "non-cooperative-target-navigation",
+          "page": 3,
+          "section": "2. YOLO AND FASTER R-CNN",
+          "rrf_score": 0.03278689
+        },
+        {
+          "id": "non-cooperative-target-navigation-p003-2-yolo-and-faster-r-cnn-c01",
+          "paper_id": "non-cooperative-target-navigation",
+          "page": 3,
+          "section": "2. YOLO AND FASTER R-CNN",
+          "rrf_score": 0.03175403
+        },
+        {
+          "id": "spacecraft-component-detection-spy-p006-2-color-scorer-c05",
+          "paper_id": "spacecraft-component-detection-spy",
+          "page": 6,
+          "section": "2 Color Scorer",
+          "rrf_score": 0.03149802
+        },
+        {
+          "id": "spacecraft-component-detection-spy-p006-1-shape-scorer-c03",
+          "paper_id": "spacecraft-component-detection-spy",
+          "page": 6,
+          "section": "1 Shape Scorer",
+          "rrf_score": 0.03083491
+        },
+        {
+          "id": "spacecraft-component-detection-spy-p008-4-syc-predictions-c02",
+          "paper_id": "spacecraft-component-detection-spy",
+          "page": 8,
+          "section": "4. SYC Predictions",
+          "rrf_score": 0.0305789
+        }
+      ]
+    },
+    {
+      "id": "noncoop-edge-deployment",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "non-cooperative-target-navigation-p009-6-implementation-c05",
+          "paper_id": "non-cooperative-target-navigation",
+          "page": 9,
+          "section": "6. IMPLEMENTATION",
+          "rrf_score": 0.03278689
+        },
+        {
+          "id": "non-cooperative-target-navigation-p004-2-yolo-and-faster-r-cnn-c01",
+          "paper_id": "non-cooperative-target-navigation",
+          "page": 4,
+          "section": "2. YOLO AND FASTER R-CNN",
+          "rrf_score": 0.03030999
+        },
+        {
+          "id": "non-cooperative-target-navigation-p009-5-testing-c01",
+          "paper_id": "non-cooperative-target-navigation",
+          "page": 9,
+          "section": "5. TESTING",
+          "rrf_score": 0.03011775
+        },
+        {
+          "id": "non-cooperative-target-navigation-p009-6-implementation-c04",
+          "paper_id": "non-cooperative-target-navigation",
+          "page": 9,
+          "section": "6. IMPLEMENTATION",
+          "rrf_score": 0.02964255
+        },
+        {
+          "id": "non-cooperative-target-navigation-p011-6-implementation-c03",
+          "paper_id": "non-cooperative-target-navigation",
+          "page": 11,
+          "section": "6. IMPLEMENTATION",
+          "rrf_score": 0.01612903
+        }
+      ]
+    },
+    {
+      "id": "domaingap-tpe-optimization",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 0.5,
+      "first_relevant_rank": 2,
+      "top_results": [
+        {
+          "id": "orbit-domain-gap-augmentation-p002-2-related-work-c04",
+          "paper_id": "orbit-domain-gap-augmentation",
+          "page": 2,
+          "section": "2. RELATED WORK",
+          "rrf_score": 0.03252247
+        },
+        {
+          "id": "orbit-domain-gap-augmentation-p006-3-method-c01",
+          "paper_id": "orbit-domain-gap-augmentation",
+          "page": 6,
+          "section": "3. METHOD",
+          "rrf_score": 0.03252247
+        },
+        {
+          "id": "orbit-domain-gap-augmentation-p004-2-related-work-c01",
+          "paper_id": "orbit-domain-gap-augmentation",
+          "page": 4,
+          "section": "2. RELATED WORK",
+          "rrf_score": 0.03125763
+        },
+        {
+          "id": "orbit-domain-gap-augmentation-p006-3-method-c02",
+          "paper_id": "orbit-domain-gap-augmentation",
+          "page": 6,
+          "section": "3. METHOD",
+          "rrf_score": 0.03079839
+        },
+        {
+          "id": "orbit-domain-gap-augmentation-p007-4-experiment-c02",
+          "paper_id": "orbit-domain-gap-augmentation",
+          "page": 7,
+          "section": "4. EXPERIMENT",
+          "rrf_score": 0.02913851
+        }
+      ]
+    },
+    {
+      "id": "domaingap-space-augmentations",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "orbit-domain-gap-augmentation-p005-3-method-c04",
+          "paper_id": "orbit-domain-gap-augmentation",
+          "page": 5,
+          "section": "3. METHOD",
+          "rrf_score": 0.03278689
+        },
+        {
+          "id": "orbit-domain-gap-augmentation-p005-3-method-c05",
+          "paper_id": "orbit-domain-gap-augmentation",
+          "page": 5,
+          "section": "3. METHOD",
+          "rrf_score": 0.03151365
+        },
+        {
+          "id": "orbit-domain-gap-augmentation-p002-2-related-work-c03",
+          "paper_id": "orbit-domain-gap-augmentation",
+          "page": 2,
+          "section": "2. RELATED WORK",
+          "rrf_score": 0.03102453
+        },
+        {
+          "id": "orbit-domain-gap-augmentation-p005-3-method-c01",
+          "paper_id": "orbit-domain-gap-augmentation",
+          "page": 5,
+          "section": "3. METHOD",
+          "rrf_score": 0.02964255
+        },
+        {
+          "id": "orbit-domain-gap-augmentation-p001-domain-gap-for-object-detection-in-orbit-c02",
+          "paper_id": "orbit-domain-gap-augmentation",
+          "page": 1,
+          "section": "Domain Gap for Object Detection in Orbit?",
+          "rrf_score": 0.02859477
+        }
+      ]
+    },
+    {
+      "id": "domaingap-speedplus-test-splits",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 0.3333333333333333,
+      "first_relevant_rank": 3,
+      "top_results": [
+        {
+          "id": "non-cooperative-target-navigation-p005-4-based-on-these-criteria-a-total-of-1231-rg-c03",
+          "paper_id": "non-cooperative-target-navigation",
+          "page": 5,
+          "section": "4 Based on these criteria, a total of 1231 RGB images were",
+          "rrf_score": 0.02840451
+        },
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p019-3-2-4-domain-adversarial-learning-c02",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 19,
+          "section": "3.2.4. Domain-Adversarial Learning",
+          "rrf_score": 0.01639344
+        },
+        {
+          "id": "orbit-domain-gap-augmentation-p006-4-experiment-c03",
+          "paper_id": "orbit-domain-gap-augmentation",
+          "page": 6,
+          "section": "4. EXPERIMENT",
+          "rrf_score": 0.01639344
+        },
+        {
+          "id": "aerospace-computer-vision-p009-dl-based-pose-estimation-c03",
+          "paper_id": "aerospace-computer-vision",
+          "page": 9,
+          "section": "DL-based pose estimation",
+          "rrf_score": 0.01612903
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p016-references-c04",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 16,
+          "section": "REFERENCES",
+          "rrf_score": 0.01612903
+        }
+      ]
+    },
+    {
+      "id": "domaingap-no-augmentation-collapse",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 0.5,
+      "first_relevant_rank": 2,
+      "top_results": [
+        {
+          "id": "orbit-domain-gap-augmentation-p002-1-institute-of-robotics-and-mechatronics-ger-c01",
+          "paper_id": "orbit-domain-gap-augmentation",
+          "page": 2,
+          "section": "1 Institute of Robotics and Mechatronics, German Aerospace Center (DLR),",
+          "rrf_score": 0.03252247
+        },
+        {
+          "id": "orbit-domain-gap-augmentation-p009-4-experiment-c01",
+          "paper_id": "orbit-domain-gap-augmentation",
+          "page": 9,
+          "section": "4. EXPERIMENT",
+          "rrf_score": 0.03252247
+        },
+        {
+          "id": "orbit-domain-gap-augmentation-p009-4-experiment-c02",
+          "paper_id": "orbit-domain-gap-augmentation",
+          "page": 9,
+          "section": "4. EXPERIMENT",
+          "rrf_score": 0.03102453
+        },
+        {
+          "id": "orbit-domain-gap-augmentation-p001-domain-gap-for-object-detection-in-orbit-c02",
+          "paper_id": "orbit-domain-gap-augmentation",
+          "page": 1,
+          "section": "Domain Gap for Object Detection in Orbit?",
+          "rrf_score": 0.03079839
+        },
+        {
+          "id": "orbit-domain-gap-augmentation-p003-2-related-work-c02",
+          "paper_id": "orbit-domain-gap-augmentation",
+          "page": 3,
+          "section": "2. RELATED WORK",
+          "rrf_score": 0.02932363
+        }
+      ]
+    },
+    {
+      "id": "domaingap-openset-prompt-sensitivity",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "orbit-domain-gap-augmentation-p009-4-experiment-c04",
+          "paper_id": "orbit-domain-gap-augmentation",
+          "page": 9,
+          "section": "4. EXPERIMENT",
+          "rrf_score": 0.03252247
+        },
+        {
+          "id": "orbit-domain-gap-augmentation-p010-4-experiment-c01",
+          "paper_id": "orbit-domain-gap-augmentation",
+          "page": 10,
+          "section": "4. EXPERIMENT",
+          "rrf_score": 0.03175403
+        },
+        {
+          "id": "orbit-domain-gap-augmentation-p009-4-experiment-c05",
+          "paper_id": "orbit-domain-gap-augmentation",
+          "page": 9,
+          "section": "4. EXPERIMENT",
+          "rrf_score": 0.03174603
+        },
+        {
+          "id": "spacecraft-component-detection-spy-p009-4-syc-predictions-c01",
+          "paper_id": "spacecraft-component-detection-spy",
+          "page": 9,
+          "section": "4. SYC Predictions",
+          "rrf_score": 0.0298574
+        },
+        {
+          "id": "orbit-domain-gap-augmentation-p004-3-method-c04",
+          "paper_id": "orbit-domain-gap-augmentation",
+          "page": 4,
+          "section": "3. METHOD",
+          "rrf_score": 0.02921396
+        }
+      ]
+    },
+    {
+      "id": "lunar-quadrant-spread-association",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "lunar-crater-terrain-navigation-p003-navigation-c05",
+          "paper_id": "lunar-crater-terrain-navigation",
+          "page": 3,
+          "section": "Navigation",
+          "rrf_score": 0.02921396
+        },
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p024-references-c03",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 24,
+          "section": "References",
+          "rrf_score": 0.01639344
+        },
+        {
+          "id": "aerospace-computer-vision-p020-conclusions-c02",
+          "paper_id": "aerospace-computer-vision",
+          "page": 20,
+          "section": "Conclusions",
+          "rrf_score": 0.01612903
+        },
+        {
+          "id": "lunar-crater-terrain-navigation-p004-navigation-c02",
+          "paper_id": "lunar-crater-terrain-navigation",
+          "page": 4,
+          "section": "Navigation",
+          "rrf_score": 0.01612903
+        },
+        {
+          "id": "lunar-crater-terrain-navigation-p004-navigation-c03",
+          "paper_id": "lunar-crater-terrain-navigation",
+          "page": 4,
+          "section": "Navigation",
+          "rrf_score": 0.01587302
+        }
+      ]
+    },
+    {
+      "id": "lunar-sensor-characterization-stats",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "lunar-crater-terrain-navigation-p005-navigation-c03",
+          "paper_id": "lunar-crater-terrain-navigation",
+          "page": 5,
+          "section": "Navigation",
+          "rrf_score": 0.03226646
+        },
+        {
+          "id": "lunar-crater-terrain-navigation-p006-navigation-c01",
+          "paper_id": "lunar-crater-terrain-navigation",
+          "page": 6,
+          "section": "Navigation",
+          "rrf_score": 0.03226646
+        },
+        {
+          "id": "lunar-crater-terrain-navigation-p006-navigation-c03",
+          "paper_id": "lunar-crater-terrain-navigation",
+          "page": 6,
+          "section": "Navigation",
+          "rrf_score": 0.03151365
+        },
+        {
+          "id": "lunar-crater-terrain-navigation-p005-navigation-c04",
+          "paper_id": "lunar-crater-terrain-navigation",
+          "page": 5,
+          "section": "Navigation",
+          "rrf_score": 0.03100962
+        },
+        {
+          "id": "lunar-crater-terrain-navigation-p002-navigation-c01",
+          "paper_id": "lunar-crater-terrain-navigation",
+          "page": 2,
+          "section": "Navigation",
+          "rrf_score": 0.03030303
+        }
+      ]
+    },
+    {
+      "id": "lunar-two-channel-supervision",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "lunar-crater-terrain-navigation-p003-navigation-c03",
+          "paper_id": "lunar-crater-terrain-navigation",
+          "page": 3,
+          "section": "Navigation",
+          "rrf_score": 0.03252247
+        },
+        {
+          "id": "lunar-crater-terrain-navigation-p005-navigation-c01",
+          "paper_id": "lunar-crater-terrain-navigation",
+          "page": 5,
+          "section": "Navigation",
+          "rrf_score": 0.03007689
+        },
+        {
+          "id": "lunar-crater-terrain-navigation-p002-navigation-c03",
+          "paper_id": "lunar-crater-terrain-navigation",
+          "page": 2,
+          "section": "Navigation",
+          "rrf_score": 0.02913851
+        },
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p007-2-2-direct-end-to-end-approaches-c02",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 7,
+          "section": "2.2. Direct End-to-end Approaches",
+          "rrf_score": 0.02885015
+        },
+        {
+          "id": "lunar-crater-terrain-navigation-p003-navigation-c02",
+          "paper_id": "lunar-crater-terrain-navigation",
+          "page": 3,
+          "section": "Navigation",
+          "rrf_score": 0.02862903
+        }
+      ]
+    },
+    {
+      "id": "lunar-monte-carlo-initialization",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 0.5,
+      "first_relevant_rank": 2,
+      "top_results": [
+        {
+          "id": "lunar-crater-terrain-navigation-p006-navigation-c02",
+          "paper_id": "lunar-crater-terrain-navigation",
+          "page": 6,
+          "section": "Navigation",
+          "rrf_score": 0.03252247
+        },
+        {
+          "id": "lunar-crater-terrain-navigation-p005-navigation-c02",
+          "paper_id": "lunar-crater-terrain-navigation",
+          "page": 5,
+          "section": "Navigation",
+          "rrf_score": 0.03047795
+        },
+        {
+          "id": "lunar-crater-terrain-navigation-p004-navigation-c03",
+          "paper_id": "lunar-crater-terrain-navigation",
+          "page": 4,
+          "section": "Navigation",
+          "rrf_score": 0.0298574
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p010-7-navigation-subsystem-c04",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 10,
+          "section": "7. NAVIGATION SUBSYSTEM",
+          "rrf_score": 0.0282194
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p011-7-navigation-subsystem-c04",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 11,
+          "section": "7. NAVIGATION SUBSYSTEM",
+          "rrf_score": 0.01612903
+        }
+      ]
+    },
+    {
+      "id": "nerf-rso-onboard-training-speedup",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "nerf-space-object-reconstruction-p003-1-can-nerf-related-algorithms-learn-high-fid-c01",
+          "paper_id": "nerf-space-object-reconstruction",
+          "page": 3,
+          "section": "1. Can NeRF-related algorithms learn high-fidelity 3D models based on 2D scenes of a",
+          "rrf_score": 0.03252247
+        },
+        {
+          "id": "nerf-space-object-reconstruction-p003-1-can-nerf-related-algorithms-learn-high-fid-c03",
+          "paper_id": "nerf-space-object-reconstruction",
+          "page": 3,
+          "section": "1. Can NeRF-related algorithms learn high-fidelity 3D models based on 2D scenes of a",
+          "rrf_score": 0.03226646
+        },
+        {
+          "id": "nerf-space-object-reconstruction-p010-1-can-nerf-related-algorithms-learn-high-fid-c01",
+          "paper_id": "nerf-space-object-reconstruction",
+          "page": 10,
+          "section": "1. Can NeRF-related algorithms learn high-fidelity 3D models based on 2D scenes of a",
+          "rrf_score": 0.03149802
+        },
+        {
+          "id": "nerf-space-object-reconstruction-p004-1-can-nerf-related-algorithms-learn-high-fid-c01",
+          "paper_id": "nerf-space-object-reconstruction",
+          "page": 4,
+          "section": "1. Can NeRF-related algorithms learn high-fidelity 3D models based on 2D scenes of a",
+          "rrf_score": 0.03030303
+        },
+        {
+          "id": "nerf-space-object-reconstruction-p002-1-can-nerf-related-algorithms-learn-high-fid-c04",
+          "paper_id": "nerf-space-object-reconstruction",
+          "page": 2,
+          "section": "1. Can NeRF-related algorithms learn high-fidelity 3D models based on 2D scenes of a",
+          "rrf_score": 0.02946912
+        }
+      ]
+    },
+    {
+      "id": "nerf-rso-motion-table-specs",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "nerf-space-object-reconstruction-p004-1-can-nerf-related-algorithms-learn-high-fid-c01",
+          "paper_id": "nerf-space-object-reconstruction",
+          "page": 4,
+          "section": "1. Can NeRF-related algorithms learn high-fidelity 3D models based on 2D scenes of a",
+          "rrf_score": 0.03278689
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p003-exploration-of-small-bodies-c05",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 3,
+          "section": "EXPLORATION OF SMALL BODIES",
+          "rrf_score": 0.02911605
+        },
+        {
+          "id": "nerf-space-object-reconstruction-p003-1-can-nerf-related-algorithms-learn-high-fid-c01",
+          "paper_id": "nerf-space-object-reconstruction",
+          "page": 3,
+          "section": "1. Can NeRF-related algorithms learn high-fidelity 3D models based on 2D scenes of a",
+          "rrf_score": 0.01612903
+        },
+        {
+          "id": "deep-space-autonomy-modeling-p018-references-c02",
+          "paper_id": "deep-space-autonomy-modeling",
+          "page": 18,
+          "section": "REFERENCES",
+          "rrf_score": 0.01587302
+        },
+        {
+          "id": "spacecraft-component-detection-spy-p003-component-detection-c03",
+          "paper_id": "spacecraft-component-detection-spy",
+          "page": 3,
+          "section": "Component Detection",
+          "rrf_score": 0.01587302
+        }
+      ]
+    },
+    {
+      "id": "nerf-rso-colmap-spinning-target-fix",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "nerf-space-object-reconstruction-p006-1-can-nerf-related-algorithms-learn-high-fid-c01",
+          "paper_id": "nerf-space-object-reconstruction",
+          "page": 6,
+          "section": "1. Can NeRF-related algorithms learn high-fidelity 3D models based on 2D scenes of a",
+          "rrf_score": 0.03154496
+        },
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p002-1-introduction-c04",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 2,
+          "section": "1. Introduction",
+          "rrf_score": 0.03079839
+        },
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p002-1-introduction-c05",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 2,
+          "section": "1. Introduction",
+          "rrf_score": 0.03007689
+        },
+        {
+          "id": "nerf-space-object-reconstruction-p011-1-can-nerf-related-algorithms-learn-high-fid-c01",
+          "paper_id": "nerf-space-object-reconstruction",
+          "page": 11,
+          "section": "1. Can NeRF-related algorithms learn high-fidelity 3D models based on 2D scenes of a",
+          "rrf_score": 0.02995752
+        },
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p006-2-1-3-pose-computation-c03",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 6,
+          "section": "2.1.3. Pose Computation",
+          "rrf_score": 0.02878726
+        }
+      ]
+    },
+    {
+      "id": "nerf-rso-dnerf-bright-lighting-failure",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 0.5,
+      "first_relevant_rank": 2,
+      "top_results": [
+        {
+          "id": "nerf-space-object-reconstruction-p005-1-can-nerf-related-algorithms-learn-high-fid-c01",
+          "paper_id": "nerf-space-object-reconstruction",
+          "page": 5,
+          "section": "1. Can NeRF-related algorithms learn high-fidelity 3D models based on 2D scenes of a",
+          "rrf_score": 0.03201844
+        },
+        {
+          "id": "nerf-space-object-reconstruction-p009-1-can-nerf-related-algorithms-learn-high-fid-c01",
+          "paper_id": "nerf-space-object-reconstruction",
+          "page": 9,
+          "section": "1. Can NeRF-related algorithms learn high-fidelity 3D models based on 2D scenes of a",
+          "rrf_score": 0.03201844
+        },
+        {
+          "id": "nerf-space-object-reconstruction-p004-1-can-nerf-related-algorithms-learn-high-fid-c02",
+          "paper_id": "nerf-space-object-reconstruction",
+          "page": 4,
+          "section": "1. Can NeRF-related algorithms learn high-fidelity 3D models based on 2D scenes of a",
+          "rrf_score": 0.03200205
+        },
+        {
+          "id": "nerf-space-object-reconstruction-p009-1-can-nerf-related-algorithms-learn-high-fid-c02",
+          "paper_id": "nerf-space-object-reconstruction",
+          "page": 9,
+          "section": "1. Can NeRF-related algorithms learn high-fidelity 3D models based on 2D scenes of a",
+          "rrf_score": 0.03200205
+        },
+        {
+          "id": "nerf-space-object-reconstruction-p010-1-can-nerf-related-algorithms-learn-high-fid-c01",
+          "paper_id": "nerf-space-object-reconstruction",
+          "page": 10,
+          "section": "1. Can NeRF-related algorithms learn high-fidelity 3D models based on 2D scenes of a",
+          "rrf_score": 0.02943723
+        }
+      ]
+    },
+    {
+      "id": "nerf-rso-lpips-vs-psnr-tradeoff",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "nerf-space-object-reconstruction-p009-1-can-nerf-related-algorithms-learn-high-fid-c01",
+          "paper_id": "nerf-space-object-reconstruction",
+          "page": 9,
+          "section": "1. Can NeRF-related algorithms learn high-fidelity 3D models based on 2D scenes of a",
+          "rrf_score": 0.03226646
+        },
+        {
+          "id": "orbit-domain-gap-augmentation-p009-4-experiment-c05",
+          "paper_id": "orbit-domain-gap-augmentation",
+          "page": 9,
+          "section": "4. EXPERIMENT",
+          "rrf_score": 0.0281746
+        },
+        {
+          "id": "nerf-space-object-reconstruction-p002-space-object-using-instant-nerf-and-d-nerf-c02",
+          "paper_id": "nerf-space-object-reconstruction",
+          "page": 2,
+          "section": "SPACE OBJECT USING INSTANT NERF AND D-NERF",
+          "rrf_score": 0.02791239
+        },
+        {
+          "id": "nerf-space-object-reconstruction-p002-space-object-using-instant-nerf-and-d-nerf-c03",
+          "paper_id": "nerf-space-object-reconstruction",
+          "page": 2,
+          "section": "SPACE OBJECT USING INSTANT NERF AND D-NERF",
+          "rrf_score": 0.01639344
+        },
+        {
+          "id": "aerospace-computer-vision-p021-conclusions-c01",
+          "paper_id": "aerospace-computer-vision",
+          "page": 21,
+          "section": "Conclusions",
+          "rrf_score": 0.01612903
+        }
+      ]
+    },
+    {
+      "id": "debris-sdtd-scale-and-source",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "space-debris-tracking-dataset-p003-3-1-1-data-collection-c05",
+          "paper_id": "space-debris-tracking-dataset",
+          "page": 3,
+          "section": "3.1.1 Data Collection",
+          "rrf_score": 0.03154496
+        },
+        {
+          "id": "space-debris-tracking-dataset-p015-references-c01",
+          "paper_id": "space-debris-tracking-dataset",
+          "page": 15,
+          "section": "References",
+          "rrf_score": 0.02995752
+        },
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p015-3-1-summary-of-datasets-simulators-testbeds-c02",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 15,
+          "section": "3.1. Summary of Datasets, Simulators & Testbeds",
+          "rrf_score": 0.02964255
+        },
+        {
+          "id": "dl-spacecraft-pose-estimation-survey-p015-3-1-summary-of-datasets-simulators-testbeds-c01",
+          "paper_id": "dl-spacecraft-pose-estimation-survey",
+          "page": 15,
+          "section": "3.1. Summary of Datasets, Simulators & Testbeds",
+          "rrf_score": 0.02951389
+        },
+        {
+          "id": "space-debris-tracking-dataset-p003-benchmark-dataset-c04",
+          "paper_id": "space-debris-tracking-dataset",
+          "page": 3,
+          "section": "Benchmark Dataset",
+          "rrf_score": 0.02941813
+        }
+      ]
+    },
+    {
+      "id": "debris-zscale-preprocessing",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "space-debris-tracking-dataset-p004-3-1-2-data-pre-processing-c02",
+          "paper_id": "space-debris-tracking-dataset",
+          "page": 4,
+          "section": "3.1.2 Data Pre-Processing",
+          "rrf_score": 0.03278689
+        },
+        {
+          "id": "orbit-domain-gap-augmentation-p005-3-method-c05",
+          "paper_id": "orbit-domain-gap-augmentation",
+          "page": 5,
+          "section": "3. METHOD",
+          "rrf_score": 0.03036577
+        },
+        {
+          "id": "orbit-domain-gap-augmentation-p005-3-method-c01",
+          "paper_id": "orbit-domain-gap-augmentation",
+          "page": 5,
+          "section": "3. METHOD",
+          "rrf_score": 0.02938653
+        },
+        {
+          "id": "space-debris-tracking-dataset-p002-introduction-c01",
+          "paper_id": "space-debris-tracking-dataset",
+          "page": 2,
+          "section": "Introduction",
+          "rrf_score": 0.02932363
+        },
+        {
+          "id": "space-debris-tracking-dataset-p004-3-1-1-data-collection-c01",
+          "paper_id": "space-debris-tracking-dataset",
+          "page": 4,
+          "section": "3.1.1 Data Collection",
+          "rrf_score": 0.02900988
+        }
+      ]
+    },
+    {
+      "id": "debris-endpoint-pair-detection",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "space-debris-tracking-dataset-p007-4-4-1-endpoints-heatmap-c04",
+          "paper_id": "space-debris-tracking-dataset",
+          "page": 7,
+          "section": "4.4.1 Endpoints Heatmap",
+          "rrf_score": 0.03226646
+        },
+        {
+          "id": "space-debris-tracking-dataset-p008-4-4-2-line-source-embedding-c02",
+          "paper_id": "space-debris-tracking-dataset",
+          "page": 8,
+          "section": "4.4.2 Line Source Embedding",
+          "rrf_score": 0.03226646
+        },
+        {
+          "id": "space-debris-tracking-dataset-p007-4-4-debris-detection-module-c03",
+          "paper_id": "space-debris-tracking-dataset",
+          "page": 7,
+          "section": "4.4 Debris Detection Module",
+          "rrf_score": 0.03175403
+        },
+        {
+          "id": "space-debris-tracking-dataset-p006-method-c03",
+          "paper_id": "space-debris-tracking-dataset",
+          "page": 6,
+          "section": "Method",
+          "rrf_score": 0.03076923
+        },
+        {
+          "id": "space-debris-tracking-dataset-p008-4-5-debris-offset-module-c04",
+          "paper_id": "space-debris-tracking-dataset",
+          "page": 8,
+          "section": "4.5 Debris Offset Module",
+          "rrf_score": 0.02982766
+        }
+      ]
+    },
+    {
+      "id": "debris-antarctic-real-world-transfer",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "space-debris-tracking-dataset-p011-5-5-qualitative-results-c03",
+          "paper_id": "space-debris-tracking-dataset",
+          "page": 11,
+          "section": "5.5 Qualitative Results",
+          "rrf_score": 0.03278689
+        },
+        {
+          "id": "space-debris-tracking-dataset-p011-5-5-qualitative-results-c02",
+          "paper_id": "space-debris-tracking-dataset",
+          "page": 11,
+          "section": "5.5 Qualitative Results",
+          "rrf_score": 0.03125
+        },
+        {
+          "id": "space-debris-tracking-dataset-p003-2-1-object-detection-and-tracking-c02",
+          "paper_id": "space-debris-tracking-dataset",
+          "page": 3,
+          "section": "2.1 Object Detection and Tracking",
+          "rrf_score": 0.03102453
+        },
+        {
+          "id": "space-debris-tracking-dataset-p012-conclusion-c01",
+          "paper_id": "space-debris-tracking-dataset",
+          "page": 12,
+          "section": "Conclusion",
+          "rrf_score": 0.03041475
+        },
+        {
+          "id": "space-debris-tracking-dataset-p009-5-2-evaluation-metrics-c04",
+          "paper_id": "space-debris-tracking-dataset",
+          "page": 9,
+          "section": "5.2 Evaluation Metrics",
+          "rrf_score": 0.03030999
+        }
+      ]
+    },
+    {
+      "id": "debris-dense-vs-sparse-categories",
+      "recall_at_5": 1.0,
+      "reciprocal_rank": 1.0,
+      "first_relevant_rank": 1,
+      "top_results": [
+        {
+          "id": "space-debris-tracking-dataset-p006-3-3-2-debris-type-c01",
+          "paper_id": "space-debris-tracking-dataset",
+          "page": 6,
+          "section": "3.3.2 Debris Type",
+          "rrf_score": 0.03278689
+        },
+        {
+          "id": "space-debris-tracking-dataset-p005-3-3-2-debris-type-c05",
+          "paper_id": "space-debris-tracking-dataset",
+          "page": 5,
+          "section": "3.3.2 Debris Type",
+          "rrf_score": 0.03225806
+        },
+        {
+          "id": "space-debris-tracking-dataset-p009-5-3-comparison-with-existing-mot-methods-c05",
+          "paper_id": "space-debris-tracking-dataset",
+          "page": 9,
+          "section": "5.3 Comparison with Existing MOT Methods",
+          "rrf_score": 0.03125763
+        },
+        {
+          "id": "space-debris-tracking-dataset-p011-5-5-qualitative-results-c02",
+          "paper_id": "space-debris-tracking-dataset",
+          "page": 11,
+          "section": "5.5 Qualitative Results",
+          "rrf_score": 0.03079839
+        },
+        {
+          "id": "space-debris-tracking-dataset-p012-conclusion-c01",
+          "paper_id": "space-debris-tracking-dataset",
+          "page": 12,
+          "section": "Conclusion",
+          "rrf_score": 0.03055037
         }
       ]
     }
