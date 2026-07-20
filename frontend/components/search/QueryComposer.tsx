@@ -7,6 +7,7 @@ type QueryComposerProps = {
   showDetails: boolean;
   available: boolean;
   busy: boolean;
+  actionLabel?: string;
   onQuestionChange: (question: string) => void;
   onSourceCountChange: (count: number) => void;
   onShowDetailsChange: (show: boolean) => void;
@@ -20,6 +21,7 @@ export function QueryComposer({
   showDetails,
   available,
   busy,
+  actionLabel = "Ask the library",
   onQuestionChange,
   onSourceCountChange,
   onShowDetailsChange,
@@ -50,7 +52,7 @@ export function QueryComposer({
             disabled={busy || !question.trim() || !available}
             onClick={onSubmit}
           >
-            {busy ? "Researching…" : "Ask the library"} <ArrowIcon />
+            {busy ? "Researching…" : actionLabel} <ArrowIcon />
           </button>
         </div>
         <details className="retrieval-settings">
@@ -72,12 +74,14 @@ export function QueryComposer({
         </details>
       </section>
 
-      <div className="example-questions" aria-label="Example questions">
-        <span>Try an example</span>
-        {examples.map((example) => (
-          <button key={example} onClick={() => onQuestionChange(example)} disabled={busy}>{example}</button>
-        ))}
-      </div>
+      {examples.length > 0 && (
+        <div className="example-questions" aria-label="Example questions">
+          <span>Try an example</span>
+          {examples.map((example) => (
+            <button key={example} onClick={() => onQuestionChange(example)} disabled={busy}>{example}</button>
+          ))}
+        </div>
+      )}
     </>
   );
 }

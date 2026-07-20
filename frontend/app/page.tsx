@@ -5,9 +5,18 @@ import { AppHeader } from "@/components/app-shell/AppHeader";
 import { LibrarySidebar } from "@/components/app-shell/LibrarySidebar";
 import { SourcePanel } from "@/components/app-shell/SourcePanel";
 import { AnswerCard } from "@/components/answer/AnswerCard";
+import { LocalDocumentPanel, type LocalPhase } from "@/components/local/LocalDocumentPanel";
 import { QueryComposer } from "@/components/search/QueryComposer";
 import { ResultList } from "@/components/sources/ResultList";
-import { RefreshIcon, SparkIcon } from "@/components/icons";
+import { BookIcon, FileIcon, RefreshIcon, SparkIcon } from "@/components/icons";
+import {
+  MAX_FILE_BYTES,
+  MAX_LOCAL_EXCERPTS,
+  MAX_LOCAL_EXCERPT_CHARS,
+} from "@/lib/local-documents/limits";
+import { LocalDocumentSession } from "@/lib/local-documents/session";
+import { readPersistedMeta } from "@/lib/local-documents/storage";
+import type { LocalDocumentError, LocalDocumentMeta, LocalProgress } from "@/lib/local-documents/types";
 import type {
   AnswerStreamEvent,
   HistoryEntry,
@@ -26,6 +35,8 @@ const EXAMPLE_QUESTIONS = [
   "Why do limited real datasets and synthetic images create a domain gap?",
 ];
 
+type Collection = "curated" | "local";
+
 async function responseError(response: Response): Promise<string> {
   try {
     const payload = await response.json() as { message?: string; detail?: string; error?: { message?: string } };
@@ -33,6 +44,15 @@ async function responseError(response: Response): Promise<string> {
   } catch {
     return "The request could not be completed.";
   }
+}
+
+function localErrorMessage(caught: unknown): { code: string; message: string } {
+  if (caught && typeof caught === "object" && "code" in caught && "message" in caught) {
+    const error = caught as LocalDocumentError;
+    return { code: error.code, message: error.message };
+  }
+  if (caught instanceof Error) return { code: "WORKER_FAILURE", message: caught.message };
+  return { code: "WORKER_FAILURE", message: "Local document processing failed unexpectedly." };
 }
 
 export default function Home() {
@@ -51,7 +71,31 @@ export default function Home() {
   const [libraryOpen, setLibraryOpen] = useState(false);
   const [sourcesOpen, setSourcesOpen] = useState(false);
   const [viewerOpen, setViewerOpen] = useState(false);
+  const [collection, setCollection] = useState<Collection>("curated");
+  const [localPhase, setLocalPhase] = useState<LocalPhase>("idle");
+  const [localMeta, setLocalMeta] = useState<LocalDocumentMeta | null>(null);
+  const [localProgress, setLocalProgress] = useState<LocalProgress | null>(null);
+  const [localError, setLocalError] = useState("");
+  const [persistedAvailable, setPersistedAvailable] = useState(false);
+  const [hostedSynthesis, setHostedSynthesis] = useState(false);
+  const [localSearchMode, setLocalSearchMode] = useState<"hybrid" | "keyword" | null>(null);
   const activeRequest = useRef<AbortController | null>(null);
+  const localSession = useRef<LocalDocumentSession | null>(null);
+  const localPdfUrlRef = useRef<string | null>(null);
+
+  function getSession(): LocalDocumentSession {
+    if (!localSession.current) {
+      const session = new LocalDocumentSession();
+      session.onProgress = setLocalProgress;
+      localSession.current = session;
+    }
+    return localSession.current;
+  }
+
+  function replaceLocalPdfUrl(url: string | null) {
+    if (localPdfUrlRef.current) URL.revokeObjectURL(localPdfUrlRef.current);
+    localPdfUrlRef.current = url;
+  }
 
   useEffect(() => {
     const controller = new AbortController();
@@ -77,6 +121,7 @@ export default function Home() {
       await Promise.all([loadStatus, loadPapers]);
     }
     void loadWorkspace();
+    void readPersistedMeta().then((meta) => setPersistedAvailable(Boolean(meta)));
 
     try {
       const stored = JSON.parse(localStorage.getItem(HISTORY_KEY) ?? "[]") as unknown;
@@ -93,6 +138,8 @@ export default function Home() {
       controller.abort();
       window.cancelAnimationFrame(historyFrame);
       activeRequest.current?.abort();
+      localSession.current?.dispose();
+      if (localPdfUrlRef.current) URL.revokeObjectURL(localPdfUrlRef.current);
     };
   }, []);
 
@@ -115,6 +162,8 @@ export default function Home() {
   }, [status, statusFailed]);
 
   const hostedAvailable = !statusFailed && (status?.quota.available ?? false);
+  const localReady = localPhase === "ready";
+  const composerAvailable = collection === "curated" ? hostedAvailable : localReady;
 
   function updateRemaining(response: Response) {
     const remainingHeader = response.headers.get("X-Demo-Remaining");
@@ -151,83 +200,230 @@ export default function Home() {
     }
   }
 
-  async function askLibrary() {
-    const submittedQuestion = question.trim();
-    if (!submittedQuestion || stage || !hostedAvailable) return;
-    activeRequest.current?.abort();
-    const controller = new AbortController();
-    activeRequest.current = controller;
-    setStage("retrieving");
+  async function consumeAnswerStream(
+    response: Response,
+    onEvent: (event: AnswerStreamEvent) => void,
+  ): Promise<void> {
+    if (!response.body) throw new Error("The browser could not open the answer stream.");
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    while (true) {
+      const { value, done } = await reader.read();
+      buffer += decoder.decode(value, { stream: !done });
+      const lines = buffer.split("\n");
+      buffer = lines.pop() ?? "";
+      for (const line of lines) if (line.trim()) onEvent(JSON.parse(line) as AnswerStreamEvent);
+      if (done) break;
+    }
+    if (buffer.trim()) onEvent(JSON.parse(buffer) as AnswerStreamEvent);
+  }
+
+  function resetResearchState() {
     setError("");
     setAnswer("");
     setResults([]);
     setSelectedSource(null);
     setViewerOpen(false);
+    setLocalSearchMode(null);
+  }
+
+  async function askCuratedLibrary(submittedQuestion: string, controller: AbortController) {
     let completeAnswer = "";
     let completeSources: SearchResult[] = [];
     let completed = false;
 
+    const response = await fetch(`${API_BASE_URL}/answer/stream`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question: submittedQuestion, n_results: sourceCount }),
+      signal: controller.signal,
+    });
+    updateRemaining(response);
+    if (!response.ok) {
+      const message = await responseError(response);
+      await refreshStatus();
+      throw new Error(message);
+    }
+
+    await consumeAnswerStream(response, (event) => {
+      if (event.type === "sources") {
+        completeSources = event.sources;
+        setResults(event.sources);
+        setSelectedSource(event.sources[0] ?? null);
+      } else if (event.type === "stage") {
+        setStage(event.stage);
+      } else if (event.type === "delta") {
+        completeAnswer += event.delta;
+        setAnswer(completeAnswer);
+      } else if (event.type === "done") {
+        completed = true;
+      } else if (event.type === "error") {
+        throw new Error(event.message);
+      }
+    });
+    if (!completed || !completeAnswer.trim()) throw new Error("The answer stream ended before completion.");
+
+    saveHistory({
+      id: crypto.randomUUID(),
+      question: submittedQuestion,
+      answer: completeAnswer,
+      sources: completeSources,
+      createdAt: new Date().toISOString(),
+    });
+  }
+
+  async function askLocalDocument(submittedQuestion: string, controller: AbortController) {
+    const outcome = await getSession().search(submittedQuestion, sourceCount);
+    const localSources = outcome.results.map((result) => ({
+      ...result,
+      pdf_url: localPdfUrlRef.current ?? "",
+    }));
+    setResults(localSources);
+    setSelectedSource(localSources[0] ?? null);
+    setLocalSearchMode(outcome.embedded ? "hybrid" : "keyword");
+    if (localSources.length === 0) {
+      setStage(null);
+      return;
+    }
+
+    if (!hostedSynthesis || !hostedAvailable) {
+      setStage(null);
+      return;
+    }
+
+    // Only the bounded retrieved excerpts are transmitted — never the file.
+    const excerpts = localSources.slice(0, MAX_LOCAL_EXCERPTS).map((source) => ({
+      label: source.title,
+      page: source.page,
+      text: source.snippet.slice(0, MAX_LOCAL_EXCERPT_CHARS),
+    }));
+    const response = await fetch(`${API_BASE_URL}/answer/local/stream`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question: submittedQuestion, excerpts }),
+      signal: controller.signal,
+    });
+    updateRemaining(response);
+    if (!response.ok) {
+      const message = await responseError(response);
+      await refreshStatus();
+      throw new Error(message);
+    }
+
+    let completeAnswer = "";
+    let completed = false;
+    await consumeAnswerStream(response, (event) => {
+      if (event.type === "stage") setStage(event.stage);
+      else if (event.type === "delta") {
+        completeAnswer += event.delta;
+        setAnswer(completeAnswer);
+      } else if (event.type === "done") completed = true;
+      else if (event.type === "error") throw new Error(event.message);
+    });
+    if (!completed || !completeAnswer.trim()) throw new Error("The answer stream ended before completion.");
+  }
+
+  async function askLibrary() {
+    const submittedQuestion = question.trim();
+    if (!submittedQuestion || stage || !composerAvailable) return;
+    activeRequest.current?.abort();
+    const controller = new AbortController();
+    activeRequest.current = controller;
+    setStage("retrieving");
+    resetResearchState();
+
     try {
-      const response = await fetch(`${API_BASE_URL}/answer/stream`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: submittedQuestion, n_results: sourceCount }),
-        signal: controller.signal,
-      });
-      updateRemaining(response);
-      if (!response.ok) {
-        const message = await responseError(response);
-        await refreshStatus();
-        throw new Error(message);
-      }
-      if (!response.body) throw new Error("The browser could not open the answer stream.");
-
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = "";
-
-      function handleEvent(event: AnswerStreamEvent) {
-        if (event.type === "sources") {
-          completeSources = event.sources;
-          setResults(event.sources);
-          setSelectedSource(event.sources[0] ?? null);
-        } else if (event.type === "stage") {
-          setStage(event.stage);
-        } else if (event.type === "delta") {
-          completeAnswer += event.delta;
-          setAnswer(completeAnswer);
-        } else if (event.type === "done") {
-          completed = true;
-        } else if (event.type === "error") {
-          throw new Error(event.message);
-        }
-      }
-
-      while (true) {
-        const { value, done } = await reader.read();
-        buffer += decoder.decode(value, { stream: !done });
-        const lines = buffer.split("\n");
-        buffer = lines.pop() ?? "";
-        for (const line of lines) if (line.trim()) handleEvent(JSON.parse(line) as AnswerStreamEvent);
-        if (done) break;
-      }
-      if (buffer.trim()) handleEvent(JSON.parse(buffer) as AnswerStreamEvent);
-      if (!completed || !completeAnswer.trim()) throw new Error("The answer stream ended before completion.");
-
-      saveHistory({
-        id: crypto.randomUUID(),
-        question: submittedQuestion,
-        answer: completeAnswer,
-        sources: completeSources,
-        createdAt: new Date().toISOString(),
-      });
+      if (collection === "curated") await askCuratedLibrary(submittedQuestion, controller);
+      else await askLocalDocument(submittedQuestion, controller);
     } catch (caught) {
       if (caught instanceof DOMException && caught.name === "AbortError") return;
-      setError(caught instanceof Error ? caught.message : "The research request failed.");
+      if (caught && typeof caught === "object" && "code" in caught) {
+        setError(localErrorMessage(caught).message);
+      } else {
+        setError(caught instanceof Error ? caught.message : "The research request failed.");
+      }
     } finally {
       if (activeRequest.current === controller) activeRequest.current = null;
       setStage(null);
     }
+  }
+
+  async function addLocalFile(file: File) {
+    if (file.size > MAX_FILE_BYTES) {
+      setLocalPhase("error");
+      setLocalError(`PDFs up to ${Math.round(MAX_FILE_BYTES / (1024 * 1024))} MB are supported.`);
+      return;
+    }
+    setLocalPhase("processing");
+    setLocalProgress(null);
+    setLocalError("");
+    try {
+      const meta = await getSession().process(file, false);
+      replaceLocalPdfUrl(URL.createObjectURL(file));
+      setLocalMeta(meta);
+      setLocalPhase("ready");
+    } catch (caught) {
+      const { code, message } = localErrorMessage(caught);
+      if (code === "PROCESSING_CANCELLED") {
+        setLocalPhase("idle");
+        return;
+      }
+      setLocalPhase("error");
+      setLocalError(message);
+    }
+  }
+
+  async function restoreLocalDocument() {
+    setLocalPhase("processing");
+    setLocalProgress(null);
+    setLocalError("");
+    try {
+      const restored = await getSession().restore();
+      if (!restored) {
+        setPersistedAvailable(false);
+        setLocalPhase("idle");
+        return;
+      }
+      replaceLocalPdfUrl(URL.createObjectURL(new Blob([restored.pdfBytes], { type: "application/pdf" })));
+      setLocalMeta(restored.meta);
+      setLocalPhase("ready");
+    } catch (caught) {
+      setLocalPhase("error");
+      setLocalError(localErrorMessage(caught).message);
+    }
+  }
+
+  async function removeLocalDocument() {
+    try {
+      await getSession().remove();
+    } catch {
+      localSession.current?.terminate();
+    }
+    replaceLocalPdfUrl(null);
+    setLocalMeta(null);
+    setLocalPhase("idle");
+    setLocalProgress(null);
+    setPersistedAvailable(false);
+    resetResearchState();
+  }
+
+  async function persistLocalDocument(persist: boolean) {
+    try {
+      const meta = await getSession().setPersist(persist);
+      setLocalMeta(meta);
+      setPersistedAvailable(meta.persisted);
+    } catch (caught) {
+      setError(localErrorMessage(caught).message);
+    }
+  }
+
+  function switchCollection(next: Collection) {
+    if (next === collection) return;
+    activeRequest.current?.abort();
+    setCollection(next);
+    setStage(null);
+    resetResearchState();
   }
 
   function selectSource(source: SearchResult) {
@@ -238,6 +434,7 @@ export default function Home() {
 
   function restoreHistory(entry: HistoryEntry) {
     activeRequest.current?.abort();
+    setCollection("curated");
     setQuestion(entry.question);
     setAnswer(entry.answer);
     setResults(entry.sources);
@@ -245,6 +442,7 @@ export default function Home() {
     setViewerOpen(false);
     setError("");
     setStage(null);
+    setLocalSearchMode(null);
   }
 
   return (
@@ -268,23 +466,87 @@ export default function Home() {
             </dl>
           </section>
 
-          <QueryComposer question={question} examples={EXAMPLE_QUESTIONS} sourceCount={sourceCount} showDetails={showDetails} available={hostedAvailable} busy={Boolean(stage)} onQuestionChange={setQuestion} onSourceCountChange={setSourceCount} onShowDetailsChange={setShowDetails} onSubmit={askLibrary} />
+          <div className="collection-switch" role="group" aria-label="Search collection">
+            <button
+              className={collection === "curated" ? "is-active" : ""}
+              aria-pressed={collection === "curated"}
+              onClick={() => switchCollection("curated")}
+            >
+              <BookIcon /> Curated library
+            </button>
+            <button
+              className={collection === "local" ? "is-active" : ""}
+              aria-pressed={collection === "local"}
+              onClick={() => switchCollection("local")}
+            >
+              <FileIcon /> Your PDF <em>private</em>
+            </button>
+          </div>
+
+          {collection === "local" && (
+            <LocalDocumentPanel
+              phase={localPhase}
+              meta={localMeta}
+              progress={localProgress}
+              error={localError}
+              persistedAvailable={persistedAvailable && localPhase === "idle"}
+              hostedSynthesisEnabled={hostedSynthesis}
+              hostedAvailable={hostedAvailable}
+              busy={Boolean(stage)}
+              onAddFile={addLocalFile}
+              onRestore={restoreLocalDocument}
+              onCancel={() => localSession.current?.cancel()}
+              onRemove={removeLocalDocument}
+              onPersistChange={persistLocalDocument}
+              onHostedSynthesisChange={setHostedSynthesis}
+              onReset={() => { setLocalPhase("idle"); setLocalError(""); }}
+            />
+          )}
+
+          <QueryComposer
+            question={question}
+            examples={collection === "curated" ? EXAMPLE_QUESTIONS : []}
+            sourceCount={sourceCount}
+            showDetails={showDetails}
+            available={composerAvailable}
+            busy={Boolean(stage)}
+            actionLabel={collection === "curated" ? "Ask the library" : "Search your document"}
+            onQuestionChange={setQuestion}
+            onSourceCountChange={setSourceCount}
+            onShowDetailsChange={setShowDetails}
+            onSubmit={askLibrary}
+          />
 
           {error && (
             <div className="message error-message" role="alert">
               <div><strong>Research interrupted</strong><span>{error}</span></div>
-              <button onClick={askLibrary} disabled={!hostedAvailable}><RefreshIcon /> Retry</button>
+              <button onClick={askLibrary} disabled={!composerAvailable}><RefreshIcon /> Retry</button>
             </div>
           )}
 
-          {!hostedAvailable && status && (
+          {collection === "curated" && !hostedAvailable && status && (
             <div className="message paused-message" role="status">
               <strong>{status.quota.code === "DEMO_DISABLED" ? "The hosted demo is paused" : "Today’s demo capacity has been reached"}</strong>
-              <span>The library remains available to explore. Hosted research resets at {new Date(status.quota.resetsAt).toLocaleString([], { dateStyle: "medium", timeStyle: "short", timeZoneName: "short" })}.</span>
+              <span>The library remains available to explore. Hosted research resets at {new Date(status.quota.resetsAt).toLocaleString([], { dateStyle: "medium", timeStyle: "short", timeZoneName: "short" })}. Your own PDF can still be searched fully in-browser.</span>
             </div>
           )}
 
           {(stage || answer) && <AnswerCard answer={answer} sources={results} stage={stage} onCitation={selectSource} onRetry={askLibrary} />}
+
+          {collection === "local" && localSearchMode && results.length > 0 && !stage && (
+            <div className="message local-mode-note" role="status">
+              <strong>
+                {answer
+                  ? "Answer generated by the hosted model from bounded excerpts"
+                  : "Local search only"}
+              </strong>
+              <span>
+                {answer
+                  ? `Only the ${Math.min(results.length, MAX_LOCAL_EXCERPTS)} retrieved excerpts were sent to the quota-limited hosted endpoint.`
+                  : `Ranked in this browser with ${localSearchMode === "hybrid" ? "local embeddings and keyword search" : "keyword search"}. Nothing was transmitted.`}
+              </span>
+            </div>
+          )}
 
           <section className="results-section" aria-live="polite">
             <div className="section-heading">

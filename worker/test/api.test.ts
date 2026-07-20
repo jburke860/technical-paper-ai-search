@@ -382,6 +382,89 @@ describe("hosted Worker API", () => {
     expect(env.AI.run).toHaveBeenCalledTimes(20);
   });
 
+  it("streams hosted synthesis from bounded visitor excerpts without retrieval", async () => {
+    const env = createEnv();
+    const response = await fetchHandler(
+      post("/api/answer/local/stream", {
+        question: "What does the visitor document say about autonomy?",
+        excerpts: [
+          { label: "visitor.pdf", page: 3, text: "Functional-level autonomy addresses bounded tasks." },
+          { label: "visitor.pdf", page: 4, text: "System-level autonomy coordinates subsystems." },
+        ],
+      }),
+      env,
+    );
+    const lines = (await response.text()).trim().split("\n").map((line) => JSON.parse(line));
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get("Content-Type")).toContain("application/x-ndjson");
+    expect(lines[0]).toEqual({ type: "stage", stage: "synthesizing" });
+    expect(lines.filter((event) => event.type === "delta").length).toBeGreaterThan(0);
+    expect(lines.at(-1).type).toBe("done");
+    expect(response.headers.get("X-Demo-Remaining")).toBe("199");
+    expect(env.AI.run).toHaveBeenCalledTimes(1);
+    expect(env.VECTOR_INDEX.query).not.toHaveBeenCalled();
+  });
+
+  it("keeps visitor excerpts out of hosted retrieval and validates their bounds", async () => {
+    const env = createEnv();
+    const tooMany = await fetchHandler(
+      post("/api/answer/local/stream", {
+        question: "Summarize the document.",
+        excerpts: Array.from({ length: 6 }, () => ({ text: "Excerpt." })),
+      }),
+      env,
+    );
+    const oversized = await fetchHandler(
+      post("/api/answer/local/stream", {
+        question: "Summarize the document.",
+        excerpts: [{ text: "x".repeat(801) }],
+      }),
+      env,
+    );
+    const empty = await fetchHandler(
+      post("/api/answer/local/stream", { question: "Summarize the document.", excerpts: [] }),
+      env,
+    );
+
+    expect(tooMany.status).toBe(422);
+    expect((await tooMany.json() as Record<string, any>).error.code).toBe("INVALID_EXCERPTS");
+    expect(oversized.status).toBe(422);
+    expect((await oversized.json() as Record<string, any>).error.code).toBe("INVALID_EXCERPT_TEXT");
+    expect(empty.status).toBe(422);
+    expect(env.AI.run).not.toHaveBeenCalled();
+    expect(env.VECTOR_INDEX.query).not.toHaveBeenCalled();
+  });
+
+  it("gates local-excerpt synthesis behind the same global quota", async () => {
+    const disabled = createEnv({ enabled: "false" });
+    const disabledResponse = await fetchHandler(
+      post("/api/answer/local/stream", {
+        question: "Summarize the document.",
+        excerpts: [{ text: "Excerpt." }],
+      }),
+      disabled,
+    );
+
+    const quota = createMockD1();
+    const env = createEnv({ db: quota.db, limit: "1" });
+    const consumed = await fetchHandler(post("/api/search", { question: "Use the only slot" }), env);
+    const blocked = await fetchHandler(
+      post("/api/answer/local/stream", {
+        question: "Summarize the document.",
+        excerpts: [{ text: "Excerpt." }],
+      }, undefined, sessionCookie(consumed)),
+      env,
+    );
+
+    expect(disabledResponse.status).toBe(503);
+    expect((await disabledResponse.json() as Record<string, any>).code).toBe("DEMO_DISABLED");
+    expect(disabled.AI.run).not.toHaveBeenCalled();
+    expect(blocked.status).toBe(503);
+    expect((await blocked.json() as Record<string, any>).code).toBe("DAILY_DEMO_LIMIT_REACHED");
+    expect(env.AI.run).toHaveBeenCalledTimes(1);
+  });
+
   it("resets quota on the next UTC day", async () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2026-07-18T23:59:00.000Z"));

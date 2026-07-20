@@ -49,6 +49,20 @@ These are conservative application limits, not estimates of the provider's
 remaining allowance. They may be lowered after measuring real usage, but they
 must not be automatically raised.
 
+## Browser-local document mode
+
+Visitor PDFs are parsed, chunked, embedded, indexed, and searched entirely in
+the visitor's browser (Web Worker + optional IndexedDB). The document is never
+posted to the Worker or any owner-controlled service, so this mode consumes no
+owner-funded infrastructure and stays available during exhaustion.
+
+The only hosted touchpoint is the opt-in `POST /api/answer/local/stream`
+route, which accepts at most 5 visitor-selected excerpts of 800 characters
+each (4,000 characters total), performs no retrieval, and executes the same
+required request sequence and global quota reservation as every other
+inference route. The embedding model used for local search is downloaded by
+the visitor's browser from a public model CDN, not from owner infrastructure.
+
 ## Required request sequence
 
 Every route capable of consuming hosted compute must execute these checks in

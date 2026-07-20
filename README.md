@@ -68,6 +68,12 @@ PDFs → text extraction → chunking → embeddings → vector store → hybrid
   responsive desktop/mobile presentation
 - Reproducible retrieval explanations with semantic/BM25 ranks, RRF
   contributions, retriever agreement, and matched query concepts
+- Private browser-local PDF mode: visitor documents are parsed, chunked,
+  embedded (Transformers.js MiniLM), and searched with hybrid BM25 + semantic
+  RRF entirely in a Web Worker, with opt-in IndexedDB persistence and
+  strict size/page/chunk/timeout limits — the file never leaves the browser,
+  and optional hosted synthesis sends only bounded excerpts through the same
+  quota gate
 
 ## Architecture
 

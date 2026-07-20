@@ -251,6 +251,8 @@ documented in [`RETRIEVAL_EXPLAINABILITY.md`](RETRIEVAL_EXPLAINABILITY.md).
 
 ## Phase 8 — Browser-local PDF mode
 
+Status: complete
+
 Deliverables:
 
 - Remove the public server-side upload workflow from the hosted app.
@@ -267,6 +269,31 @@ Exit criteria:
 - Unsupported, scanned, oversized, and malformed PDFs fail safely.
 - Browser limits prevent a document from freezing the page.
 - Hosted generation remains protected by the global quota gate.
+
+Implementation: a dedicated Web Worker
+(`frontend/lib/local-documents/pdf.worker.ts`) validates the file, extracts
+text with PDF.js in fake-worker mode, builds bounded overlapping passages,
+embeds them with a quantized MiniLM model via Transformers.js, and serves
+hybrid BM25 + semantic RRF search with the same constant, deduplication, and
+retrieval explanation as the hosted pipeline. Every stage enforces explicit
+limits (20 MB, 200 pages, 500k characters, 400 chunks, batch sizes, and
+per-stage timeouts) with visible progress and cooperative cancellation; if the
+embedding model cannot be downloaded, search degrades to keyword-only ranking
+and says so. The index lives in worker memory with opt-in IndexedDB
+persistence and explicit cleanup on removal. Optional hosted synthesis posts
+only the retrieved excerpts (max 5 × 800 characters) to the new
+`POST /api/answer/local/stream` route, which passes the same quota
+reservation as every other inference route.
+
+Verification completed with Worker tests proving the synthesis route streams
+from bounded excerpts without touching Vectorize, rejects invalid excerpt
+shapes before inference, and fails closed behind both kill switches and the
+shared global counter. Desktop and mobile Playwright flows index a generated
+PDF fully in-browser and assert that no request ever carries the document
+bytes or marker text, that opt-in synthesis transmits only bounded excerpts,
+that oversized and non-PDF files fail safely, and that removal restores the
+empty state. A network-gated spec (`LIVE_MODEL=1`) additionally verifies the
+real embedding-model path end to end.
 
 ## Phase 9 — Quality and failure testing
 
