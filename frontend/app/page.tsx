@@ -432,6 +432,30 @@ export default function Home() {
     setSourcesOpen(true);
   }
 
+  // Draws the eye to a panel that is already visible on wide layouts, where
+  // opening its drawer state alone would produce no visible change.
+  function flashPanel(id: string) {
+    window.requestAnimationFrame(() => {
+      const panel = document.getElementById(id);
+      if (!panel) return;
+      panel.scrollIntoView({ block: "nearest" });
+      panel.classList.remove("attention-flash");
+      void panel.offsetWidth;
+      panel.classList.add("attention-flash");
+    });
+  }
+
+  function showLibrary() {
+    setLibraryOpen(true);
+    flashPanel("library");
+  }
+
+  function showSources() {
+    if (!selectedSource && results.length > 0) setSelectedSource(results[0]);
+    setSourcesOpen(true);
+    flashPanel("sources");
+  }
+
   function restoreHistory(entry: HistoryEntry) {
     activeRequest.current?.abort();
     setCollection("curated");
@@ -447,10 +471,10 @@ export default function Home() {
 
   return (
     <div className="research-app">
-      <AppHeader statusLabel={statusView.label} statusTone={statusView.tone} libraryOpen={libraryOpen} sourcesOpen={sourcesOpen} onOpenLibrary={() => setLibraryOpen(true)} onOpenSources={() => setSourcesOpen(true)} />
+      <AppHeader statusLabel={statusView.label} statusTone={statusView.tone} libraryOpen={libraryOpen} sourcesOpen={sourcesOpen} onOpenLibrary={() => setLibraryOpen(true)} onOpenSources={() => setSourcesOpen(true)} onShowLibrary={showLibrary} />
 
       <div className="workspace-grid">
-        <LibrarySidebar papers={papers} chunkCount={status?.corpus.chunkCount ?? null} history={history} open={libraryOpen} onClose={() => setLibraryOpen(false)} onSelectHistory={restoreHistory} />
+        <LibrarySidebar papers={papers} chunkCount={status?.corpus.chunkCount ?? null} history={history} sourceCount={results.length} open={libraryOpen} onClose={() => setLibraryOpen(false)} onSelectHistory={restoreHistory} onShowSources={showSources} />
 
         <main id="workspace" className="research-workspace">
           <section className="workspace-intro">
@@ -548,19 +572,25 @@ export default function Home() {
             </div>
           )}
 
-          <section className="results-section" aria-live="polite">
-            <div className="section-heading">
-              <div><p className="eyebrow">Evidence</p><h2>{results.length ? "Supporting sources" : "Built for verifiable answers"}</h2></div>
-              {results.length > 0 && <span>{results.length} sources</span>}
-            </div>
-
-            {results.length > 0 ? <ResultList results={results} selectedSource={selectedSource} showDetails={showDetails} onSelect={selectSource} /> : (
-              <div id="method" className="method-grid">
-                <article><span>01</span><h3>Hybrid retrieval</h3><p>Dense semantic search and BM25 keyword matching find complementary evidence.</p></article>
-                <article><span>02</span><h3>Stable citations</h3><p>Every passage carries a real title, section, page number, and source URL.</p></article>
-                <article><span>03</span><h3>Grounded synthesis</h3><p>Answers are constrained to retrieved context and keep citations visible.</p></article>
+          {results.length > 0 && (
+            <section className="results-section" aria-live="polite">
+              <div className="section-heading">
+                <div><p className="eyebrow">Evidence</p><h2>Supporting sources</h2></div>
+                <span>{results.length} sources</span>
               </div>
-            )}
+              <ResultList results={results} selectedSource={selectedSource} showDetails={showDetails} onSelect={selectSource} />
+            </section>
+          )}
+
+          <section id="method" className="results-section">
+            <div className="section-heading">
+              <div><p className="eyebrow">Method</p><h2>Built for verifiable answers</h2></div>
+            </div>
+            <div className="method-grid">
+              <article><span>01</span><h3>Hybrid retrieval</h3><p>Dense semantic search and BM25 keyword matching find complementary evidence.</p></article>
+              <article><span>02</span><h3>Stable citations</h3><p>Every passage carries a real title, section, page number, and source URL.</p></article>
+              <article><span>03</span><h3>Grounded synthesis</h3><p>Answers are constrained to retrieved context and keep citations visible.</p></article>
+            </div>
           </section>
         </main>
 

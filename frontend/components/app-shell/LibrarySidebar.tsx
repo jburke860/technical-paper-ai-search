@@ -8,11 +8,13 @@ type LibrarySidebarProps = {
   chunkCount: number | null;
   open: boolean;
   history: HistoryEntry[];
+  sourceCount: number;
   onClose: () => void;
   onSelectHistory: (entry: HistoryEntry) => void;
+  onShowSources: () => void;
 };
 
-export function LibrarySidebar({ papers, chunkCount, open, history, onClose, onSelectHistory }: LibrarySidebarProps) {
+export function LibrarySidebar({ papers, chunkCount, open, history, sourceCount, onClose, onSelectHistory, onShowSources }: LibrarySidebarProps) {
   const topics = [...new Set(papers.flatMap((paper) => paper.topics))].slice(0, 6);
   const drawerRef = useRef<HTMLElement>(null);
   useDrawerFocus(open, drawerRef, "(max-width: 820px)");
@@ -43,8 +45,16 @@ export function LibrarySidebar({ papers, chunkCount, open, history, onClose, onS
         </div>
 
         <nav className="sidebar-nav" aria-label="Library views">
-          <a className="is-active" href="#workspace"><LayersIcon /><span>All papers</span><b>{papers.length || "—"}</b></a>
-          <a href="#sources"><FileIcon /><span>Retrieved sources</span></a>
+          <button
+            type="button"
+            className="is-active"
+            onClick={() => drawerRef.current?.querySelector(".paper-list")?.scrollIntoView({ block: "nearest" })}
+          >
+            <LayersIcon /><span>All papers</span><b>{papers.length || "—"}</b>
+          </button>
+          <button type="button" onClick={() => { onShowSources(); onClose(); }}>
+            <FileIcon /><span>Retrieved sources</span><b>{sourceCount || "—"}</b>
+          </button>
         </nav>
 
         <div className="sidebar-section">

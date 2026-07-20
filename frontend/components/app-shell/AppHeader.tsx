@@ -1,4 +1,4 @@
-import { BookIcon, MenuIcon, PanelIcon } from "@/components/icons";
+import { MenuIcon, PanelIcon } from "@/components/icons";
 
 type AppHeaderProps = {
   statusLabel: string;
@@ -7,6 +7,7 @@ type AppHeaderProps = {
   sourcesOpen: boolean;
   onOpenLibrary: () => void;
   onOpenSources: () => void;
+  onShowLibrary: () => void;
 };
 
 export function AppHeader({
@@ -16,11 +17,13 @@ export function AppHeader({
   sourcesOpen,
   onOpenLibrary,
   onOpenSources,
+  onShowLibrary,
 }: AppHeaderProps) {
   return (
     <header className="app-header">
       <div className="brand-lockup">
-        <span className="brand-mark"><BookIcon /></span>
+        {/* eslint-disable-next-line @next/next/no-img-element -- static export serves the raw icon */}
+        <img className="brand-mark brand-favicon" src="/icon.svg" alt="" width={38} height={38} />
         <span>
           <strong>Technical Paper AI</strong>
           <small>Search assistant</small>
@@ -29,7 +32,7 @@ export function AppHeader({
 
       <nav className="primary-nav" aria-label="Primary navigation">
         <a className="is-active" href="#workspace">Research</a>
-        <a href="#library">Library</a>
+        <button type="button" onClick={onShowLibrary}>Library</button>
         <a href="#method">Method</a>
       </nav>
 
