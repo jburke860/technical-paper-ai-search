@@ -66,6 +66,8 @@ PDFs → text extraction → chunking → embeddings → vector store → hybrid
   retrieval controls, quota states, and browser-local history
 - Lazy PDF.js citation viewer with exact-page navigation, zoom, downloads, and
   responsive desktop/mobile presentation
+- Reproducible retrieval explanations with semantic/BM25 ranks, RRF
+  contributions, retriever agreement, and matched query concepts
 
 ## Architecture
 

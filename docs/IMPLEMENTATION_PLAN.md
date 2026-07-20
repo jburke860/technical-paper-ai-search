@@ -226,6 +226,8 @@ fallback are implemented.
 
 ## Phase 7 — Retrieval explainability
 
+Status: complete
+
 Deliverables:
 
 - Add an expandable `Why this source?` view.
@@ -240,6 +242,12 @@ Exit criteria:
 - Displayed rankings reproduce the backend result order.
 - No knowledge graph or confidence metric is added without a real evaluation
   basis.
+
+Verification completed with Worker assertions that displayed ranks match
+response order and that semantic plus keyword contributions reproduce the RRF
+score. Desktop and mobile Playwright flows exercise the expandable explanation.
+The calculation, lexical concept matching, deduplication order, and limits are
+documented in [`RETRIEVAL_EXPLAINABILITY.md`](RETRIEVAL_EXPLAINABILITY.md).
 
 ## Phase 8 — Browser-local PDF mode
 

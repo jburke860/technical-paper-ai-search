@@ -24,9 +24,11 @@ export function ResultList({ results, selectedSource, showDetails, onSelect }: R
             <span>{result.snippet}</span>
             {showDetails && (
               <span className="retrieval-details">
-                <i>Vector rank {result.vector_rank ?? "—"}</i>
-                <i>Keyword rank {result.keyword_rank ?? "—"}</i>
+                <i>Final rank {result.retrieval_explanation?.final_rank ?? index + 1}</i>
+                <i>Semantic rank {result.retrieval_explanation?.semantic.rank ?? result.vector_rank ?? "—"}</i>
+                <i>Keyword rank {result.retrieval_explanation?.keyword.rank ?? result.keyword_rank ?? "—"}</i>
                 <i>RRF {score(result.rrf_score)}</i>
+                {result.retrieval_explanation?.found_by === "both" && <i>Found by both</i>}
               </span>
             )}
           </span>

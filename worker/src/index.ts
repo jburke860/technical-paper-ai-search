@@ -160,6 +160,7 @@ async function searchCorpus(
     score: match.score,
   }));
   return fuseResults(
+    question,
     vectorCandidates,
     bm25Search(question, CANDIDATE_COUNT),
     resultCount,

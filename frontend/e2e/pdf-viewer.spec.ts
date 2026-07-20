@@ -30,6 +30,14 @@ const source = {
   vector_rank: 1,
   keyword_rank: 2,
   rrf_score: 0.03,
+  retrieval_explanation: {
+    final_rank: 1,
+    rrf_constant: 60,
+    found_by: "both",
+    semantic: { rank: 1, score: 0.92, contribution: 1 / 61 },
+    keyword: { rank: 2, score: 4.2, contribution: 1 / 62 },
+    matched_concepts: ["safety", "autonomous systems"],
+  },
 };
 
 async function mockResearchApi(page: Page) {
@@ -86,6 +94,9 @@ test("opens a citation at its real PDF page only after interaction", async ({ pa
   await page.getByRole("button", { name: "Zoom in" }).click();
   await expect(page.locator(".zoom-controls")).toContainText("115%");
   await expect(page.getByText("Position data is unavailable", { exact: false })).toBeVisible();
+  await page.getByText("Why this source?").click();
+  await expect(page.getByText("Found independently by both retrievers")).toBeVisible();
+  await expect(page.getByText("1 / (60 + rank)", { exact: false })).toBeVisible();
 
   if (testInfo.project.name === "mobile") {
     await expect(page.locator(".source-panel")).toHaveClass(/is-open/);

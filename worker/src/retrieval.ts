@@ -3,6 +3,11 @@ import type { CorpusChunk, SearchResult } from "./types";
 
 const TOKEN_PATTERN = /[a-zA-Z0-9_+-]+/g;
 const RRF_CONSTANT = 60;
+const EXPLANATION_STOP_WORDS = new Set([
+  "a", "an", "and", "are", "as", "at", "be", "by", "do", "does", "for",
+  "from", "how", "in", "is", "it", "of", "on", "or", "that", "the", "to",
+  "what", "when", "where", "which", "why", "with",
+]);
 
 export function tokenize(text: string): string[] {
   return (text.toLowerCase().match(TOKEN_PATTERN) ?? []).filter(Boolean);
@@ -57,7 +62,31 @@ function tokenJaccard(left: string, right: string): number {
 
 type VectorCandidate = { id: string; score: number };
 
+function matchedConcepts(question: string, text: string): string[] {
+  const query = tokenize(question).filter(
+    (term) => term.length > 2 && !EXPLANATION_STOP_WORDS.has(term),
+  );
+  const passage = tokenize(text);
+  const passageTerms = new Set(passage);
+  const passageText = ` ${passage.join(" ")} `;
+  const concepts: string[] = [];
+
+  for (let index = 0; index < query.length - 1; index += 1) {
+    const phrase = `${query[index]} ${query[index + 1]}`;
+    if (passageText.includes(` ${phrase} `) && !concepts.includes(phrase)) {
+      concepts.push(phrase);
+    }
+  }
+  for (const term of query) {
+    if (passageTerms.has(term) && !concepts.some((concept) => concept.includes(term))) {
+      concepts.push(term);
+    }
+  }
+  return concepts.slice(0, 6);
+}
+
 export function fuseResults(
+  question: string,
   vectorCandidates: VectorCandidate[],
   keywordCandidates: ReturnType<typeof bm25Search>,
   resultCount: number,
@@ -123,7 +152,14 @@ export function fuseResults(
     if (deduplicated.length >= resultCount) break;
   }
 
-  return deduplicated.map((candidate) => ({
+  return deduplicated.map((candidate, index) => {
+    const semanticContribution = candidate.vectorRank === null
+      ? 0
+      : 1 / (RRF_CONSTANT + candidate.vectorRank);
+    const keywordContribution = candidate.keywordRank === null
+      ? 0
+      : 1 / (RRF_CONSTANT + candidate.keywordRank);
+    return {
     id: candidate.chunk.id,
     paper_id: candidate.chunk.paper_id,
     document: candidate.chunk.document,
@@ -142,5 +178,24 @@ export function fuseResults(
     vector_rank: candidate.vectorRank,
     keyword_rank: candidate.keywordRank,
     rrf_score: candidate.rrfScore,
-  }));
+    retrieval_explanation: {
+      final_rank: index + 1,
+      rrf_constant: RRF_CONSTANT,
+      found_by: candidate.vectorRank !== null && candidate.keywordRank !== null
+        ? "both" as const
+        : candidate.vectorRank !== null ? "semantic" as const : "keyword" as const,
+      semantic: {
+        rank: candidate.vectorRank,
+        score: candidate.vectorScore,
+        contribution: semanticContribution,
+      },
+      keyword: {
+        rank: candidate.keywordRank,
+        score: candidate.bm25Score,
+        contribution: keywordContribution,
+      },
+      matched_concepts: matchedConcepts(question, candidate.chunk.text),
+    },
+  };
+  });
 }

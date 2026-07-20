@@ -4,6 +4,7 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import { CloseIcon, CopyIcon, ExternalIcon, FileIcon } from "@/components/icons";
 import type { SearchResult } from "@/app/types";
+import { RetrievalExplanation } from "@/components/sources/RetrievalExplanation";
 
 type SourcePanelProps = {
   source: SearchResult | null;
@@ -68,6 +69,7 @@ export function SourcePanel({ source, sourceCount, open, viewerOpen, onClose, on
               <p>{source.authors.slice(0, 3).join(", ")}{source.authors.length > 3 ? " et al." : ""} · {source.year}</p>
             </div>
             <p className="source-snippet">{source.snippet}</p>
+            <RetrievalExplanation source={source} />
             <div className="source-actions">
               <button className="secondary-button" onClick={copyCitation}><CopyIcon /> {copied ? "Copied" : "Copy citation"}</button>
               <a className="secondary-button" href={source.source_url ?? source.pdf_url} target="_blank" rel="noreferrer">Open source <ExternalIcon /></a>

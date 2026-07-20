@@ -34,6 +34,12 @@ before `delta` events, followed by `done`. If generation is interrupted after
 headers are sent, the stream ends with an `error` event. It uses the same quota
 reservation as the non-streaming routes.
 
+Every result also includes deterministic retrieval-explanation fields: final
+rank, semantic and BM25 ranks, each list's RRF contribution, retriever agreement,
+and exact query concepts present in the passage. See
+[`docs/RETRIEVAL_EXPLAINABILITY.md`](../docs/RETRIEVAL_EXPLAINABILITY.md) for the
+formula and interpretation limits.
+
 ## Local verification
 
 ```bash

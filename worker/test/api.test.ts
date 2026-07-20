@@ -134,6 +134,15 @@ describe("hosted Worker API", () => {
     expect(payload.results.length).toBeGreaterThan(0);
     expect(payload.results[0].paper_id).toBe("deep-space-autonomy-modeling");
     expect(payload.results[0].rrf_score).toBeGreaterThan(0);
+    payload.results.forEach((result: Record<string, any>, index: number) => {
+      const explanation = result.retrieval_explanation;
+      expect(explanation.final_rank).toBe(index + 1);
+      expect(explanation.rrf_constant).toBe(60);
+      expect(explanation.semantic.contribution + explanation.keyword.contribution)
+        .toBeCloseTo(result.rrf_score, 10);
+      expect(["both", "semantic", "keyword"]).toContain(explanation.found_by);
+    });
+    expect(payload.results[0].retrieval_explanation.matched_concepts.length).toBeGreaterThan(0);
     expect(response.headers.get("X-Demo-Remaining")).toBe("199");
     expect(response.headers.get("Set-Cookie")).toContain("HttpOnly");
     expect(env.AI.run).toHaveBeenCalledTimes(1);

@@ -62,6 +62,14 @@ export type SearchResult = {
   vector_rank: number | null;
   keyword_rank: number | null;
   rrf_score: number;
+  retrieval_explanation: {
+    final_rank: number;
+    rrf_constant: number;
+    found_by: "both" | "semantic" | "keyword";
+    semantic: { rank: number | null; score: number | null; contribution: number };
+    keyword: { rank: number | null; score: number | null; contribution: number };
+    matched_concepts: string[];
+  };
 };
 
 export interface Env {
