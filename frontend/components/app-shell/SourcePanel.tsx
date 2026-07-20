@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { CloseIcon, CopyIcon, ExternalIcon, FileIcon } from "@/components/icons";
+import { useDrawerFocus } from "@/lib/use-drawer-focus";
 import type { SearchResult } from "@/app/types";
 import { RetrievalExplanation } from "@/components/sources/RetrievalExplanation";
 
@@ -23,6 +24,8 @@ const PdfViewer = dynamic(() => import("@/components/documents/PdfViewer"), {
 export function SourcePanel({ source, sourceCount, open, viewerOpen, onClose, onOpenViewer }: SourcePanelProps) {
   const [copiedSourceId, setCopiedSourceId] = useState<string | null>(null);
   const copied = copiedSourceId === source?.id;
+  const drawerRef = useRef<HTMLElement>(null);
+  useDrawerFocus(open, drawerRef, "(max-width: 1180px)");
 
   async function copyCitation() {
     if (!source) return;
@@ -40,7 +43,7 @@ export function SourcePanel({ source, sourceCount, open, viewerOpen, onClose, on
         aria-label="Close sources"
         tabIndex={open ? 0 : -1}
       />
-      <aside id="sources" className={`source-panel ${open ? "is-open" : ""}`} aria-label="Selected source">
+      <aside ref={drawerRef} id="sources" className={`source-panel ${open ? "is-open" : ""}`} aria-label="Selected source">
         <div className="source-panel-heading">
           <div><p className="eyebrow">Source preview</p><h2>{sourceCount ? `${sourceCount} retrieved` : "No source selected"}</h2></div>
           <button className="icon-button source-close" onClick={onClose} aria-label="Close sources"><CloseIcon /></button>

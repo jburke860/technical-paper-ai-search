@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-18T17:47:49.579629+00:00",
+  "generated_at": "2026-07-20T18:02:57.775710+00:00",
   "model": "all-MiniLM-L6-v2",
   "retrieval": "Reciprocal Rank Fusion of dense cosine and BM25 rankings",
   "question_count": 24,
@@ -8,7 +8,10 @@
   "top_k": 5,
   "metrics": {
     "recall_at_5": 1.0,
-    "mean_reciprocal_rank_at_5": 0.8263888888888888
+    "mean_reciprocal_rank_at_5": 0.8263888888888888,
+    "duplicate_result_rate": 0.0,
+    "citation_page_accuracy": 1.0,
+    "missing_metadata_rate": 0.0
   },
   "questions": [
     {

@@ -1,0 +1,90 @@
+# Runs entirely from a clean checkout with mocked bindings.
+# No job may call Workers AI, Vectorize, or any paid service.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  corpus:
+    name: Corpus determinism and quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Rebuild corpus from committed PDFs
+        run: |
+          pip install pymupdf==1.27.2.3
+          python scripts/build_corpus.py
+      - name: Rebuild Worker retrieval assets
+        run: python scripts/build_worker_assets.py
+      - name: Verify rebuild is byte-identical
+        run: git diff --exit-code data/corpus.json data/corpus-manifest.json worker/src/generated
+      - name: Corpus quality gate
+        run: python evaluation/check_corpus_quality.py
+
+  worker:
+    name: Worker tests, typecheck, deploy dry run
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: worker
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: worker/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npm run typecheck
+      - name: Deployment dry run (no credentials, nothing deployed)
+        run: npx wrangler deploy --dry-run
+
+  frontend:
+    name: Frontend lint, unit tests, production build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npx tsc --noEmit
+      - run: npm run test:unit
+      - run: npm run build
+
+  e2e:
+    name: Playwright desktop and mobile
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npx playwright install chromium --with-deps
+      - name: Run desktop and mobile suites (hosted API mocked, model CDN blocked)
+        run: npx playwright test
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-traces
+          path: frontend/test-results
+          retention-days: 7

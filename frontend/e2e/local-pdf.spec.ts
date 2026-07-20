@@ -221,6 +221,24 @@ test.describe("browser-local PDF mode", () => {
     await expect(page.getByText(/PDFs up to 20 MB are supported/)).toBeVisible();
   });
 
+  test("cancels local processing and returns to the empty state", async ({ page }) => {
+    await mockHostedApi(page);
+    // Let the model download hang so processing parks in the loading-model
+    // stage, then cancel while it is visibly in progress.
+    await page.route(/huggingface\.co|hf\.co|jsdelivr\.net|hf\.xet/, () => {
+      /* never fulfilled */
+    });
+    await openLocalMode(page);
+
+    await page.getByLabel("Add a local PDF").setInputFiles(SAMPLE_PDF);
+    await expect(page.getByText(/Loading the embedding model/)).toBeVisible({ timeout: 90_000 });
+    await page.getByRole("button", { name: "Cancel processing" }).click();
+
+    await expect(page.getByText("Add a local PDF")).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText(/Loading the embedding model/)).toHaveCount(0);
+    await expect(page.getByText("This document could not be indexed")).toHaveCount(0);
+  });
+
   test("removes the local document and returns to the empty state", async ({ page }) => {
     await mockHostedApi(page);
     await blockModelCdn(page);

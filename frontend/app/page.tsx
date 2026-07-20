@@ -527,7 +527,7 @@ export default function Home() {
           {collection === "curated" && !hostedAvailable && status && (
             <div className="message paused-message" role="status">
               <strong>{status.quota.code === "DEMO_DISABLED" ? "The hosted demo is paused" : "Today’s demo capacity has been reached"}</strong>
-              <span>The library remains available to explore. Hosted research resets at {new Date(status.quota.resetsAt).toLocaleString([], { dateStyle: "medium", timeStyle: "short", timeZoneName: "short" })}. Your own PDF can still be searched fully in-browser.</span>
+              <span>The library remains available to explore. Hosted research resets at {new Date(status.quota.resetsAt).toLocaleString([], { dateStyle: "medium", timeStyle: "short" })} local time. Your own PDF can still be searched fully in-browser.</span>
             </div>
           )}
 

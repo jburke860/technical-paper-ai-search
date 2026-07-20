@@ -1,4 +1,6 @@
+import { useRef } from "react";
 import { BookIcon, CloseIcon, FileIcon, HistoryIcon, LayersIcon } from "@/components/icons";
+import { useDrawerFocus } from "@/lib/use-drawer-focus";
 import type { HistoryEntry, Paper } from "@/app/types";
 
 type LibrarySidebarProps = {
@@ -12,6 +14,8 @@ type LibrarySidebarProps = {
 
 export function LibrarySidebar({ papers, chunkCount, open, history, onClose, onSelectHistory }: LibrarySidebarProps) {
   const topics = [...new Set(papers.flatMap((paper) => paper.topics))].slice(0, 6);
+  const drawerRef = useRef<HTMLElement>(null);
+  useDrawerFocus(open, drawerRef, "(max-width: 820px)");
 
   return (
     <>
@@ -21,7 +25,7 @@ export function LibrarySidebar({ papers, chunkCount, open, history, onClose, onS
         aria-label="Close library"
         tabIndex={open ? 0 : -1}
       />
-      <aside id="library" className={`library-sidebar ${open ? "is-open" : ""}`} aria-label="Document library">
+      <aside ref={drawerRef} id="library" className={`library-sidebar ${open ? "is-open" : ""}`} aria-label="Document library">
         <div className="sidebar-heading">
           <div>
             <p className="eyebrow">Workspace</p>

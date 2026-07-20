@@ -297,6 +297,8 @@ real embedding-model path end to end.
 
 ## Phase 9 — Quality and failure testing
 
+Status: complete
+
 Deliverables:
 
 - Add Worker tests for validation, quota, retrieval, citation mapping, provider
@@ -313,6 +315,41 @@ Exit criteria:
 - A quota exhaustion drill and quota-store failure drill pass.
 - Lighthouse accessibility reaches the agreed target.
 - No tested route bypasses quota middleware.
+
+Implementation: the Worker suite grew to 39 tests covering every validation
+boundary, every quota denial code, provider failures (Vectorize outage,
+malformed embedding/generation shapes, mid-stream interruption), the
+prompt-injection guards on both generation prompts, citation numbering and
+metadata mapping, CORS/preflight behavior, read-only routes while disabled,
+and a bypass suite asserting all four inference routes share one quota gate
+and that blocked requests never call AI or Vectorize. It exposed and fixed a
+real bug: the streaming route returned its promise without awaiting, letting a
+pre-stream generation failure escape the 503 error contract. Frontend
+Playwright coverage (42 tests, desktop and mobile) exercises the streamed
+answer flow, empty questions, status failure, load-time and mid-session
+exhaustion, burst limits, interrupted streams with retry, history restoration,
+copy actions, citation navigation, PDF viewer failure, keyboard-only drawer
+use, reduced motion, local-PDF ingestion, cancellation, and oversized/invalid
+files; it exposed and fixed a crash in the exhausted-state banner
+(`toLocaleString` option conflict). Fourteen Vitest unit tests pin the local
+chunking bounds and the local BM25/RRF parity with the hosted formula. Drawer
+focus trapping and restoration were implemented (`lib/use-drawer-focus.ts`)
+and are verified by a keyboard-only test.
+
+Verification: axe WCAG A/AA scans pass with zero violations across the
+initial, answer/explanation, and local-document states after darkening the
+muted text token to reach 4.5:1 contrast and making the PDF scroll region
+keyboard-focusable; Lighthouse accessibility scores 100 on the production
+build. Retrieval evaluation now records recall@5 1.0, MRR@5 0.826, plus
+duplicate-result rate 0, citation-page accuracy 1.0, and missing-metadata
+rate 0 in `evaluation/baseline.json`; a dependency-free corpus quality gate
+(`evaluation/check_corpus_quality.py`) enforces manifest-hash determinism and
+Worker-bundle sync. `.github/workflows/ci.yml` runs corpus rebuild
+determinism (pinned PyMuPDF), the Worker suite/typecheck/deploy dry run,
+frontend lint/unit/build, and both Playwright projects with hosted bindings
+mocked and the model CDN blocked — no job can consume Workers AI or any paid
+service. Every pre-deployment failure drill is mapped to its automated
+rehearsal in [`FAILURE_DRILLS.md`](FAILURE_DRILLS.md).
 
 ## Phase 10 — Production and portfolio launch
 

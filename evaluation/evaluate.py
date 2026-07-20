@@ -19,6 +19,17 @@ sys.path.insert(0, str(ROOT_DIR / "backend"))
 from retrieval import deduplicate_overlapping_results, reciprocal_rank_fusion, tokenize  # noqa: E402
 
 
+CITATION_FIELDS = ("id", "paper_id", "title", "page", "section", "pdf_url", "text")
+
+
+def token_jaccard(left: str, right: str) -> float:
+    left_tokens = set(tokenize(left))
+    right_tokens = set(tokenize(right))
+    if not left_tokens or not right_tokens:
+        return 0.0
+    return len(left_tokens & right_tokens) / len(left_tokens | right_tokens)
+
+
 CORPUS_PATH = ROOT_DIR / "data" / "corpus.json"
 MANIFEST_PATH = ROOT_DIR / "data" / "corpus-manifest.json"
 QUESTIONS_PATH = ROOT_DIR / "evaluation" / "questions.json"
@@ -54,9 +65,16 @@ def evaluate() -> dict[str, Any]:
     )
     bm25 = BM25Okapi([tokenize(text) for text in texts])
 
+    page_ranges = {
+        paper["id"]: paper["pages"] for paper in manifest["included_papers"]
+    }
     question_results: list[dict[str, Any]] = []
     reciprocal_ranks: list[float] = []
     recalls: list[float] = []
+    result_count = 0
+    duplicate_pairs = 0
+    invalid_pages = 0
+    missing_metadata = 0
 
     for question in questions:
         query_embedding = model.encode(
@@ -94,6 +112,23 @@ def evaluate() -> dict[str, Any]:
         reciprocal_rank = 1.0 / first_relevant_rank if first_relevant_rank else 0.0
         recalls.append(recall)
         reciprocal_ranks.append(reciprocal_rank)
+
+        result_count += len(top_results)
+        for result in top_results:
+            paper_pages = page_ranges.get(result["paper_id"])
+            if paper_pages is None or not 1 <= result["page"] <= paper_pages:
+                invalid_pages += 1
+            if any(result.get(field) in (None, "", []) for field in CITATION_FIELDS):
+                missing_metadata += 1
+        for left_index in range(len(top_results)):
+            for right_index in range(left_index + 1, len(top_results)):
+                left, right = top_results[left_index], top_results[right_index]
+                if (
+                    left["paper_id"] == right["paper_id"]
+                    and left["page"] == right["page"]
+                    and token_jaccard(left["text"], right["text"]) >= 0.72
+                ):
+                    duplicate_pairs += 1
         question_results.append(
             {
                 "id": question["id"],
@@ -124,6 +159,9 @@ def evaluate() -> dict[str, Any]:
         "metrics": {
             "recall_at_5": sum(recalls) / len(recalls),
             "mean_reciprocal_rank_at_5": sum(reciprocal_ranks) / len(reciprocal_ranks),
+            "duplicate_result_rate": duplicate_pairs / result_count,
+            "citation_page_accuracy": 1 - invalid_pages / result_count,
+            "missing_metadata_rate": missing_metadata / result_count,
         },
         "questions": question_results,
     }

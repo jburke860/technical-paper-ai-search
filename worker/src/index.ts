@@ -527,7 +527,7 @@ async function routeRequest(request: Request, env: Env): Promise<Response> {
         return jsonResponse({ question: parsed.question, results }, 200, headers);
       }
       if (url.pathname === "/api/answer/stream") {
-        return streamAnswer(parsed.question, parsed.n_results, env, headers);
+        return await streamAnswer(parsed.question, parsed.n_results, env, headers);
       }
       const generated = await answerQuestion(parsed.question, parsed.n_results, env);
       return jsonResponse({ question: parsed.question, ...generated }, 200, headers);

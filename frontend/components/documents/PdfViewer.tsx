@@ -114,7 +114,13 @@ export default function PdfViewer({ url, initialPage, title, snippet, highlightB
         </div>
       </div>
 
-      <div className="pdf-canvas-shell" ref={containerRef}>
+      <div
+        className="pdf-canvas-shell"
+        ref={containerRef}
+        tabIndex={0}
+        role="region"
+        aria-label={`Page ${page} of ${title}`}
+      >
         {loading && !error && <div className="pdf-loading"><span /><p>Rendering cited page…</p></div>}
         {error ? <div className="pdf-error"><strong>Preview unavailable</strong><p>{error}</p><a href={url} target="_blank" rel="noreferrer">Open original PDF</a></div> : (
           <div className="pdf-page">

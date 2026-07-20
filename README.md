@@ -74,6 +74,13 @@ PDFs → text extraction → chunking → embeddings → vector store → hybrid
   strict size/page/chunk/timeout limits — the file never leaves the browser,
   and optional hosted synthesis sends only bounded excerpts through the same
   quota gate
+- Production-grade quality gates: 39 Worker tests (validation, quota denial,
+  provider failure, prompt-injection guards, CORS, quota-bypass proofs), 42
+  Playwright flows across desktop and mobile, axe WCAG A/AA scans with zero
+  violations, Lighthouse accessibility 100, drawer focus trapping, a corpus
+  determinism gate, extended retrieval metrics in `evaluation/baseline.json`,
+  documented failure drills, and a GitHub Actions pipeline that runs entirely
+  on mocked bindings
 
 ## Architecture
 
