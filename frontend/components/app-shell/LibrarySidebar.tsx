@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { BookIcon, CloseIcon, FileIcon, HistoryIcon, LayersIcon } from "@/components/icons";
+import { BookIcon, CloseIcon, FileIcon, HistoryIcon } from "@/components/icons";
 import { useDrawerFocus } from "@/lib/use-drawer-focus";
 import type { HistoryEntry, Paper } from "@/app/types";
 
@@ -8,13 +8,11 @@ type LibrarySidebarProps = {
   chunkCount: number | null;
   open: boolean;
   history: HistoryEntry[];
-  sourceCount: number;
   onClose: () => void;
   onSelectHistory: (entry: HistoryEntry) => void;
-  onShowSources: () => void;
 };
 
-export function LibrarySidebar({ papers, chunkCount, open, history, sourceCount, onClose, onSelectHistory, onShowSources }: LibrarySidebarProps) {
+export function LibrarySidebar({ papers, chunkCount, open, history, onClose, onSelectHistory }: LibrarySidebarProps) {
   const topics = [...new Set(papers.flatMap((paper) => paper.topics))].slice(0, 6);
   const drawerRef = useRef<HTMLElement>(null);
   useDrawerFocus(open, drawerRef, "(max-width: 820px)");
@@ -43,19 +41,6 @@ export function LibrarySidebar({ papers, chunkCount, open, history, sourceCount,
           <span><strong>{papers.length || "—"}</strong> papers</span>
           <span><strong>{chunkCount ?? "—"}</strong> passages</span>
         </div>
-
-        <nav className="sidebar-nav" aria-label="Library views">
-          <button
-            type="button"
-            className="is-active"
-            onClick={() => drawerRef.current?.querySelector(".paper-list")?.scrollIntoView({ block: "nearest" })}
-          >
-            <LayersIcon /><span>All papers</span><b>{papers.length || "—"}</b>
-          </button>
-          <button type="button" onClick={() => { onShowSources(); onClose(); }}>
-            <FileIcon /><span>Retrieved sources</span><b>{sourceCount || "—"}</b>
-          </button>
-        </nav>
 
         <div className="sidebar-section">
           <p className="eyebrow">Topics in this corpus</p>

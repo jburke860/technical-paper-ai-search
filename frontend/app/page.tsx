@@ -432,30 +432,6 @@ export default function Home() {
     setSourcesOpen(true);
   }
 
-  // Draws the eye to a panel that is already visible on wide layouts, where
-  // opening its drawer state alone would produce no visible change.
-  function flashPanel(id: string) {
-    window.requestAnimationFrame(() => {
-      const panel = document.getElementById(id);
-      if (!panel) return;
-      panel.scrollIntoView({ block: "nearest" });
-      panel.classList.remove("attention-flash");
-      void panel.offsetWidth;
-      panel.classList.add("attention-flash");
-    });
-  }
-
-  function showLibrary() {
-    setLibraryOpen(true);
-    flashPanel("library");
-  }
-
-  function showSources() {
-    if (!selectedSource && results.length > 0) setSelectedSource(results[0]);
-    setSourcesOpen(true);
-    flashPanel("sources");
-  }
-
   function restoreHistory(entry: HistoryEntry) {
     activeRequest.current?.abort();
     setCollection("curated");
@@ -471,10 +447,10 @@ export default function Home() {
 
   return (
     <div className="research-app">
-      <AppHeader statusLabel={statusView.label} statusTone={statusView.tone} libraryOpen={libraryOpen} sourcesOpen={sourcesOpen} onOpenLibrary={() => setLibraryOpen(true)} onOpenSources={() => setSourcesOpen(true)} onShowLibrary={showLibrary} />
+      <AppHeader statusLabel={statusView.label} statusTone={statusView.tone} libraryOpen={libraryOpen} sourcesOpen={sourcesOpen} onOpenLibrary={() => setLibraryOpen(true)} onOpenSources={() => setSourcesOpen(true)} />
 
       <div className="workspace-grid">
-        <LibrarySidebar papers={papers} chunkCount={status?.corpus.chunkCount ?? null} history={history} sourceCount={results.length} open={libraryOpen} onClose={() => setLibraryOpen(false)} onSelectHistory={restoreHistory} onShowSources={showSources} />
+        <LibrarySidebar papers={papers} chunkCount={status?.corpus.chunkCount ?? null} history={history} open={libraryOpen} onClose={() => setLibraryOpen(false)} onSelectHistory={restoreHistory} />
 
         <main id="workspace" className="research-workspace">
           <section className="workspace-intro">
