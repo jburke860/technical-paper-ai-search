@@ -86,7 +86,9 @@ export default function Home() {
   const [localProgress, setLocalProgress] = useState<LocalProgress | null>(null);
   const [localError, setLocalError] = useState("");
   const [persistedAvailable, setPersistedAvailable] = useState(false);
-  const [hostedSynthesis, setHostedSynthesis] = useState(false);
+  // Hosted synthesis is on by default so local-PDF questions get a real
+  // answer out of the box; the panel toggle switches to fully local search.
+  const [hostedSynthesis, setHostedSynthesis] = useState(true);
   const [localSearchMode, setLocalSearchMode] = useState<"hybrid" | "keyword" | null>(null);
   const activeRequest = useRef<AbortController | null>(null);
   const localSession = useRef<LocalDocumentSession | null>(null);
@@ -495,9 +497,18 @@ export default function Home() {
               <p className="eyebrow"><SparkIcon /> Source-grounded research</p>
               <h1>{collection === "curated" ? "Ask the spacecraft autonomy library" : "Find insights in your own PDFs"}</h1>
               <p>
-                {collection === "curated"
-                  ? "Question a curated collection of research on spacecraft autonomy and aerospace computer vision, then trace every answer back to its paper and page."
-                  : "Search up to three of your own PDFs privately in this browser tab — and optionally let the hosted model synthesize a cited answer from the retrieved passages."}
+                {collection === "curated" ? (
+                  <>
+                    Question a curated collection of research on spacecraft autonomy and aerospace
+                    computer vision, then trace every answer back to its paper and page —{" "}
+                    <button className="hero-link" onClick={() => switchCollection("local")}>
+                      or upload your own PDF to get cited insights from it
+                    </button>
+                    .
+                  </>
+                ) : (
+                  "Your PDFs are parsed and searched privately in this browser tab; answers are synthesized by the hosted model from the few retrieved passages, or switch it off to stay fully local."
+                )}
               </p>
             </div>
             <dl className="corpus-stats" aria-label="Corpus statistics">

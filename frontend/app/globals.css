@@ -102,6 +102,8 @@ svg { width: 1.15rem; height: 1.15rem; flex: none; }
 .workspace-intro { display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; max-width: 1040px; margin: 0 auto; }
 .workspace-intro h1 { margin: 12px 0 10px; font-family: var(--font-editorial); font-size: clamp(38px, 4.4vw, 64px); font-weight: 500; line-height: .98; letter-spacing: -.045em; }
 .workspace-intro > div > p:last-child { max-width: 650px; margin: 0; color: var(--ink-soft); font-size: 13px; line-height: 1.7; }
+.hero-link { background: none; border: none; padding: 0; font: inherit; color: var(--green-dark); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.hero-link:hover { color: var(--ink); }
 .corpus-stats { flex: none; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(70px, 1fr)); border: 1px solid var(--line); border-radius: var(--radius-md); overflow: hidden; background: rgb(251 250 246 / 76%); box-shadow: var(--shadow-sm); }
 .corpus-stats div { min-width: 82px; padding: 12px 14px; border-left: 1px solid var(--line); }
 .corpus-stats div:first-child { border-left: 0; }

@@ -131,6 +131,8 @@ test.describe("browser-local PDF mode", () => {
 
     await openLocalMode(page);
     await indexSamplePdf(page);
+    // Hosted synthesis defaults on; switch it off to verify the fully local path.
+    await page.getByText("Generate answers with the hosted model").click();
 
     await page.getByRole("textbox", { name: "Research question" }).fill("thermal subsystem radiator margin");
     await page.getByRole("button", { name: "Search your document" }).click();
@@ -152,7 +154,7 @@ test.describe("browser-local PDF mode", () => {
     }
   });
 
-  test("sends only bounded excerpts when hosted synthesis is opted in", async ({ page }) => {
+  test("sends only bounded excerpts through default hosted synthesis", async ({ page }) => {
     await mockHostedApi(page);
     await blockModelCdn(page);
     let synthesisBody: string | null = null;
@@ -175,8 +177,6 @@ test.describe("browser-local PDF mode", () => {
 
     await openLocalMode(page);
     await indexSamplePdf(page);
-    // The styled toggle visually hides its checkbox, so click the label text.
-    await page.getByText("Generate answers with the hosted model").click();
 
     await page.getByRole("textbox", { name: "Research question" }).fill("thermal subsystem radiator margin");
     await page.getByRole("button", { name: "Search your document" }).click();
@@ -223,8 +223,10 @@ test.describe("browser-local PDF mode", () => {
 
     await openLocalMode(page);
     await indexSamplePdf(page);
+    // The styled toggle visually hides its checkbox, so click the label text.
+    await page.getByText("Generate answers with the hosted model").click();
 
-    // Search without the synthesis toggle: local-only results plus the offer.
+    // Search with synthesis off: local-only results plus the one-click offer.
     await page.getByRole("textbox", { name: "Research question" }).fill("thermal subsystem radiator margin");
     await page.getByRole("button", { name: "Search your document" }).click();
     await expect(page.getByText("Local search only")).toBeVisible({ timeout: 30_000 });
@@ -295,6 +297,8 @@ test.describe("browser-local PDF mode", () => {
     await page.getByLabel("Add a local PDF").setInputFiles(second);
     await expect(page.getByText("2 of 3 documents")).toBeVisible({ timeout: 60_000 });
     await expect(page.getByText(second.name)).toBeVisible();
+    // Synthesis defaults on; this test covers the fully local search path.
+    await page.getByText("Generate answers with the hosted model").click();
 
     await page.getByRole("textbox", { name: "Research question" }).fill("zephyr battery eclipse charge cycles");
     await page.getByRole("button", { name: "Search your document" }).click();

@@ -83,8 +83,9 @@ PDFs → text extraction → chunking → embeddings → vector store → hybrid
   documents are parsed, chunked,
   embedded (Transformers.js MiniLM), and searched with hybrid BM25 + semantic
   RRF entirely in a Web Worker, with opt-in IndexedDB persistence and
-  strict size/page/chunk/timeout limits — the file never leaves the browser,
-  and optional hosted synthesis sends only bounded excerpts through the same
+  strict size/page/chunk/timeout limits — the file never leaves the browser;
+  answers are synthesized by the hosted model from bounded excerpts only
+  (on by default, switchable to fully local search), through the same
   quota gate
 - Production-grade quality gates: 39 Worker tests (validation, quota denial,
   provider failure, prompt-injection guards, CORS, quota-bypass proofs), 42
@@ -482,9 +483,10 @@ If you delete a PDF manually from `data/pdfs/`, run `python ingest.py` again to 
   entirely inside a Web Worker in their browser. The file never reaches the
   Worker, Cloudflare storage, or any owner-controlled service. Opt-in
   persistence uses the browser's own IndexedDB.
-- Hosted answer generation for a local document is opt-in and transmits only
-  the retrieved excerpts (at most 5 x 800 characters), through the same
-  global quota gate as every other inference route.
+- Hosted answer generation for a local document transmits only the retrieved
+  excerpts (at most 5 x 800 characters), through the same global quota gate
+  as every other inference route. It is on by default and clearly labeled;
+  one click switches to fully local search where nothing is transmitted.
 - The local embedding model (~25 MB, quantized MiniLM) is fetched once from a
   public model CDN by the visitor's browser; the visitor's document is not
   part of that request. If the download fails, local search degrades to

@@ -159,6 +159,7 @@ export function LocalDocumentPanel({
           <li>Up to {MAX_LOCAL_DOCUMENTS} documents, each {Math.round(MAX_FILE_BYTES / (1024 * 1024))} MB and {MAX_PAGE_COUNT} pages max</li>
           <li>Text-based PDFs only — scanned documents need OCR, which is not supported</li>
           <li>The embedding model (~25 MB) is downloaded once from a public CDN; your documents are not part of that request</li>
+          <li>Answers use the hosted model by default (one daily question each, sending only retrieved excerpts) — switch it off after upload for fully local search</li>
         </ul>
       )}
 
