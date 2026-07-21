@@ -98,7 +98,8 @@ svg { width: 1.15rem; height: 1.15rem; flex: none; }
 .privacy-note p { margin: 0; color: var(--muted); font-size: 9px; line-height: 1.55; }
 .privacy-note strong { color: var(--green-dark); }
 
-.research-workspace { min-width: 0; padding: 50px clamp(28px, 4vw, 64px) 72px; background: radial-gradient(circle at 80% 4%, rgb(190 218 193 / 20%), transparent 27%), var(--canvas); }
+.research-workspace { min-width: 0; display: flex; flex-direction: column; padding: 50px clamp(28px, 4vw, 64px) 28px; background: radial-gradient(circle at 80% 4%, rgb(190 218 193 / 20%), transparent 27%), var(--canvas); }
+.research-workspace > * { width: 100%; }
 .workspace-intro { display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; max-width: 1040px; margin: 0 auto; }
 .workspace-intro h1 { margin: 12px 0 10px; font-family: var(--font-editorial); font-size: clamp(38px, 4.4vw, 64px); font-weight: 500; line-height: .98; letter-spacing: -.045em; }
 .workspace-intro > div > p:last-child { max-width: 650px; margin: 0; color: var(--ink-soft); font-size: 13px; line-height: 1.7; }
@@ -234,7 +235,9 @@ svg { width: 1.15rem; height: 1.15rem; flex: none; }
 .result-body > span:last-child { overflow: hidden; color: var(--muted); font-size: 10px; line-height: 1.55; white-space: nowrap; text-overflow: ellipsis; }
 .result-body .retrieval-details { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 5px; overflow: visible; white-space: normal; }
 .retrieval-details i { padding: 5px 7px; border: 1px solid var(--line); border-radius: 6px; color: var(--muted); background: #f5f5f0; font-family: var(--font-mono); font-size: 7px; font-style: normal; }
-.workspace-footer { max-width: 1040px; margin: 52px auto 0; padding-top: 18px; display: flex; justify-content: space-between; align-items: baseline; gap: 16px; border-top: 1px solid var(--line); }
+#method { margin-bottom: 52px; }
+/* margin-top auto pins the footer to the bottom of the flex column when content is short. */
+.workspace-footer { max-width: 1040px; margin: auto auto 0; padding-top: 18px; display: flex; justify-content: space-between; align-items: baseline; gap: 16px; border-top: 1px solid var(--line); }
 .workspace-footer p { margin: 0; display: flex; align-items: baseline; gap: 10px; color: var(--muted); font-size: 11px; }
 .workspace-footer strong { color: var(--ink); font-weight: 650; }
 .workspace-footer a { color: var(--green-dark); font-weight: 620; text-decoration: underline; text-underline-offset: 3px; }
