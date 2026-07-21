@@ -24,6 +24,7 @@ test.describe("hosted research workflow", () => {
     await expect(page.getByRole("heading", { name: "Supporting sources" })).toBeVisible();
     await expect(page.locator(".result-card")).toHaveCount(3);
     await expect(page.getByText("194 questions left")).toBeVisible();
+    await expect(page.getByRole("textbox", { name: "Research question" })).toHaveValue("");
 
     await page.getByRole("button", { name: /^Copy$/ }).click();
     await expect(page.getByRole("button", { name: "Copied" })).toBeVisible();

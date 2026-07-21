@@ -91,6 +91,8 @@ export default function Home() {
   const [hostedSynthesis, setHostedSynthesis] = useState(true);
   const [localSearchMode, setLocalSearchMode] = useState<"hybrid" | "keyword" | null>(null);
   const activeRequest = useRef<AbortController | null>(null);
+  // The composer clears after each ask; Retry and the synthesis banner re-ask this.
+  const lastSubmittedQuestion = useRef("");
   const localSession = useRef<LocalDocumentSession | null>(null);
   const localPdfUrls = useRef(new Map<string, string>());
 
@@ -362,19 +364,23 @@ export default function Home() {
       options && typeof options === "object" && "synthesis" in options
         ? Boolean((options as { synthesis: unknown }).synthesis)
         : hostedSynthesis;
-    const submittedQuestion = question.trim();
+    const submittedQuestion = question.trim() || lastSubmittedQuestion.current;
     if (!submittedQuestion || stage || !composerAvailable) return;
+    lastSubmittedQuestion.current = submittedQuestion;
     activeRequest.current?.abort();
     const controller = new AbortController();
     activeRequest.current = controller;
     setStage("retrieving");
     resetResearchState();
+    setQuestion("");
 
     try {
       if (collection === "curated") await askCuratedLibrary(submittedQuestion, controller);
       else await askLocalDocument(submittedQuestion, controller, synthesis);
     } catch (caught) {
       if (caught instanceof DOMException && caught.name === "AbortError") return;
+      // Put the question back so a failed ask can be edited and resubmitted.
+      setQuestion((current) => current || submittedQuestion);
       if (caught && typeof caught === "object" && "code" in caught) {
         setError(localErrorMessage(caught).message);
       } else {
