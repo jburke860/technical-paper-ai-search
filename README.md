@@ -39,6 +39,9 @@ nothing is transmitted).
   and matched query concepts.
 - **Streamed grounded answers** — Workers AI Llama 3.2 synthesizes answers
   constrained to the retrieved passages, with inline `[Source N]` citations.
+  When the sources cannot answer the question, the model says so and may
+  append a clearly labeled, uncited "Outside these sources:" note from
+  general knowledge.
 - **Exact-passage citation highlighting** — chunk bounding boxes are computed
   at ingestion time and rendered as overlays on the cited PDF page.
 - **Private browser-local PDF mode** — up to 3 documents (20 MB / 200 pages
