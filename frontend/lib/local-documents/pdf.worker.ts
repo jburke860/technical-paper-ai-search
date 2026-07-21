@@ -357,7 +357,15 @@ async function handleProcess(
   assertNotCancelled();
   let embeddings: Float32Array[] | null = null;
   if (pipeline) {
-    embeddings = await embedTexts(requestId, pipeline, chunks.map((chunk) => chunk.text));
+    // A model that loaded but crashes during inference (device-specific WASM
+    // failures) must not sink the document — degrade to keyword-only instead.
+    try {
+      embeddings = await embedTexts(requestId, pipeline, chunks.map((chunk) => chunk.text));
+    } catch (error) {
+      if (error instanceof LocalPipelineError && error.code === "PROCESSING_CANCELLED") throw error;
+      console.warn("Embedding failed; indexing this document keyword-only.", error);
+      embeddings = null;
+    }
   }
 
   assertNotCancelled();
@@ -397,8 +405,13 @@ async function handleSearch(requestId: string, question: string, k: number): Pro
     // loaded yet; the query itself still needs a local embedding.
     const pipeline = await loadExtractor(requestId);
     if (pipeline) {
-      const [queryVector] = await embedTexts(null, pipeline, [question]);
-      semanticCandidates = semanticRank(queryVector, combined.embeddings);
+      try {
+        const [queryVector] = await embedTexts(null, pipeline, [question]);
+        semanticCandidates = semanticRank(queryVector, combined.embeddings);
+      } catch (error) {
+        if (error instanceof LocalPipelineError && error.code === "PROCESSING_CANCELLED") throw error;
+        console.warn("Query embedding failed; searching keyword-only.", error);
+      }
     }
   }
 
@@ -491,7 +504,12 @@ self.addEventListener("message", (event: MessageEvent<WorkerRequest>) => {
         await handleRemove(requestId, message.docId);
       }
     } catch (error) {
+      console.error("Local pipeline failure:", error);
       const known = error instanceof LocalPipelineError;
+      // Surface the underlying reason: the generic message alone made
+      // device-specific failures (real Safari vs headless) undiagnosable.
+      const detail =
+        error instanceof Error ? `${error.name}: ${error.message}` : String(error);
       post({
         type: "error",
         requestId,
@@ -499,7 +517,7 @@ self.addEventListener("message", (event: MessageEvent<WorkerRequest>) => {
           code: known ? error.code : "WORKER_FAILURE",
           message: known
             ? error.message
-            : "Local document processing failed unexpectedly.",
+            : `Local document processing failed unexpectedly (${detail.slice(0, 160)}).`,
         },
       });
     }
