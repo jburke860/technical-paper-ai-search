@@ -142,7 +142,9 @@ export default function Home() {
     void loadWorkspace();
     void readPersistedMetas().then((metas) => setPersistedAvailable(metas.length > 0));
     // Rotate after hydration so server and first client render agree.
-    setExamples([...EXAMPLE_POOL].sort(() => Math.random() - 0.5).slice(0, 3));
+    const exampleFrame = window.requestAnimationFrame(() => {
+      setExamples([...EXAMPLE_POOL].sort(() => Math.random() - 0.5).slice(0, 3));
+    });
 
     try {
       const stored = JSON.parse(localStorage.getItem(HISTORY_KEY) ?? "[]") as unknown;
@@ -158,6 +160,7 @@ export default function Home() {
     return () => {
       controller.abort();
       window.cancelAnimationFrame(historyFrame);
+      window.cancelAnimationFrame(exampleFrame);
       activeRequest.current?.abort();
       localSession.current?.dispose();
       revokeLocalPdfUrls(new Set());
@@ -294,7 +297,11 @@ export default function Home() {
     });
   }
 
-  async function askLocalDocument(submittedQuestion: string, controller: AbortController) {
+  async function askLocalDocument(
+    submittedQuestion: string,
+    controller: AbortController,
+    synthesis: boolean,
+  ) {
     const outcome = await getSession().search(submittedQuestion, sourceCount);
     const localSources = outcome.results.map((result) => ({
       ...result,
@@ -308,7 +315,7 @@ export default function Home() {
       return;
     }
 
-    if (!hostedSynthesis || !hostedAvailable) {
+    if (!synthesis || !hostedAvailable) {
       setStage(null);
       return;
     }
@@ -345,7 +352,14 @@ export default function Home() {
     if (!completed || !completeAnswer.trim()) throw new Error("The answer stream ended before completion.");
   }
 
-  async function askLibrary() {
+  // Accepts an optional { synthesis } override so the results banner can turn
+  // hosted synthesis on and re-ask in one click, before the state updates.
+  // Event objects from onClick/onSubmit fall through to the toggle state.
+  async function askLibrary(options?: unknown) {
+    const synthesis =
+      options && typeof options === "object" && "synthesis" in options
+        ? Boolean((options as { synthesis: unknown }).synthesis)
+        : hostedSynthesis;
     const submittedQuestion = question.trim();
     if (!submittedQuestion || stage || !composerAvailable) return;
     activeRequest.current?.abort();
@@ -356,7 +370,7 @@ export default function Home() {
 
     try {
       if (collection === "curated") await askCuratedLibrary(submittedQuestion, controller);
-      else await askLocalDocument(submittedQuestion, controller);
+      else await askLocalDocument(submittedQuestion, controller, synthesis);
     } catch (caught) {
       if (caught instanceof DOMException && caught.name === "AbortError") return;
       if (caught && typeof caught === "object" && "code" in caught) {
@@ -479,8 +493,12 @@ export default function Home() {
           <section className="workspace-intro">
             <div>
               <p className="eyebrow"><SparkIcon /> Source-grounded research</p>
-              <h1>Ask your technical library</h1>
-              <p>Search a curated collection with hybrid retrieval, then trace every answer back to its paper and page.</p>
+              <h1>{collection === "curated" ? "Ask the spacecraft autonomy library" : "Find insights in your own PDFs"}</h1>
+              <p>
+                {collection === "curated"
+                  ? "Question a curated collection of research on spacecraft autonomy and aerospace computer vision, then trace every answer back to its paper and page."
+                  : "Search up to three of your own PDFs privately in this browser tab — and optionally let the hosted model synthesize a cited answer from the retrieved passages."}
+              </p>
             </div>
             <dl className="corpus-stats" aria-label="Corpus statistics">
               <div><dt>Papers</dt><dd>{status?.corpus.paperCount ?? "—"}</dd></div>
@@ -569,6 +587,16 @@ export default function Home() {
                   ? `Only the ${Math.min(results.length, MAX_LOCAL_EXCERPTS)} retrieved excerpts were sent to the quota-limited hosted endpoint.`
                   : `Ranked in this browser with ${localSearchMode === "hybrid" ? "local embeddings and keyword search" : "keyword search"}. Nothing was transmitted.`}
               </span>
+              {!answer && hostedAvailable && (
+                <button
+                  onClick={() => {
+                    setHostedSynthesis(true);
+                    void askLibrary({ synthesis: true });
+                  }}
+                >
+                  <SparkIcon /> Generate an answer from these passages — uses 1 daily question
+                </button>
+              )}
             </div>
           )}
 

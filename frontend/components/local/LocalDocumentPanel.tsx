@@ -181,12 +181,12 @@ export function LocalDocumentPanel({
                 onChange={(event) => onHostedSynthesisChange(event.target.checked)}
                 disabled={searchBusy || !hostedAvailable}
               />
-              <span /> Generate answers with the hosted model
+              <span /> Generate answers with the hosted model (uses daily questions)
             </label>
           </div>
           <p className="local-doc-privacy">
             {hostedSynthesisEnabled
-              ? "Answers send only the few retrieved excerpts (never the files) to the quota-limited hosted model."
+              ? "Each answer sends only the few retrieved excerpts (never the files) to the quota-limited hosted model and uses one daily question."
               : "Fully local: searches run in this tab and nothing about these documents leaves your browser."}
             {!hostedAvailable && " Hosted synthesis is currently unavailable, so local search continues on its own."}
           </p>
