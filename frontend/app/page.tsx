@@ -493,7 +493,7 @@ export default function Home() {
 
         <main id="workspace" className="research-workspace">
           <section className="workspace-intro">
-            <div>
+            <div key={collection} className="mode-transition">
               <p className="eyebrow"><SparkIcon /> Source-grounded research</p>
               <h1>{collection === "curated" ? "Ask the spacecraft autonomy library" : "Find insights in your own PDFs"}</h1>
               <p>

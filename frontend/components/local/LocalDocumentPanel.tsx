@@ -70,7 +70,7 @@ export function LocalDocumentPanel({
   }
 
   return (
-    <section className="local-doc-panel" aria-labelledby="local-doc-heading">
+    <section className="local-doc-panel mode-transition" aria-labelledby="local-doc-heading">
       <div className="local-doc-heading">
         <div>
           <p className="eyebrow"><FileIcon /> Private document mode</p>

@@ -104,6 +104,11 @@ svg { width: 1.15rem; height: 1.15rem; flex: none; }
 .workspace-intro > div > p:last-child { max-width: 650px; margin: 0; color: var(--ink-soft); font-size: 13px; line-height: 1.7; }
 .hero-link { background: none; border: none; padding: 0; font: inherit; color: var(--green-dark); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 .hero-link:hover { color: var(--ink); }
+
+/* Collection switches remount mode-specific content; ease it in instead of jumping. */
+@keyframes mode-enter { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: none; } }
+.mode-transition { animation: mode-enter .3s cubic-bezier(.22, .7, .25, 1) both; }
+@media (prefers-reduced-motion: reduce) { .mode-transition { animation: none; } }
 .corpus-stats { flex: none; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(70px, 1fr)); border: 1px solid var(--line); border-radius: var(--radius-md); overflow: hidden; background: rgb(251 250 246 / 76%); box-shadow: var(--shadow-sm); }
 .corpus-stats div { min-width: 82px; padding: 12px 14px; border-left: 1px solid var(--line); }
 .corpus-stats div:first-child { border-left: 0; }
@@ -152,7 +157,7 @@ svg { width: 1.15rem; height: 1.15rem; flex: none; }
 .secondary-button:hover:not(:disabled) { border-color: #9cac9f; background: var(--green-pale); }
 .primary-button:disabled, .secondary-button:disabled { opacity: .45; cursor: not-allowed; }
 .collection-switch { max-width: 1040px; margin: 30px auto 0; display: inline-flex; gap: 4px; padding: 4px; border: 1px solid var(--line); border-radius: 12px; background: rgb(251 250 246 / 76%); }
-.collection-switch button { display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 14px; border: 1px solid transparent; border-radius: 9px; background: transparent; color: var(--muted); font-size: 11px; font-weight: 620; cursor: pointer; }
+.collection-switch button { display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 14px; border: 1px solid transparent; border-radius: 9px; background: transparent; color: var(--muted); font-size: 11px; font-weight: 620; cursor: pointer; transition: background .22s ease, color .22s ease, border-color .22s ease, box-shadow .22s ease; }
 .collection-switch button svg { width: 14px; height: 14px; }
 .collection-switch button:hover { color: var(--ink); }
 .collection-switch button.is-active { border-color: #a9c8b6; background: var(--paper-strong); color: var(--green-dark); box-shadow: var(--shadow-sm); }

@@ -30,7 +30,11 @@ export function SourcePanel({ source, sourceCount, open, viewerOpen, onClose, on
   async function copyCitation() {
     if (!source) return;
     const authors = source.authors.join(", ");
-    await navigator.clipboard.writeText(`${authors} (${source.year}). ${source.title}. p. ${source.page}.`);
+    try {
+      await navigator.clipboard.writeText(`${authors} (${source.year}). ${source.title}. p. ${source.page}.`);
+    } catch {
+      return; // Clipboard denied by the browser; keep the button state honest.
+    }
     setCopiedSourceId(source.id);
     window.setTimeout(() => setCopiedSourceId(null), 1600);
   }

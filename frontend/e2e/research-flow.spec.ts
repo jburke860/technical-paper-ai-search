@@ -186,7 +186,9 @@ test.describe("hosted research workflow", () => {
     await expect(page.locator(".result-card")).toHaveCount(3);
   });
 
-  test("opens the cited page from an inline citation and copies a citation", async ({ page }, testInfo) => {
+  test("opens the cited page from an inline citation and copies a citation", async ({ page, context }, testInfo) => {
+    // Bundled headless Chromium (CI) denies clipboard writes unless granted.
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
     await mockStatusAndPapers(page);
     await mockAnswerStream(page, answerStreamBody(ANSWER_DELTAS));
 

@@ -25,7 +25,11 @@ export function AnswerCard({ answer, sources, stage, onCitation, onRetry }: Answ
   const loadingLabel = stage === "retrieving" ? "Finding the strongest passages…" : "Synthesizing a grounded answer…";
 
   async function copyAnswer() {
-    await navigator.clipboard.writeText(answer);
+    try {
+      await navigator.clipboard.writeText(answer);
+    } catch {
+      return; // Clipboard denied by the browser; keep the button state honest.
+    }
     setCopied(true);
     window.setTimeout(() => setCopied(false), 1600);
   }

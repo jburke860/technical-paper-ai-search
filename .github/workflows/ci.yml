@@ -43,6 +43,10 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run typecheck
+      # Wrangler validates that the assets directory exists even for a dry
+      # run; this job never builds the frontend, so stub the directory.
+      - name: Stub built frontend so the asset config validates
+        run: mkdir -p ../frontend/out && touch ../frontend/out/index.html
       - name: Deployment dry run (no credentials, nothing deployed)
         run: npx wrangler deploy --dry-run
 
