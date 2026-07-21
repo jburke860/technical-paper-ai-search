@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { askLibraryQuestion } from "./fixtures";
 
 const paper = {
   id: "autonomous-systems-and-ai",
@@ -78,7 +79,7 @@ test("opens a citation at its real PDF page only after interaction", async ({ pa
   await expect(page.getByText("200 questions left")).toBeVisible({ timeout: 15_000 });
   expect(pdfRequests).toHaveLength(0);
 
-  await page.getByRole("button", { name: "Ask the library" }).click();
+  await askLibraryQuestion(page);
   await expect(page.getByText("Safety remains a core challenge")).toBeVisible();
   expect(pdfRequests).toHaveLength(0);
 

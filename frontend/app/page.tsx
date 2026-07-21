@@ -28,7 +28,6 @@ import type {
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "/api";
 const HISTORY_KEY = "technical-paper-ai-history-v1";
-const INITIAL_QUESTION = "What safety and reliability challenges affect autonomous systems?";
 // A rotating subset keeps repeat visits fresh; all of these are grounded in
 // the curated corpus and drawn from the evaluation themes.
 const EXAMPLE_POOL = [
@@ -64,7 +63,7 @@ function localErrorMessage(caught: unknown): { code: string; message: string } {
 }
 
 export default function Home() {
-  const [question, setQuestion] = useState(INITIAL_QUESTION);
+  const [question, setQuestion] = useState("");
   const [papers, setPapers] = useState<Paper[]>([]);
   const [status, setStatus] = useState<StatusResponse | null>(null);
   const [statusFailed, setStatusFailed] = useState(false);

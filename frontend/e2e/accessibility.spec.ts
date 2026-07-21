@@ -1,6 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
-import { answerStreamBody, mockAnswerStream, mockStatusAndPapers } from "./fixtures";
+import { answerStreamBody, askLibraryQuestion, mockAnswerStream, mockStatusAndPapers } from "./fixtures";
 
 async function scan(page: Page) {
   const results = await new AxeBuilder({ page })
@@ -29,7 +29,7 @@ test.describe("automated accessibility scans", () => {
     await mockAnswerStream(page, answerStreamBody(["Autonomy manages safety [Source 1]."]));
     await page.goto("/");
     await expect(page.getByText("195 questions left")).toBeVisible();
-    await page.getByRole("button", { name: "Ask the library" }).click();
+    await askLibraryQuestion(page);
     await expect(page.locator(".answer-copy")).toContainText("manages safety");
     // Open the source panel (a drawer on mobile) and expand the explanation.
     await page.locator(".result-card").first().click();

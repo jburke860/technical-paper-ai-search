@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 import {
   answerStreamBody,
+  askLibraryQuestion,
   mockAnswerStream,
   mockStatusAndPapers,
   statusPayload,
@@ -18,7 +19,7 @@ test.describe("hosted research workflow", () => {
     await page.goto("/");
     await expect(page.getByText("195 questions left")).toBeVisible();
 
-    await page.getByRole("button", { name: "Ask the library" }).click();
+    await askLibraryQuestion(page);
     await expect(page.getByText("Answer from the library")).toBeVisible();
     await expect(page.locator(".answer-copy")).toContainText("during operation");
     await expect(page.getByRole("heading", { name: "Supporting sources" })).toBeVisible();
@@ -106,7 +107,7 @@ test.describe("hosted research workflow", () => {
 
     await page.goto("/");
     await expect(page.getByText("195 questions left")).toBeVisible();
-    await page.getByRole("button", { name: "Ask the library" }).click();
+    await askLibraryQuestion(page);
 
     await expect(page.getByText("Research interrupted")).toBeVisible();
     await expect(page.getByText("Today's hosted demo capacity has been reached.")).toBeVisible();
@@ -130,7 +131,7 @@ test.describe("hosted research workflow", () => {
 
     await page.goto("/");
     await expect(page.getByText("195 questions left")).toBeVisible();
-    await page.getByRole("button", { name: "Ask the library" }).click();
+    await askLibraryQuestion(page);
 
     await expect(page.getByText("Please wait before submitting another question.")).toBeVisible();
     await expect(page.getByRole("button", { name: "Ask the library" })).toBeEnabled();
@@ -152,7 +153,7 @@ test.describe("hosted research workflow", () => {
 
     await page.goto("/");
     await expect(page.getByText("195 questions left")).toBeVisible();
-    await page.getByRole("button", { name: "Ask the library" }).click();
+    await askLibraryQuestion(page);
 
     await expect(page.getByText("Research interrupted")).toBeVisible();
     await expect(page.getByText("The answer stream ended before completion.")).toBeVisible();
@@ -170,7 +171,7 @@ test.describe("hosted research workflow", () => {
     await page.goto("/");
     await expect(page.getByText("195 questions left")).toBeVisible();
     const question = "What safety and reliability challenges affect autonomous systems?";
-    await page.getByRole("button", { name: "Ask the library" }).click();
+    await askLibraryQuestion(page);
     await expect(page.locator(".answer-copy")).toContainText("during operation");
 
     await expect(page.locator(".history-list button", { hasText: question })).toBeVisible();
@@ -195,7 +196,7 @@ test.describe("hosted research workflow", () => {
 
     await page.goto("/");
     await expect(page.getByText("195 questions left")).toBeVisible();
-    await page.getByRole("button", { name: "Ask the library" }).click();
+    await askLibraryQuestion(page);
     await expect(page.locator(".answer-copy")).toContainText("during operation");
 
     await page.getByRole("button", { name: /Open Source 2:/ }).click();
@@ -223,7 +224,7 @@ test.describe("hosted research workflow", () => {
 
     await page.goto("/");
     await expect(page.getByText("195 questions left")).toBeVisible();
-    await page.getByRole("button", { name: "Ask the library" }).click();
+    await askLibraryQuestion(page);
     await expect(page.locator(".answer-copy")).toContainText("during operation");
 
     await page.getByRole("button", { name: /Open Source 1:/ }).click();
@@ -275,7 +276,7 @@ test.describe("hosted research workflow", () => {
     );
     expect(parseFloat(dotAnimation)).toBeLessThanOrEqual(0.01);
 
-    await page.getByRole("button", { name: "Ask the library" }).click();
+    await askLibraryQuestion(page);
     await expect(page.locator(".answer-copy")).toContainText("during operation");
     expect(FULL_ANSWER).toContain("safety constraints");
   });

@@ -90,6 +90,13 @@ export function answerStreamBody(deltas: string[], options: { done?: boolean; er
   return `${events.map((event) => JSON.stringify(event)).join("\n")}\n`;
 }
 
+export const DEFAULT_QUESTION = "What safety and reliability challenges affect autonomous systems?";
+
+export async function askLibraryQuestion(page: Page, question: string = DEFAULT_QUESTION): Promise<void> {
+  await page.getByRole("textbox", { name: "Research question" }).fill(question);
+  await page.getByRole("button", { name: "Ask the library" }).click();
+}
+
 export async function mockStatusAndPapers(
   page: Page,
   status: Record<string, unknown> = statusPayload(),
