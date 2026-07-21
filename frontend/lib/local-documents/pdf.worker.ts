@@ -3,6 +3,7 @@
 // worker; the document never leaves the visitor's browser. PDF.js runs in
 // "fake worker" mode here because this scope is already off the main thread.
 
+import "../readable-stream-async-iterator";
 import type { FeatureExtractionPipeline } from "@huggingface/transformers";
 import { chunkPages, type PageText } from "./chunking";
 import {
@@ -508,8 +509,15 @@ self.addEventListener("message", (event: MessageEvent<WorkerRequest>) => {
       const known = error instanceof LocalPipelineError;
       // Surface the underlying reason: the generic message alone made
       // device-specific failures (real Safari vs headless) undiagnosable.
-      const detail =
+      let detail =
         error instanceof Error ? `${error.name}: ${error.message}` : String(error);
+      if (error instanceof Error && error.stack) {
+        // The first in-app stack frame names the failing script, which
+        // identifies the library even in minified builds.
+        const frame = error.stack.split("\n").find((line) => line.includes("_next/"));
+        const location = frame?.match(/([\w~.-]+\.m?js:\d+:\d+)/)?.[1];
+        if (location) detail += ` at ${location}`;
+      }
       post({
         type: "error",
         requestId,

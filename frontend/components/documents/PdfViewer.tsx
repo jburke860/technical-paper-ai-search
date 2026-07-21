@@ -1,5 +1,6 @@
 "use client";
 
+import "@/lib/readable-stream-async-iterator";
 import { useEffect, useRef, useState } from "react";
 import type { PDFDocumentProxy } from "pdfjs-dist";
 import { DownloadIcon, ExternalIcon, LeftIcon, MinusIcon, PlusIcon, RightIcon } from "@/components/icons";
