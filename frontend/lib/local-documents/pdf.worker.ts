@@ -55,6 +55,14 @@ type CombinedIndex = {
   lexical: LexicalIndex;
 };
 
+// HuggingFace's CDN rejects requests that carry a *.workers.dev Referer with
+// a bare 404, which silently downgraded every production visitor to
+// keyword-only search. This worker only ever fetches model assets (the PDF
+// arrives as bytes over postMessage), so no fetch here needs a referrer.
+const baseFetch = globalThis.fetch.bind(globalThis);
+globalThis.fetch = ((input: RequestInfo | URL, init?: RequestInit) =>
+  baseFetch(input, { ...init, referrerPolicy: "no-referrer" })) as typeof fetch;
+
 const documents = new Map<string, DocumentState>();
 let combined: CombinedIndex | null = null;
 let persistSet = false;
