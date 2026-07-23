@@ -350,6 +350,8 @@ svg { width: 1.15rem; height: 1.15rem; flex: none; }
   .app-header { grid-template-columns: 1fr auto; padding: 0 15px; }
   .brand-lockup small { display: none; }
   .system-pill { max-width: 142px; overflow: hidden; text-overflow: ellipsis; }
+  /* Anchored right:0 to the pill, the popover would run off-screen past the header icons. */
+  .about-popover { position: fixed; top: calc(var(--header-height) + 8px); right: 12px; }
   .mobile-only { display: grid; }
   .workspace-grid { display: block; }
   .library-sidebar { width: min(330px, 88vw); position: fixed; z-index: 90; top: var(--header-height); left: 0; bottom: 0; max-height: none; visibility: hidden; transform: translateX(-102%); box-shadow: var(--shadow-lg); transition: transform .22s ease, visibility 0s linear .22s; }
