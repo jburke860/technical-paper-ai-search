@@ -383,7 +383,8 @@ svg { width: 1.15rem; height: 1.15rem; flex: none; }
 
 @media (max-width: 520px) {
   .brand-lockup strong { font-size: 14px; }
-  .system-pill { width: 34px; padding: 0; justify-content: center; font-size: 0; }
+  /* font-size 0 hides the label but it stays a flex item, so keep gap 0 or it nudges the dot off-center. */
+  .system-pill { width: 34px; padding: 0; justify-content: center; font-size: 0; gap: 0; }
   .query-card textarea { font-size: 18px; }
   .query-actions > div { grid-template-columns: 1fr; }
   .settings-row { grid-template-columns: 1fr; }
