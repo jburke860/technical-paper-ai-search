@@ -34,10 +34,25 @@ export const viewport: Viewport = {
   themeColor: "#f5f4ef",
 };
 
+// Cloudflare Web Analytics beacon, gated to the deployed hostname so local dev
+// and CI runs never send pageviews. The token is domain-locked, not a secret.
+const WEB_ANALYTICS_SNIPPET = `
+if (location.hostname === "technical-paper-ai-search.jeremy-burke024.workers.dev") {
+  var beacon = document.createElement("script");
+  beacon.src = "https://static.cloudflareinsights.com/beacon.min.js";
+  beacon.defer = true;
+  beacon.setAttribute("data-cf-beacon", '{"token": "2aa421bfec524e378131a9939d0fc968"}');
+  document.head.appendChild(beacon);
+}
+`.trim();
+
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <script dangerouslySetInnerHTML={{ __html: WEB_ANALYTICS_SNIPPET }} />
+      </body>
     </html>
   );
 }
